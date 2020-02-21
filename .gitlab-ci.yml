@@ -4,12 +4,22 @@ stages:
 variables:
   LC_ALL: "en_US.UTF-8"
 
+.setup: &setup
+  - export
+  - rvm --create use ruby-2.6.3@restler
+  - gem install bundler:2.1.4
+  - bundle config set path 'vendor/bundle'
+  - bundle install
+
+
 test_project:
   stage: build
+  before_script:
+    *setup
   script:
     - swift package generate-xcodeproj
     - xcodebuild test -scheme Restler-Package -enableCodeCoverage YES
-    - xcov --scheme Restler-Package --output_directory "output/codecov/xcov/"
+    - bundle exec xcov --scheme Restler-Package --output_directory "output/codecov/xcov/"
   tags:
     - ios
   coverage: '/Restler\.framework\D*\|\D*([\d\.]*)\%/'
