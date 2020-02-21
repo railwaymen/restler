@@ -6,7 +6,7 @@ final class RestlerTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        XCTAssertEqual(Restler().text, "Hello, World!")
+        XCTAssertEqual(Restler().getText(), "Hello, World!")
     }
 
     static var allTests = [
