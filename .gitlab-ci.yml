@@ -1,0 +1,15 @@
+stages:
+  - build
+
+variables:
+  LC_ALL: "en_US.UTF-8"
+
+test_project:
+  stage: build
+  script:
+    - swift package generate-xcodeproj
+    - xcodebuild test -scheme Restler-Package -enableCodeCoverage YES
+    - xcov --scheme Restler-Package --output_directory "output/codecov/xcov/"
+  tags:
+    - ios
+  coverage: '/Restler\.framework\D*\|\D*([\d\.]*)\%/'
