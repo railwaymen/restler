@@ -1,0 +1,16 @@
+PODS:
+  - Restler (0.1.0)
+
+DEPENDENCIES:
+  - Restler (from `../`)
+
+EXTERNAL SOURCES:
+  Restler:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Restler: 79fed163cd5972e60dcaeb13ee87f55c65604da1
+
+PODFILE CHECKSUM: 58154b66a70ecd144c69e00adf1fa0e32a5b0168
+
+COCOAPODS: 1.8.4
