@@ -1,5 +1,7 @@
 stages:
+  - prepare
   - build
+  - deploy
 
 variables:
   LC_ALL: "en_US.UTF-8"
@@ -11,6 +13,12 @@ variables:
   - bundle config set path 'vendor/bundle'
   - bundle install
 
+prepare_project:
+  stage: prepare
+  script:
+    *setup
+  tags:
+    - ios
 
 test_project:
   stage: build
@@ -22,4 +30,33 @@ test_project:
     - bundle exec xcov --scheme Restler-Package --output_directory "output/codecov/xcov/"
   tags:
     - ios
+  dependencies:
+    - prepare_project
   coverage: '/Restler\.framework\D*\|\D*([\d\.]*)\%/'
+
+lint_podspec:
+  stage: build
+  before_script:
+    *setup
+  script:
+    - bundle exec pod lib lint --private --no-clean --skip-tests
+  dependencies:
+    - prepare_project
+  tags:
+    - ios
+
+deploy_pod:
+  stage: deploy
+  before_script:
+    *setup
+  script:
+    - bundle exec pod repo push railwaymen-open-rwm_podspec 'Restler.podspec'
+  dependencies:
+    - test_project
+    - lint_podspec
+  only:
+    - /[\d\.]*/
+  except:
+    - branches
+  tags:
+    - ios
