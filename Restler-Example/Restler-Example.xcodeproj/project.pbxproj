@@ -14,6 +14,8 @@
 		8A87AEF924000850007FA662 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A87AEF824000850007FA662 /* Assets.xcassets */; };
 		8A87AEFC24000850007FA662 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A87AEFB24000850007FA662 /* Preview Assets.xcassets */; };
 		8A87AEFF24000850007FA662 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A87AEFD24000850007FA662 /* LaunchScreen.storyboard */; };
+		8A87AF0A24000D72007FA662 /* BlogPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A87AF0924000D72007FA662 /* BlogPost.swift */; };
+		8A87AF0D24000E76007FA662 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A87AF0C24000E76007FA662 /* ContentViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +31,8 @@
 		8A87AEFE24000850007FA662 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8A87AF0024000850007FA662 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8A87AF0724000A10007FA662 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		8A87AF0924000D72007FA662 /* BlogPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogPost.swift; sourceTree = "<group>"; };
+		8A87AF0C24000E76007FA662 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,14 +85,15 @@
 		8A87AEF12400084F007FA662 /* Restler-Example */ = {
 			isa = PBXGroup;
 			children = (
-				8A87AF06240009FC007FA662 /* Configuration */,
+				8A87AF0024000850007FA662 /* Info.plist */,
 				8A87AEF22400084F007FA662 /* AppDelegate.swift */,
 				8A87AEF42400084F007FA662 /* SceneDelegate.swift */,
-				8A87AEF62400084F007FA662 /* ContentView.swift */,
 				8A87AEF824000850007FA662 /* Assets.xcassets */,
+				8A87AF06240009FC007FA662 /* Configuration */,
 				8A87AEFD24000850007FA662 /* LaunchScreen.storyboard */,
-				8A87AF0024000850007FA662 /* Info.plist */,
+				8A87AF0824000D4E007FA662 /* Models */,
 				8A87AEFA24000850007FA662 /* Preview Content */,
+				8A87AF0B24000E53007FA662 /* Source */,
 			);
 			path = "Restler-Example";
 			sourceTree = "<group>";
@@ -107,6 +112,23 @@
 				8A87AF0724000A10007FA662 /* Debug.xcconfig */,
 			);
 			path = Configuration;
+			sourceTree = "<group>";
+		};
+		8A87AF0824000D4E007FA662 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8A87AF0924000D72007FA662 /* BlogPost.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8A87AF0B24000E53007FA662 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				8A87AEF62400084F007FA662 /* ContentView.swift */,
+				8A87AF0C24000E76007FA662 /* ContentViewModel.swift */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,6 +249,8 @@
 				8A87AEF32400084F007FA662 /* AppDelegate.swift in Sources */,
 				8A87AEF52400084F007FA662 /* SceneDelegate.swift in Sources */,
 				8A87AEF72400084F007FA662 /* ContentView.swift in Sources */,
+				8A87AF0A24000D72007FA662 /* BlogPost.swift in Sources */,
+				8A87AF0D24000E76007FA662 /* ContentViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

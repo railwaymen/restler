@@ -7,16 +7,13 @@
 //
 
 import SwiftUI
-import Restler
 
 struct ContentView: View {
+    @ObservedObject var viewModel: ContentViewModel
+    
     var body: some View {
-        Text("Hello, World!")
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+        List(self.viewModel.posts) {
+            Text($0.title)
+        }
     }
 }

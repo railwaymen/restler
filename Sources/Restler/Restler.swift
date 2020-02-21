@@ -9,6 +9,11 @@ public protocol Restlerable: class {
 public class Restler {
     private let networking: NetworkingType
     
+    // MARK: - Initialization
+    public init() {
+        self.networking = Networking()
+    }
+    
     init(networking: NetworkingType) {
         self.networking = networking
     }
@@ -51,10 +56,15 @@ extension Restler {
 
 // MARK: - Restlerable
 extension Restler: Restlerable {
-    public func get<T>(url: URL, completion: @escaping DecodableCompletion<T>) where T : Decodable {
+    public func get<T>(url: URL, completion: @escaping DecodableCompletion<T>) where T: Decodable {
+        let mainThreadCompletion: DecodableCompletion<T> = { result in
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
         self.networking.get(url: url) { [weak self] result in
-            guard let self = self else { return completion(.failure(Error.internalFrameworkError)) }
-            self.handleResponse(result: result, completion: completion)
+            guard let self = self else { return mainThreadCompletion(.failure(Error.internalFrameworkError)) }
+            self.handleResponse(result: result, completion: mainThreadCompletion)
         }
     }
 }
