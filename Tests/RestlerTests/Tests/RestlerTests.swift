@@ -13,6 +13,7 @@ final class RestlerTests: XCTestCase {
     private var networking: NetworkingMock!
     private var dispatchQueueManager: DispatchQueueManagerMock!
     
+    // MARK: - Setup
     override func setUp() {
         super.setUp()
         self.networking = NetworkingMock()
