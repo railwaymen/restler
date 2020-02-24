@@ -6,18 +6,23 @@ stages:
 variables:
   LC_ALL: "en_US.UTF-8"
 
+cache:
+  key: "bundle_dependencies"
+  paths:
+  - vendor
+
 .setup: &setup
   - export
   - rvm --create use ruby-2.6.3@restler
   - gem install bundler:2.1.4
-  - bundle config set path 'vendor/bundle'
+  - bundle config set deployment 'true'
   - bundle install
 
 .setup_example_app: &setup_example_app
   - export
-  - rvm --create use ruby-2.6.3@restler
+  - rvm --create use ${RUBY_VERSION}@${CI_PROJECT_NAME}
   - gem install bundler:2.1.4
-  - bundle config set path 'vendor/bundle'
+  - bundle config set deployment 'true'
   - bundle install
   - cd Restler-Example
   - bundle exec pod install || bundle exec pod install --repo-update
