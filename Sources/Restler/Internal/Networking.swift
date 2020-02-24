@@ -4,18 +4,22 @@ typealias DataResult = Result<Data, Error>
 typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType {
-    func get(url: URL, query: [String: String?], completion: @escaping DataCompletion)
+    func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion)
 }
 
-class Networking {}
-
-// MARK: - Structures
-extension Networking {}
+class Networking {
+    private let session: URLSessionType
+    
+    // MARK: - Initialization
+    init(session: URLSessionType = URLSession.shared) {
+        self.session = session
+    }
+}
 
 // MARK: - NetworkingType
 extension Networking: NetworkingType {
-    func get(url: URL, query: [String: String?], completion: @escaping DataCompletion) {
-        guard let request = self.buildURLRequest(url: url, httpMethod: .get(query: query)) else { return completion(.failure(Restler.Error.internalFrameworkError)) }
+    func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion) {
+        guard let request = self.buildURLRequest(url: url, httpMethod: method) else { return completion(.failure(Restler.Error.internalFrameworkError)) }
         self.runDataTask(request: request, completion: completion)
     }
 }
@@ -32,8 +36,7 @@ extension Networking {
     }
     
     private func runDataTask(request: URLRequest, completion: @escaping DataCompletion) {
-        let task = URLSession.shared.dataTask(with: request) { [weak self] (optionalData, optionalResponse, optionalError) in
-            let response = HTTPRequestResponse(data: optionalData, response: optionalResponse as? HTTPURLResponseType, error: optionalError)
+        let task = self.session.dataTask(with: request) { [weak self] response in
             self?.handleResponse(response: response, completion: completion)
         }
         task.resume()
@@ -41,8 +44,7 @@ extension Networking {
     
     private func handleResponse(response: HTTPRequestResponse, completion: DataCompletion) {
         guard let data = response.data, response.error == nil, response.response?.isSuccessful ?? false else {
-            let error = self.handle(result: response)
-            completion(.failure(error))
+            completion(.failure(self.handle(result: response)))
             return
         }
         completion(.success(data))
@@ -51,30 +53,5 @@ extension Networking {
     private func handle(result: HTTPRequestResponse) -> Error {
         guard let statusCode = result.response?.statusCode else { return Restler.Error.noInternetConnection }
         return Restler.Error(statusCode: statusCode)
-    }
-}
-
-// MARK: - Private Structures
-extension Networking {
-    private enum HTTPMethod {
-        case get(query: [String: String?])
-        
-        var name: String {
-            switch self {
-            case .get: return "GET"
-            }
-        }
-        
-        var query: [String: String?]? {
-            switch self {
-            case let .get(query): return query
-            }
-        }
-    }
-    
-    private struct HTTPRequestResponse {
-        let data: Data?
-        let response: HTTPURLResponseType?
-        let error: Error?
     }
 }
