@@ -1,0 +1,7 @@
+platform :ios, '13.0'
+
+target 'Restler-Example' do
+  use_frameworks!
+  pod 'Restler', :path => '../'
+  pod 'SwiftLint', '~> 0.39'
+end
