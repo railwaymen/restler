@@ -4,7 +4,7 @@ typealias DataResult = Result<Data, Error>
 typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType {
-    func get(url: URL, completion: @escaping DataCompletion)
+    func get(url: URL, query: [String: String?], completion: @escaping DataCompletion)
 }
 
 class Networking {}
@@ -14,8 +14,8 @@ extension Networking {}
 
 // MARK: - NetworkingType
 extension Networking: NetworkingType {
-    func get(url: URL, completion: @escaping DataCompletion) {
-        guard let request = self.buildURLRequest(url: url, httpMethod: .get) else { return completion(.failure(Restler.Error.internalFrameworkError)) }
+    func get(url: URL, query: [String: String?], completion: @escaping DataCompletion) {
+        guard let request = self.buildURLRequest(url: url, httpMethod: .get(query: query)) else { return completion(.failure(Restler.Error.internalFrameworkError)) }
         self.runDataTask(request: request, completion: completion)
     }
 }
@@ -23,7 +23,8 @@ extension Networking: NetworkingType {
 // MARK: - Private
 extension Networking {
     private func buildURLRequest(url: URL, httpMethod: HTTPMethod) -> URLRequest? {
-        guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
+        guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
+        urlComponents.queryItems = httpMethod.query?.map { URLQueryItem(name: $0.key, value: $0.value) }
         guard let url = urlComponents.url else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod.name
@@ -48,18 +49,25 @@ extension Networking {
     }
     
     private func handle(result: HTTPRequestResponse) -> Error {
-        return Restler.Error(statusCode: result.response?.statusCode ?? 15)
+        guard let statusCode = result.response?.statusCode else { return Restler.Error.noInternetConnection }
+        return Restler.Error(statusCode: statusCode)
     }
 }
 
 // MARK: - Private Structures
 extension Networking {
     private enum HTTPMethod {
-        case get
+        case get(query: [String: String?])
         
         var name: String {
             switch self {
             case .get: return "GET"
+            }
+        }
+        
+        var query: [String: String?]? {
+            switch self {
+            case let .get(query): return query
             }
         }
     }
