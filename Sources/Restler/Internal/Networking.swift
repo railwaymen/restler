@@ -3,12 +3,15 @@ import Foundation
 typealias DataResult = Result<Data, Error>
 typealias DataCompletion = (DataResult) -> Void
 
-protocol NetworkingType {
+protocol NetworkingType: class {
+    var header: [String: String] { get set }
     func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion)
 }
 
 class Networking {
     private let session: URLSessionType
+    
+    var header: [String: String] = [:]
     
     // MARK: - Initialization
     init(session: URLSessionType = URLSession.shared) {
@@ -32,6 +35,7 @@ extension Networking {
         guard let url = urlComponents.url else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod.name
+        request.allHTTPHeaderFields = self.header
         return request
     }
     

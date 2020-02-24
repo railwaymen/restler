@@ -28,6 +28,18 @@ extension Restler: Restlerable {
             self.handleResponse(result: result, completion: mainThreadCompletion)
         }
     }
+    
+    public func setHeader(_ header: [String: String]) {
+        self.networking.header = header
+    }
+    
+    public func setHeader(value: String?, forKey key: String) {
+        self.networking.header[key] = value
+    }
+    
+    public func removeHeaderValue(forKey key: String) {
+        self.networking.header.removeValue(forKey: key)
+    }
 }
 
 // MARK: - Private
