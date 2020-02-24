@@ -2,14 +2,6 @@ import XCTest
 @testable import Restler
 
 final class RestlerTests: XCTestCase {
-    static var allTests = [
-        ("testGet_makesProperRequest", testGet_makesProperRequest),
-        ("testGet_selfDeinitialized", testGet_selfDeinitialized),
-        ("testGet_failure", testGet_failure),
-        ("testGet_invalidResponse", testGet_invalidResponse),
-        ("testGet_decodesObject", testGet_decodesObject)
-    ]
-    
     private var networking: NetworkingMock!
     private var dispatchQueueManager: DispatchQueueManagerMock!
     

@@ -2,15 +2,6 @@ import XCTest
 @testable import Restler
 
 class NetworkingTests: XCTestCase {
-    static var allTests = [
-        ("testMakeRequest_makesProperRequest", testMakeRequest_makesProperRequest),
-        ("testMakeRequest_successfulResponse", testMakeRequest_successfulResponse),
-        ("testMakeRequest_noResponse", testMakeRequest_noResponse),
-        ("testMakeRequest_notFoundResponse", testMakeRequest_notFoundResponse),
-        ("testMakeRequest_responseNotNil", testMakeRequest_responseNotNil),
-        ("testMakeRequest_noDataInResponse", testMakeRequest_noDataInResponse)
-    ]
-    
     private var session: URLSessionMock!
     
     // MARK: - Setup
