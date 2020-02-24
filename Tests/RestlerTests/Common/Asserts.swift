@@ -55,6 +55,15 @@ func AssertResult<T, U>(
     }
 }
 
+func XCTUnwrap<T>(_ optional: @autoclosure () -> T?, file: StaticString = #file, line: UInt = #line) throws -> T {
+    guard let unwrapped = optional() else {
+        let error = "XCTUnwrap: expected non-nil value"
+        XCTFail(error, file: file, line: line)
+        throw error
+    }
+    return unwrapped
+}
+
 // MARK: - Private extensions
 private extension Result where Failure == Error {
     func validateEqualityErrorCase<U>(to errorCase: U) throws where U: Error & UniqueValuedEnumerator {

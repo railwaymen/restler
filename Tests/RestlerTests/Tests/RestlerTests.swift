@@ -34,9 +34,9 @@ extension RestlerTests {
         }
         //Assert
         XCTAssertNil(completionResult)
-        XCTAssertEqual(self.networking.getParams.count, 1)
-        XCTAssertEqual(self.networking.getParams.first?.url, url)
-        XCTAssertEqual(self.networking.getParams.first?.query, queryParameters)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
+        XCTAssertEqual(self.networking.makeRequestParams.first?.method, .get(query: queryParameters))
     }
     
     func testGet_selfDeinitialized() throws {
@@ -49,10 +49,10 @@ extension RestlerTests {
             completionResult = result
         }
         sut = nil
-        try XCTUnwrap(self.networking.getParams.last).completion(.failure(TestError()))
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(TestError()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
-        XCTAssertEqual(self.networking.getParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
@@ -69,10 +69,10 @@ extension RestlerTests {
         sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
-        try XCTUnwrap(self.networking.getParams.last).completion(.failure(error))
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
-        XCTAssertEqual(self.networking.getParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
@@ -88,10 +88,10 @@ extension RestlerTests {
         sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
-        try XCTUnwrap(self.networking.getParams.last).completion(.success(Data()))
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
-        XCTAssertEqual(self.networking.getParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
@@ -108,10 +108,10 @@ extension RestlerTests {
         sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
-        try XCTUnwrap(self.networking.getParams.last).completion(.success(response))
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
-        XCTAssertEqual(self.networking.getParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
@@ -126,10 +126,4 @@ extension RestlerTests {
             networking: self.networking,
             dispatchQueueManager: self.dispatchQueueManager)
     }
-}
-
-// MARK: - Private structures
-private struct SomeObject: Decodable, Equatable {
-    let id: Int
-    let name: String
 }

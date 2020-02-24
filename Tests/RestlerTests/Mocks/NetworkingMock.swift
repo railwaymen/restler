@@ -4,17 +4,17 @@ import Foundation
 class NetworkingMock {
     
     // MARK: - NetworkingType
-    private(set) var getParams: [GetParams] = []
-    struct GetParams {
+    private(set) var makeRequestParams: [MakeRequestParams] = []
+    struct MakeRequestParams {
         let url: URL
-        let query: [String : String?]
+        let method: HTTPMethod
         let completion: DataCompletion
     }
 }
 
 // MARK: - NetworkingType
 extension NetworkingMock: NetworkingType {
-    func get(url: URL, query: [String : String?], completion: @escaping DataCompletion) {
-        self.getParams.append(GetParams(url: url, query: query, completion: completion))
+    func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion) {
+        self.makeRequestParams.append(MakeRequestParams(url: url, method: method, completion: completion))
     }
 }

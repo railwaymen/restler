@@ -23,7 +23,7 @@ public class Restler {
 extension Restler: Restlerable {
     public func get<T>(url: URL, query: [String: String?], completion: @escaping DecodableCompletion<T>) where T: Decodable {
         let mainThreadCompletion = self.mainThreadClosure(of: completion)
-        self.networking.get(url: url, query: query) { [weak self] result in
+        self.networking.makeRequest(url: url, method: .get(query: query)) { [weak self] result in
             guard let self = self else { return mainThreadCompletion(.failure(Error.internalFrameworkError)) }
             self.handleResponse(result: result, completion: mainThreadCompletion)
         }
