@@ -12,8 +12,8 @@ struct ContentView: View {
     @ObservedObject var viewModel: ContentViewModel
     
     var body: some View {
-        List(self.viewModel.posts) {
-            Text($0.title)
+        List(self.viewModel.posts) { [viewModel = self.viewModel] post in
+            NavigationLink(post.title, destination: PostView(viewModel: viewModel.createPostViewModel(post: post)))
         }
     }
 }

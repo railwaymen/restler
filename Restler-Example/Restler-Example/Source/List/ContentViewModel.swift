@@ -21,8 +21,14 @@ class ContentViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Initialization
     init() {
         self.fetchData()
+    }
+    
+    // MARK: - Internal
+    func createPostViewModel(post: BlogPost) -> PostViewModel {
+        return PostViewModel(post: post)
     }
     
     // MARK: - Private

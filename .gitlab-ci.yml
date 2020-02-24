@@ -13,6 +13,16 @@ variables:
   - bundle config set path 'vendor/bundle'
   - bundle install
 
+.setup_example_app: &setup_example_app
+  - export
+  - rvm --create use ruby-2.6.3@restler
+  - gem install bundler:2.1.4
+  - bundle config set path 'vendor/bundle'
+  - bundle install
+  - cd Restler-Example
+  - bundle exec pod install || bundle exec pod install --repo-update
+  - envsubst < Restler-Example/Configuration/env_debug.xcconfig.tpl > Restler-Example/Configuration/Debug.xcconfig
+
 prepare_project:
   stage: prepare
   script:
@@ -33,6 +43,18 @@ test_project:
   dependencies:
     - prepare_project
   coverage: '/Restler\.framework\D*\|\D*([\d\.]*)\%/'
+
+build_example_app:
+  stage: build
+  before_script:
+    *setup_example_app
+  script:
+    - xcodebuild clean
+    - xcodebuild build -scheme Restler-Example -workspace Restler-Example.xcworkspace
+  tags:
+    - ios
+  dependencies:
+    - prepare_project
 
 lint_podspec:
   stage: build
