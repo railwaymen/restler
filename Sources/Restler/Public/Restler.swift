@@ -56,7 +56,7 @@ extension Restler {
         switch result {
         case let .success(data):
             do {
-                let object: T = try self.decodeObject(data: data)
+                let object = try JSONDecoder().decode(T.self, from: data)
                 completion(.success(object))
             } catch {
                 completion(.failure(Error.invalidResponse))
@@ -64,9 +64,5 @@ extension Restler {
         case let .failure(error):
             completion(.failure(error))
         }
-    }
-    
-    private func decodeObject<T>(data: Data) throws -> T where T: Decodable {
-        return try JSONDecoder().decode(T.self, from: data)
     }
 }

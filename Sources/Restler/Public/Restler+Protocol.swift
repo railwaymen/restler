@@ -1,6 +1,7 @@
 import Foundation
 
-public typealias DecodableCompletion<T: Decodable> = (Result<T, Error>) -> Void
+public typealias DecodableResult<T: Decodable> = Result<T, Error>
+public typealias DecodableCompletion<T: Decodable> = (DecodableResult<T>) -> Void
 
 public protocol Restlerable: class {
     func get<T>(url: URL, query: [String: String?], completion: @escaping DecodableCompletion<T>) where T: Decodable
