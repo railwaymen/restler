@@ -1,12 +1,13 @@
 import Foundation
 
+public typealias HeaderParameters = [String: String]
 public typealias DecodableResult<T: Decodable> = Result<T, Error>
 public typealias DecodableCompletion<T: Decodable> = (DecodableResult<T>) -> Void
 
 public protocol Restlerable: class {
     func get<T>(url: URL, query: [String: String?], completion: @escaping DecodableCompletion<T>) where T: Decodable
     
-    func setHeader(_ header: [String: String])
+    func setHeader(_ header: HeaderParameters)
     func setHeader(value: String?, forKey key: String)
     func removeHeaderValue(forKey key: String)
 }

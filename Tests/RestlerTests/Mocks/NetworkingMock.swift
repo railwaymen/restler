@@ -7,7 +7,7 @@ class NetworkingMock {
     var headerReturnValue: [String: String] = [:]
     private(set) var headerSetParams: [HeaderSetParams] = []
     struct HeaderSetParams {
-        let value: [String: String]
+        let value: HeaderParameters
     }
     
     private(set) var makeRequestParams: [MakeRequestParams] = []
@@ -20,7 +20,7 @@ class NetworkingMock {
 
 // MARK: - NetworkingType
 extension NetworkingMock: NetworkingType {
-    var header: [String : String] {
+    var header: HeaderParameters {
         get {
             self.headerReturnValue
         }

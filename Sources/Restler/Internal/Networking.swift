@@ -4,14 +4,14 @@ typealias DataResult = Result<Data, Error>
 typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType: class {
-    var header: [String: String] { get set }
+    var header: HeaderParameters { get set }
     func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion)
 }
 
 class Networking {
     private let session: URLSessionType
     
-    var header: [String: String] = [:]
+    var header: HeaderParameters = [:]
     
     // MARK: - Initialization
     init(session: URLSessionType = URLSession.shared) {

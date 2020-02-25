@@ -29,7 +29,7 @@ extension Restler: Restlerable {
         }
     }
     
-    public func setHeader(_ header: [String: String]) {
+    public func setHeader(_ header: HeaderParameters) {
         self.networking.header = header
     }
     
