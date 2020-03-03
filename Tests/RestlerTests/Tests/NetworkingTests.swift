@@ -51,6 +51,7 @@ extension NetworkingTests {
         }
         //Assert
         XCTAssertEqual(self.session.dataTaskParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.session.dataTaskParams.last?.request.url).query)
         XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.absoluteString.starts(with: "https://www.example.com")))
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "POST")
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpBody, content)
@@ -73,9 +74,32 @@ extension NetworkingTests {
         }
         //Assert
         XCTAssertEqual(self.session.dataTaskParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.session.dataTaskParams.last?.request.url).query)
         XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.absoluteString.starts(with: "https://www.example.com")))
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "PUT")
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpBody, content)
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
+        XCTAssertNil(completionResult)
+        XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)
+    }
+    
+    func testMakeRequest_delete_makesProperRequest() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let header = ["key1": "value1", "key2": "value2"]
+        sut.header = Restler.Header(raw: header)
+        var completionResult: Result<Data, Error>?
+        //Act
+        sut.makeRequest(url: url, method: .delete) { result in
+            completionResult = result
+        }
+        //Assert
+        XCTAssertEqual(self.session.dataTaskParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.session.dataTaskParams.last?.request.url).query)
+        XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.absoluteString.starts(with: "https://www.example.com")))
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "DELETE")
+        XCTAssertNil(self.session.dataTaskParams.last?.request.httpBody)
         XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
         XCTAssertNil(completionResult)
         XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)

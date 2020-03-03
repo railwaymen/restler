@@ -104,6 +104,27 @@ extension Restler {
             method: .put(content: data),
             completion: self.getCompletion(with: completion))
     }
+    
+    public func delete<D>(
+        url: URL,
+        expectedType: D.Type = D.self,
+        completion: @escaping DecodableCompletion<D>
+    ) where D: Decodable {
+        self.networking.makeRequest(
+            url: url,
+            method: .delete,
+            completion: self.getCompletion(with: completion))
+    }
+    
+    public func delete(
+        url: URL,
+        completion: @escaping VoidCompletion
+    ) {
+        self.networking.makeRequest(
+            url: url,
+            method: .delete,
+            completion: self.getCompletion(with: completion))
+    }
 }
 
 // MARK: - Private

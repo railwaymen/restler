@@ -25,6 +25,13 @@ extension HTTPMethodTests {
         //Assert
         XCTAssertEqual(sut.name, "PUT")
     }
+    
+    func testName_delete() {
+        //Arrange
+        let sut: HTTPMethod = .delete
+        //Assert
+        XCTAssertEqual(sut.name, "DELETE")
+    }
 }
 
 // MARK: - query
@@ -49,6 +56,13 @@ extension HTTPMethodTests {
         //Arrange
         let content = ["key": "value", "nil": nil, "some": "another"]
         let sut: HTTPMethod = .put(content: try JSONEncoder().encode(content))
+        //Assert
+        XCTAssertNil(sut.query)
+    }
+    
+    func testQuery_delete() throws {
+        //Arrange
+        let sut: HTTPMethod = .delete
         //Assert
         XCTAssertNil(sut.query)
     }
@@ -80,5 +94,12 @@ extension HTTPMethodTests {
         let sut: HTTPMethod = .put(content: data)
         //Assert
         XCTAssertEqual(sut.content, data)
+    }
+    
+    func testContent_delete() throws {
+        //Arrange
+        let sut: HTTPMethod = .delete
+        //Assert
+        XCTAssertNil(sut.content)
     }
 }
