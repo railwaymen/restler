@@ -13,7 +13,7 @@ struct PostView: View {
     
     var body: some View {
         List(self.viewModel.comments) { comment in
-            Text(comment.body)
+            NavigationLink(comment.body, destination: CommentView(viewModel: self.viewModel.createViewModel(for: comment)))
         }
         .onAppear {
             self.viewModel.viewAppears()

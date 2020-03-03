@@ -42,15 +42,37 @@ public class Restler {
 }
 
 // MARK: - Restlerable
-extension Restler: Restlerable {
-    public func get<D>(url: URL, query: [String: String?], completion: @escaping DecodableCompletion<D>) where D: Decodable {
+extension Restler {
+    public func get<D>(
+        url: URL,
+        query: [String: String?] = [:],
+        expectedType: D.Type = D.self,
+        completion: @escaping DecodableCompletion<D>
+    ) where D: Decodable {
         self.networking.makeRequest(
             url: url,
             method: .get(query: query),
             completion: self.getCompletion(with: completion))
     }
     
-    public func post<E, D>(url: URL, content: E, completion: @escaping DecodableCompletion<D>) throws where E: Encodable, D: Decodable {
+    public func post<E, D>(
+        url: URL,
+        content: E,
+        expectedType: D.Type = D.self,
+        completion: @escaping DecodableCompletion<D>
+    ) throws where E: Encodable, D: Decodable {
+        let data = try self.encoder.encode(content)
+        self.networking.makeRequest(
+            url: url,
+            method: .post(content: data),
+            completion: self.getCompletion(with: completion))
+    }
+    
+    public func post<E>(
+        url: URL,
+        content: E,
+        completion: @escaping VoidCompletion
+    ) throws where E: Encodable {
         let data = try self.encoder.encode(content)
         self.networking.makeRequest(
             url: url,
@@ -61,11 +83,30 @@ extension Restler: Restlerable {
 
 // MARK: - Private
 extension Restler {
-    private func getCompletion<D>(with completion: @escaping DecodableCompletion<D>) -> DataCompletion where D: Decodable {
+    private func getCompletion(with completion: @escaping VoidCompletion) -> DataCompletion {
         let mainThreadCompletion = self.mainThreadClosure(of: completion)
-        return { [weak self] result in
-            guard let self = self else { return mainThreadCompletion(.failure(Error.classDeinitialized)) }
-            self.handleResponse(result: result, completion: mainThreadCompletion)
+        return { result in
+            switch result {
+            case .success:
+                mainThreadCompletion(.success(Void()))
+            case let .failure(error):
+                mainThreadCompletion(.failure(error))
+            }
+        }
+    }
+    
+    private func getCompletion<D>(with completion: @escaping DecodableCompletion<D>) -> DataCompletion where D: Decodable {
+        let responseHandler = self.responseHandlerClosure(completion: self.mainThreadClosure(of: completion))
+        return { result in
+            responseHandler(result)
+        }
+    }
+    
+    private func mainThreadClosure(of closure: @escaping VoidCompletion) -> VoidCompletion {
+        return { [dispatchQueueManager] result in
+            dispatchQueueManager.perform(on: .main, .async) {
+                closure(result)
+            }
         }
     }
     
@@ -77,17 +118,19 @@ extension Restler {
         }
     }
     
-    private func handleResponse<D>(result: DataResult, completion: DecodableCompletion<D>) where D: Decodable {
-        switch result {
-        case let .success(data):
-            do {
-                let object = try self.decoder.decode(D.self, from: data)
-                completion(.success(object))
-            } catch {
-                completion(.failure(Error.invalidResponse))
+    private func responseHandlerClosure<D>(completion: @escaping DecodableCompletion<D>) -> (DataResult) -> Void where D: Decodable {
+        return { [decoder] result in
+            switch result {
+            case let .success(data):
+                do {
+                    let object = try decoder.decode(D.self, from: data)
+                    completion(.success(object))
+                } catch {
+                    completion(.failure(Error.invalidResponse))
+                }
+            case let .failure(error):
+                completion(.failure(error))
             }
-        case let .failure(error):
-            completion(.failure(error))
         }
     }
 }

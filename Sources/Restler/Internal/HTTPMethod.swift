@@ -20,8 +20,8 @@ enum HTTPMethod: Equatable {
     
     var content: Data? {
         switch self {
-        case let .post(content): return content
         case .get: return nil
+        case let .post(content): return content
         }
     }
 }

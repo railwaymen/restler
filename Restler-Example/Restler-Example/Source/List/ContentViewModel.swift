@@ -11,7 +11,7 @@ import Combine
 import Restler
 
 class ContentViewModel: ObservableObject {
-    private let restler: Restlerable = Restler()
+    private let restler = Restler(encoder: JSONEncoder(), decoder: JSONDecoder())
     
     let objectWillChange = PassthroughSubject<Void, Never>()
     
