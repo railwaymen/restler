@@ -28,6 +28,18 @@ extension Restler: Restlerable {
             self.handleResponse(result: result, completion: mainThreadCompletion)
         }
     }
+    
+    public func setHeader(_ header: HeaderParameters) {
+        self.networking.header = header
+    }
+    
+    public func setHeader(value: String?, forKey key: String) {
+        self.networking.header[key] = value
+    }
+    
+    public func removeHeaderValue(forKey key: String) {
+        self.networking.header.removeValue(forKey: key)
+    }
 }
 
 // MARK: - Private
@@ -44,7 +56,7 @@ extension Restler {
         switch result {
         case let .success(data):
             do {
-                let object: T = try self.decodeObject(data: data)
+                let object = try JSONDecoder().decode(T.self, from: data)
                 completion(.success(object))
             } catch {
                 completion(.failure(Error.invalidResponse))
@@ -52,9 +64,5 @@ extension Restler {
         case let .failure(error):
             completion(.failure(error))
         }
-    }
-    
-    private func decodeObject<T>(data: Data) throws -> T where T: Decodable {
-        return try JSONDecoder().decode(T.self, from: data)
     }
 }

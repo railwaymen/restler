@@ -18,6 +18,8 @@ extension NetworkingTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let queryParameters = ["some": "key", "another": "key1"]
+        let header = ["key1": "value1", "key2": "value2"]
+        sut.header = header
         var completionResult: Result<Data, Error>?
         //Act
         sut.makeRequest(url: url, method: .get(query: queryParameters)) { result in
@@ -28,6 +30,8 @@ extension NetworkingTests {
         XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.query?.contains("some=key")))
         XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.query?.contains("another=key1")))
         XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.absoluteString.starts(with: "https://www.example.com")))
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "GET")
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
         XCTAssertNil(completionResult)
         XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)
     }

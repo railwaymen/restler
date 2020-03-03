@@ -112,6 +112,77 @@ extension RestlerTests {
     }
 }
 
+// MARK: - setHeader(_:)
+extension RestlerTests {
+    func testSetHeader_replaceAllValues() {
+        //Arrange
+        let sut = self.buildSUT()
+        let newHeader = ["second": "value2"]
+        self.networking.headerReturnValue = ["first": "value1"]
+        //Act
+        sut.setHeader(newHeader)
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value, newHeader)
+    }
+}
+
+// MARK: - setHeader(value:forKey:)
+extension RestlerTests {
+    func testSetHeaderValue_newKey() {
+        //Arrange
+        let sut = self.buildSUT()
+        self.networking.headerReturnValue = ["first": "value1"]
+        //Act
+        sut.setHeader(value: "value2", forKey: "second")
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value, ["first": "value1", "second": "value2"])
+    }
+    
+    func testSetHeaderValue_existingKey() {
+        //Arrange
+        let sut = self.buildSUT()
+        self.networking.headerReturnValue = ["first": "value1"]
+        //Act
+        sut.setHeader(value: "value2", forKey: "first")
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value, ["first": "value2"])
+    }
+    
+    func testSetHeaderValue_nilValue() {
+        //Arrange
+        let sut = self.buildSUT()
+        self.networking.headerReturnValue = ["first": "value1"]
+        //Act
+        sut.setHeader(value: nil, forKey: "first")
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value, [:])
+    }
+}
+
+// MARK: - removeHeaderValue(forKey:)
+extension RestlerTests {
+    func testRemoveHeaderValue_existingKey() {
+        //Arrange
+        let sut = self.buildSUT()
+        self.networking.headerReturnValue = ["first": "value1"]
+        //Act
+        sut.removeHeaderValue(forKey: "first")
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value, [:])
+    }
+    
+    func testRemoveHeaderValue_newKey() {
+        //Arrange
+        let sut = self.buildSUT()
+        let oldHeader = ["first": "value1"]
+        self.networking.headerReturnValue = oldHeader
+        //Act
+        sut.removeHeaderValue(forKey: "second")
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value, oldHeader)
+    }
+}
+
 // MARK: - Private
 extension RestlerTests {
     private func buildSUT() -> Restler {
