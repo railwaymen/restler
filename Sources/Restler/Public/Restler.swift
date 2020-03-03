@@ -64,7 +64,7 @@ extension Restler {
     private func getCompletion<D>(with completion: @escaping DecodableCompletion<D>) -> DataCompletion where D: Decodable {
         let mainThreadCompletion = self.mainThreadClosure(of: completion)
         return { [weak self] result in
-            guard let self = self else { return mainThreadCompletion(.failure(Error.internalFrameworkError)) }
+            guard let self = self else { return mainThreadCompletion(.failure(Error.classDeinitialized)) }
             self.handleResponse(result: result, completion: mainThreadCompletion)
         }
     }

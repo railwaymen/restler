@@ -2,6 +2,7 @@ import Foundation
 
 extension Restler {
     public enum Error: Swift.Error {
+        case classDeinitialized
         case forbiden
         case internalFrameworkError
         case invalidParameters

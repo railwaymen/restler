@@ -4,28 +4,30 @@ import Foundation
 extension Restler.Error: UniqueValuedEnumerator {
     var uniqueValue: Int {
         switch self {
-        case .forbiden:
+        case .classDeinitialized:
             return 0
-        case .internalFrameworkError:
+        case .forbiden:
             return 1
-        case .invalidParameters:
+        case .internalFrameworkError:
             return 2
-        case .invalidResponse:
+        case .invalidParameters:
             return 3
-        case .noInternetConnection:
+        case .invalidResponse:
             return 4
-        case .notFound:
+        case .noInternetConnection:
             return 5
-        case .serverError:
+        case .notFound:
             return 6
-        case .timeout:
+        case .serverError:
             return 7
-        case .unauthorized:
+        case .timeout:
             return 8
-        case .unknownError:
+        case .unauthorized:
             return 9
-        case .validationError:
+        case .unknownError:
             return 10
+        case .validationError:
+            return 11
         }
     }
 }
