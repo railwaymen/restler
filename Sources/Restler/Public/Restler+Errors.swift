@@ -15,7 +15,7 @@ extension Restler {
         case validationError
         
         // MARK: - Initialization
-        init(statusCode: Int) {
+        init?(statusCode: Int) {
             switch statusCode {
             case 15: self = .noInternetConnection
             case 23: self = .timeout
@@ -29,7 +29,7 @@ extension Restler {
             case NSURLErrorNetworkConnectionLost: self = .noInternetConnection
             case NSURLErrorTimedOut: self = .timeout
             case NSURLErrorUnknown: self = .unknownError
-            default: self = .unknownError
+            default: return nil
             }
         }
     }

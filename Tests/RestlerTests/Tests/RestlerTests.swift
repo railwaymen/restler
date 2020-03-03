@@ -184,6 +184,8 @@ extension RestlerTests {
     private func buildSUT() -> Restler {
         return Restler(
             networking: self.networking,
-            dispatchQueueManager: self.dispatchQueueManager)
+            dispatchQueueManager: self.dispatchQueueManager,
+            encoder: JSONEncoder(),
+            decoder: JSONDecoder())
     }
 }

@@ -34,8 +34,9 @@ extension Networking {
         urlComponents.queryItems = httpMethod.query?.map { URLQueryItem(name: $0.key, value: $0.value) }
         guard let url = urlComponents.url else { return nil }
         var request = URLRequest(url: url)
-        request.httpMethod = httpMethod.name
         request.allHTTPHeaderFields = self.header.raw
+        request.httpMethod = httpMethod.name
+        request.httpBody = httpMethod.content
         return request
     }
     
@@ -55,7 +56,8 @@ extension Networking {
     }
     
     private func handle(result: HTTPRequestResponse) -> Error {
-        guard let statusCode = result.response?.statusCode else { return Restler.Error.noInternetConnection }
-        return Restler.Error(statusCode: statusCode)
+        let defaultReturnedError = result.error ?? Restler.Error.unknownError
+        guard let statusCode = result.response?.statusCode else { return defaultReturnedError }
+        return Restler.Error(statusCode: statusCode) ?? defaultReturnedError
     }
 }
