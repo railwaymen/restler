@@ -13,7 +13,7 @@ class NetworkingTests: XCTestCase {
 
 // MARK: - makeRequest(url:method:completion:)
 extension NetworkingTests {
-    func testMakeRequest_makesProperRequest() throws {
+    func testMakeRequest_get_makesProperRequest() throws {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
@@ -31,6 +31,29 @@ extension NetworkingTests {
         XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.query?.contains("another=key1")))
         XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.absoluteString.starts(with: "https://www.example.com")))
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "GET")
+        XCTAssertNil(self.session.dataTaskParams.last?.request.httpBody)
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
+        XCTAssertNil(completionResult)
+        XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)
+    }
+    
+    func testMakeRequest_post_makesProperRequest() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = Data()
+        let header = ["key1": "value1", "key2": "value2"]
+        sut.header = Restler.Header(raw: header)
+        var completionResult: Result<Data, Error>?
+        //Act
+        sut.makeRequest(url: url, method: .post(content: content)) { result in
+            completionResult = result
+        }
+        //Assert
+        XCTAssertEqual(self.session.dataTaskParams.count, 1)
+        XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.absoluteString.starts(with: "https://www.example.com")))
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "POST")
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.httpBody, content)
         XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
         XCTAssertNil(completionResult)
         XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)
@@ -65,7 +88,7 @@ extension NetworkingTests {
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: responseData, response: nil, error: nil))
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.noInternetConnection)
+        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.unknownError)
     }
     
     func testMakeRequest_notFoundResponse() throws {
@@ -92,6 +115,7 @@ extension NetworkingTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let mockResponse = HTTPURLResponseMock()
         mockResponse.isSuccessfulReturnValue = true
+        mockResponse.statusCodeReturnValue = 401
         let responseData = Data()
         var completionResult: Result<Data, Error>?
         //Act
@@ -100,7 +124,7 @@ extension NetworkingTests {
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: responseData, response: mockResponse, error: TestError()))
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.unknownError)
+        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.unauthorized)
     }
     
     func testMakeRequest_noDataInResponse() throws {
@@ -117,6 +141,23 @@ extension NetworkingTests {
         try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: nil, response: mockResponse, error: nil))
         //Assert
         AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.unknownError)
+    }
+    
+    func testMakeRequest_error() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let returnedError = TestError()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let mockResponse = HTTPURLResponseMock()
+        mockResponse.isSuccessfulReturnValue = false
+        var completionResult: Result<Data, Error>?
+        //Act
+        sut.makeRequest(url: url, method: .get(query: [:])) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: nil, response: mockResponse, error: returnedError))
+        //Assert
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: returnedError)
     }
 }
 

@@ -11,6 +11,13 @@ extension HTTPMethodTests {
         //Assert
         XCTAssertEqual(sut.name, "GET")
     }
+    
+    func testName_post() {
+        //Arrange
+        let sut: HTTPMethod = .post(content: nil)
+        //Assert
+        XCTAssertEqual(sut.name, "POST")
+    }
 }
 
 // MARK: - query
@@ -21,5 +28,33 @@ extension HTTPMethodTests {
         let sut: HTTPMethod = .get(query: queryParameters)
         //Assert
         XCTAssertEqual(sut.query, queryParameters)
+    }
+    
+    func testQuery_post() throws {
+        //Arrange
+        let content = ["key": "value", "nil": nil, "some": "another"]
+        let sut: HTTPMethod = .post(content: try JSONEncoder().encode(content))
+        //Assert
+        XCTAssertNil(sut.query)
+    }
+}
+
+// MARK: - content
+extension HTTPMethodTests {
+    func testContent_get() {
+        //Arrange
+        let queryParameters = ["key": "value", "nil": nil, "some": "another"]
+        let sut: HTTPMethod = .get(query: queryParameters)
+        //Assert
+        XCTAssertNil(sut.content)
+    }
+    
+    func testContent_post() throws {
+        //Arrange
+        let content = ["key": "value", "nil": nil, "some": "another"]
+        let data = try JSONEncoder().encode(content)
+        let sut: HTTPMethod = .post(content: data)
+        //Assert
+        XCTAssertEqual(sut.content, data)
     }
 }

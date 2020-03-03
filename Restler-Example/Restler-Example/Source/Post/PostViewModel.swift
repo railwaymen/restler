@@ -11,7 +11,7 @@ import Combine
 import Restler
 
 class PostViewModel: ObservableObject {
-    private let restler: Restlerable = Restler()
+    private let restler = Restler(encoder: JSONEncoder(), decoder: JSONDecoder())
     
     let objectWillChange = PassthroughSubject<Void, Never>()
     let post: BlogPost
@@ -32,10 +32,14 @@ class PostViewModel: ObservableObject {
         self.fetchComments()
     }
     
+    func createViewModel(for comment: PostComment) -> CommentViewModel {
+        return CommentViewModel(comment: comment)
+    }
+    
     // MARK: - Private
     private func fetchComments() {
         guard let url = URL(string: "https://jsonplaceholder.typicode.com/comments") else { return assertionFailure() }
-        self.restler.get(url: url, query: ["postId": "\(self.post.id)"]) { (result: Result<[PostComment], Error>) in
+        self.restler.get(url: url, query: ["postId": "\(self.post.id)"], expectedType: [PostComment].self) { result in
             switch result {
             case let .success(comments):
                 self.comments = comments
