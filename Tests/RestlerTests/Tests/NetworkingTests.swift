@@ -59,6 +59,28 @@ extension NetworkingTests {
         XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)
     }
     
+    func testMakeRequest_put_makesProperRequest() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = Data()
+        let header = ["key1": "value1", "key2": "value2"]
+        sut.header = Restler.Header(raw: header)
+        var completionResult: Result<Data, Error>?
+        //Act
+        sut.makeRequest(url: url, method: .put(content: content)) { result in
+            completionResult = result
+        }
+        //Assert
+        XCTAssertEqual(self.session.dataTaskParams.count, 1)
+        XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.absoluteString.starts(with: "https://www.example.com")))
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "PUT")
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.httpBody, content)
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
+        XCTAssertNil(completionResult)
+        XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)
+    }
+    
     func testMakeRequest_successfulResponse() throws {
         //Arrange
         let sut = self.buildSUT()

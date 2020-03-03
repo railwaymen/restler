@@ -31,12 +31,32 @@ class CommentViewModel: ObservableObject {
         }
     }
     
+    func update() {
+        guard let url = URL(string: "https://jsonplaceholder.typicode.com/comments/1") else { return assertionFailure() }
+        do {
+            try self.put(url: url)
+        } catch {
+            assertionFailure(error.localizedDescription)
+        }
+    }
+    
     // MARK: - Private
     private func post(url: URL) throws {
         try self.restler.post(url: url, content: self.comment) { result in
             switch result {
             case .success:
                 print("Comment posted")
+            case let .failure(error):
+                print(error)
+            }
+        }
+    }
+    
+    private func put(url: URL) throws {
+        try self.restler.put(url: url, content: self.comment) { result in
+            switch result {
+            case .success:
+                print("Comment updated")
             case let .failure(error):
                 print(error)
             }

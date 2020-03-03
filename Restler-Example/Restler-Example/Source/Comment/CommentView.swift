@@ -12,11 +12,16 @@ struct CommentView: View {
     @ObservedObject var viewModel: CommentViewModel
     
     var body: some View {
-        VStack {
+        VStack(spacing: 16) {
             Button(
                 action: self.viewModel.create,
                 label: {
-                    Text("Post")
+                    Text("POST")
+            })
+            Button(
+                action: self.viewModel.update,
+                label: {
+                    Text("PUT")
             })
         }
     }

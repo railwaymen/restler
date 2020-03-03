@@ -79,6 +79,31 @@ extension Restler {
             method: .post(content: data),
             completion: self.getCompletion(with: completion))
     }
+    
+    public func put<E, D>(
+        url: URL,
+        content: E,
+        expectedType: D.Type = D.self,
+        completion: @escaping DecodableCompletion<D>
+    ) throws where E: Encodable, D: Decodable {
+        let data = try self.encoder.encode(content)
+        self.networking.makeRequest(
+            url: url,
+            method: .put(content: data),
+            completion: self.getCompletion(with: completion))
+    }
+    
+    public func put<E>(
+        url: URL,
+        content: E,
+        completion: @escaping VoidCompletion
+    ) throws where E: Encodable {
+        let data = try self.encoder.encode(content)
+        self.networking.makeRequest(
+            url: url,
+            method: .put(content: data),
+            completion: self.getCompletion(with: completion))
+    }
 }
 
 // MARK: - Private
