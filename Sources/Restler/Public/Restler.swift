@@ -167,7 +167,11 @@ extension Restler {
     private func responseHandlerClosure<D>(completion: @escaping DecodableCompletion<D>) -> (DataResult) -> Void where D: Decodable {
         return { [decoder] result in
             switch result {
-            case let .success(data):
+            case let .success(optionalData):
+                guard let data = optionalData else {
+                    completion(.failure(Error.invalidResponse))
+                    return
+                }
                 do {
                     let object = try decoder.decode(D.self, from: data)
                     completion(.success(object))
