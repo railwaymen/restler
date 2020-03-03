@@ -1,9 +1,7 @@
 import XCTest
 @testable import Restler
 
-class HeaderTests: XCTestCase {
-    
-}
+class HeaderTests: XCTestCase {}
 
 // MARK: - init(_:)
 extension HeaderTests {
