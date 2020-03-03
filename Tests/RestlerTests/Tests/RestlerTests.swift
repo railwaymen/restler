@@ -140,6 +140,25 @@ extension RestlerTests {
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
     
+    func testGet_noResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: Result<SomeObject, Error>?
+        //Act
+        sut.get(url: url, query: [:]) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+    }
+    
     func testGet_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -177,6 +196,105 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), SomeObject(id: 1, name: "Object"))
+    }
+}
+
+// MARK: - get(url:query:completion:)
+extension RestlerTests {
+    func testGetIgnoringResponse_makesProperRequest() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let queryParameters = ["some": "value"]
+        var completionResult: VoidResult?
+        //Act
+        sut.get(url: url, query: queryParameters) { result in
+            completionResult = result
+        }
+        //Assert
+        XCTAssertNil(completionResult)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
+        XCTAssertEqual(self.networking.makeRequestParams.first?.method, .get(query: queryParameters))
+    }
+    
+    func testGetIgnoringResponse_selfDeinitialized() throws {
+        //Arrange
+        var sut: Restler? = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let error = TestError()
+        var completionResult: VoidResult?
+        //Act
+        try XCTUnwrap(sut).get(url: url, query: [:]) { result in
+            completionResult = result
+        }
+        sut = nil
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
+    }
+    
+    func testGetIgnoringResponse_failure() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let error = TestError()
+        var completionResult: VoidResult?
+        //Act
+        sut.get(url: url, query: [:]) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
+    }
+    
+    func testGetIgnoringResponse_noResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: VoidResult?
+        //Act
+        sut.get(url: url, query: [:]) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testGetIgnoringResponse_success() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: VoidResult?
+        //Act
+        sut.get(url: url, query: [:]) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
     }
 }
 
@@ -261,6 +379,26 @@ extension RestlerTests {
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
     
+    func testPost_noResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        var completionResult: Result<SomeObject, Error>?
+        //Act
+        try sut.post(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+    }
+    
     func testPost_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -311,7 +449,7 @@ extension RestlerTests {
         let sut = self.buildSUT(encoder: encoderMock)
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         XCTAssertThrowsError(
             try sut.post(url: url, content: content) { result in
@@ -329,7 +467,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -347,7 +485,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         try XCTUnwrap(sut).post(url: url, content: content) { result in
             completionResult = result
@@ -369,7 +507,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -384,12 +522,32 @@ extension RestlerTests {
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
     
-    func testPostIgnoringResponse_invalidResponse() throws {
+    func testPostIgnoringResponse_noResponse() throws {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
+        //Act
+        try sut.post(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testPostIgnoringResponse_emptyResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        var completionResult: VoidResult?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -410,7 +568,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -507,6 +665,26 @@ extension RestlerTests {
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
     
+    func testPut_noResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        var completionResult: Result<SomeObject, Error>?
+        //Act
+        try sut.put(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+    }
+    
     func testPut_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -557,7 +735,7 @@ extension RestlerTests {
         let sut = self.buildSUT(encoder: encoderMock)
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         XCTAssertThrowsError(
             try sut.put(url: url, content: content) { result in
@@ -575,7 +753,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -593,7 +771,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         try XCTUnwrap(sut).put(url: url, content: content) { result in
             completionResult = result
@@ -615,7 +793,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -630,12 +808,32 @@ extension RestlerTests {
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
     
-    func testPutIgnoringResponse_invalidResponse() throws {
+    func testPutIgnoringResponse_noResponse() throws {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
+        //Act
+        try sut.put(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testPutIgnoringResponse_emptyResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        var completionResult: VoidResult?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -656,7 +854,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -731,6 +929,25 @@ extension RestlerTests {
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
     
+    func testDelete_noResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: Result<SomeObject, Error>?
+        //Act
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+    }
+    
     func testDelete_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -777,7 +994,7 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -794,7 +1011,7 @@ extension RestlerTests {
         var sut: Restler? = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         try XCTUnwrap(sut).delete(url: url) { result in
             completionResult = result
@@ -815,7 +1032,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -830,11 +1047,30 @@ extension RestlerTests {
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
     
-    func testDeleteIgnoringResponse_invalidResponse() throws {
+    func testDeleteIgnoringResponse_noResponse() throws {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: VoidResult?
+        //Act
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testDeleteIgnoringResponse_emptyResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: VoidResult?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -846,7 +1082,7 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
     }
     
     func testDeleteIgnoringResponse_decodesObject() throws {
@@ -854,7 +1090,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
-        var completionResult: Result<Void, Error>?
+        var completionResult: VoidResult?
         //Act
         sut.delete(url: url) { result in
             completionResult = result

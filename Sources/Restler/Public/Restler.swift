@@ -55,6 +55,17 @@ extension Restler {
             completion: self.getCompletion(with: completion))
     }
     
+    public func get(
+        url: URL,
+        query: [String: String?] = [:],
+        completion: @escaping VoidCompletion
+    ) {
+        self.networking.makeRequest(
+            url: url,
+            method: .get(query: query),
+            completion: self.getCompletion(with: completion))
+    }
+    
     public func post<E, D>(
         url: URL,
         content: E,
