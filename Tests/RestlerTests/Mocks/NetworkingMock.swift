@@ -4,10 +4,10 @@ import Foundation
 class NetworkingMock {
     
     // MARK: - NetworkingType
-    var headerReturnValue: [String: String] = [:]
+    var headerReturnValue: Restler.Header = .init()
     private(set) var headerSetParams: [HeaderSetParams] = []
     struct HeaderSetParams {
-        let value: HeaderParameters
+        let value: Restler.Header
     }
     
     private(set) var makeRequestParams: [MakeRequestParams] = []
@@ -20,7 +20,7 @@ class NetworkingMock {
 
 // MARK: - NetworkingType
 extension NetworkingMock: NetworkingType {
-    var header: HeaderParameters {
+    var header: Restler.Header {
         get {
             self.headerReturnValue
         }

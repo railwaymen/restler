@@ -4,14 +4,14 @@ typealias DataResult = Result<Data, Error>
 typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType: class {
-    var header: HeaderParameters { get set }
+    var header: Restler.Header { get set }
     func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion)
 }
 
 class Networking {
     private let session: URLSessionType
     
-    var header: HeaderParameters = [:]
+    var header: Restler.Header = .init()
     
     // MARK: - Initialization
     init(session: URLSessionType = URLSession.shared) {
@@ -35,7 +35,7 @@ extension Networking {
         guard let url = urlComponents.url else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod.name
-        request.allHTTPHeaderFields = self.header
+        request.allHTTPHeaderFields = self.header.raw
         return request
     }
     

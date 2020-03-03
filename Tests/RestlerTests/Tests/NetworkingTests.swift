@@ -19,7 +19,7 @@ extension NetworkingTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let queryParameters = ["some": "key", "another": "key1"]
         let header = ["key1": "value1", "key2": "value2"]
-        sut.header = header
+        sut.header = Restler.Header(raw: header)
         var completionResult: Result<Data, Error>?
         //Act
         sut.makeRequest(url: url, method: .get(query: queryParameters)) { result in

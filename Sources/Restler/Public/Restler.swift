@@ -4,6 +4,15 @@ public class Restler {
     private let networking: NetworkingType
     private let dispatchQueueManager: DispatchQueueManagerType
     
+    public var header: Restler.Header {
+        get {
+            return self.networking.header
+        }
+        set {
+            self.networking.header = newValue
+        }
+    }
+    
     // MARK: - Initialization
     public init() {
         self.networking = Networking()
@@ -27,18 +36,6 @@ extension Restler: Restlerable {
             guard let self = self else { return mainThreadCompletion(.failure(Error.internalFrameworkError)) }
             self.handleResponse(result: result, completion: mainThreadCompletion)
         }
-    }
-    
-    public func setHeader(_ header: HeaderParameters) {
-        self.networking.header = header
-    }
-    
-    public func setHeader(value: String?, forKey key: String) {
-        self.networking.header[key] = value
-    }
-    
-    public func removeHeaderValue(forKey key: String) {
-        self.networking.header.removeValue(forKey: key)
     }
 }
 
