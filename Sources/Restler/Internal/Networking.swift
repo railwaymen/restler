@@ -57,7 +57,6 @@ extension Networking {
     
     private func handle(result: HTTPRequestResponse) -> Error {
         let defaultReturnedError = result.error ?? Restler.Error.unknownError
-        guard let statusCode = result.response?.statusCode else { return defaultReturnedError }
-        return Restler.Error(statusCode: statusCode) ?? defaultReturnedError
+        return Restler.Error(result: result) ?? defaultReturnedError
     }
 }
