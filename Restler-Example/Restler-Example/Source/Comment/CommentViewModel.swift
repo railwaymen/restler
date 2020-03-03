@@ -40,6 +40,11 @@ class CommentViewModel: ObservableObject {
         }
     }
     
+    func delete() {
+        guard let url = URL(string: "https://jsonplaceholder.typicode.com/comments/\(self.comment.id)") else { return assertionFailure() }
+        self.delete(url: url)
+    }
+    
     // MARK: - Private
     private func post(url: URL) throws {
         try self.restler.post(url: url, content: self.comment) { result in
@@ -57,6 +62,17 @@ class CommentViewModel: ObservableObject {
             switch result {
             case .success:
                 print("Comment updated")
+            case let .failure(error):
+                print(error)
+            }
+        }
+    }
+    
+    private func delete(url: URL) {
+        self.restler.delete(url: url) { result in
+            switch result {
+            case .success:
+                print("Comment deleted")
             case let .failure(error):
                 print(error)
             }

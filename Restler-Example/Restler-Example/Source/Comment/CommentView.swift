@@ -23,6 +23,11 @@ struct CommentView: View {
                 label: {
                     Text("PUT")
             })
+            Button(
+                action: self.viewModel.delete,
+                label: {
+                    Text("DELETE")
+            })
         }
     }
 }
