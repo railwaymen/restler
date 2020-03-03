@@ -87,7 +87,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let queryParameters = ["some": "value"]
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         sut.get(url: url, query: queryParameters) { result in
             completionResult = result
@@ -104,7 +104,7 @@ extension RestlerTests {
         var sut: Restler? = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try XCTUnwrap(sut).get(url: url, query: [:]) { result in
             completionResult = result
@@ -125,7 +125,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         sut.get(url: url, query: [:]) { result in
             completionResult = result
@@ -144,7 +144,7 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         sut.get(url: url, query: [:]) { result in
             completionResult = result
@@ -163,7 +163,7 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         sut.get(url: url, query: [:]) { result in
             completionResult = result
@@ -183,7 +183,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         sut.get(url: url, query: [:]) { result in
             completionResult = result
@@ -206,7 +206,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let queryParameters = ["some": "value"]
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         sut.get(url: url, query: queryParameters) { result in
             completionResult = result
@@ -223,7 +223,7 @@ extension RestlerTests {
         var sut: Restler? = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try XCTUnwrap(sut).get(url: url, query: [:]) { result in
             completionResult = result
@@ -244,7 +244,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         sut.get(url: url, query: [:]) { result in
             completionResult = result
@@ -263,7 +263,7 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         sut.get(url: url, query: [:]) { result in
             completionResult = result
@@ -282,7 +282,7 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         sut.get(url: url, query: [:]) { result in
             completionResult = result
@@ -306,7 +306,7 @@ extension RestlerTests {
         let sut = self.buildSUT(encoder: encoderMock)
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         XCTAssertThrowsError(
             try sut.post(url: url, content: content) { result in
@@ -324,7 +324,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -342,7 +342,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try XCTUnwrap(sut).post(url: url, content: content) { result in
             completionResult = result
@@ -364,7 +364,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -384,7 +384,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -404,7 +404,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -425,7 +425,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -449,7 +449,7 @@ extension RestlerTests {
         let sut = self.buildSUT(encoder: encoderMock)
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         XCTAssertThrowsError(
             try sut.post(url: url, content: content) { result in
@@ -467,7 +467,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -485,7 +485,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try XCTUnwrap(sut).post(url: url, content: content) { result in
             completionResult = result
@@ -507,7 +507,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -527,7 +527,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -547,7 +547,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -568,7 +568,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -592,7 +592,7 @@ extension RestlerTests {
         let sut = self.buildSUT(encoder: encoderMock)
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         XCTAssertThrowsError(
             try sut.put(url: url, content: content) { result in
@@ -610,7 +610,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -628,7 +628,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try XCTUnwrap(sut).put(url: url, content: content) { result in
             completionResult = result
@@ -650,7 +650,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -670,7 +670,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -690,7 +690,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -711,7 +711,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -735,7 +735,7 @@ extension RestlerTests {
         let sut = self.buildSUT(encoder: encoderMock)
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         XCTAssertThrowsError(
             try sut.put(url: url, content: content) { result in
@@ -753,7 +753,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -771,7 +771,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try XCTUnwrap(sut).put(url: url, content: content) { result in
             completionResult = result
@@ -793,7 +793,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -813,7 +813,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -833,7 +833,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -854,7 +854,7 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try sut.put(url: url, content: content) { result in
             completionResult = result
@@ -876,7 +876,7 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -893,7 +893,7 @@ extension RestlerTests {
         var sut: Restler? = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         try XCTUnwrap(sut).delete(url: url) { result in
             completionResult = result
@@ -914,7 +914,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -933,7 +933,7 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -952,7 +952,7 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -972,7 +972,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
-        var completionResult: Result<SomeObject, Error>?
+        var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -994,7 +994,7 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -1011,7 +1011,7 @@ extension RestlerTests {
         var sut: Restler? = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         try XCTUnwrap(sut).delete(url: url) { result in
             completionResult = result
@@ -1032,7 +1032,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -1051,7 +1051,7 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -1070,7 +1070,7 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
@@ -1090,7 +1090,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
-        var completionResult: VoidResult?
+        var completionResult: Restler.VoidResult?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
