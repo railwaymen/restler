@@ -1,0 +1,8 @@
+scheme: Restler-Package
+xcodeproj: Restler.xcodeproj
+configuration: Debug
+output_directory: output/coverage
+source_directory: .
+build_directory: output/derivedData
+binary_basename: Restler
+coverage_service: terminal
