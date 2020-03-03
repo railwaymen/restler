@@ -13,6 +13,73 @@ final class RestlerTests: XCTestCase {
     }
 }
 
+// MARK: - header set
+extension RestlerTests {
+    func testSetHeader_replaceAllValues() {
+        //Arrange
+        let sut = self.buildSUT()
+        let newHeader = Restler.Header(raw: ["second": "value2"])
+        self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
+        //Act
+        sut.header = newHeader
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value, newHeader)
+    }
+    
+    func testSetHeaderValue_newKey() {
+        //Arrange
+        let sut = self.buildSUT()
+        self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
+        //Act
+        sut.header[.custom("second")] = "value2"
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, ["first": "value1", "second": "value2"])
+    }
+    
+    func testSetHeaderValue_existingKey() {
+        //Arrange
+        let sut = self.buildSUT()
+        self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
+        //Act
+        sut.header[.custom("first")] = "value2"
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, ["first": "value2"])
+    }
+    
+    func testSetHeaderValue_nilValue() {
+        //Arrange
+        let sut = self.buildSUT()
+        self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
+        //Act
+        sut.header[.custom("first")] = nil
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, [:])
+    }
+    
+    func testRemoveHeaderValue_existingKey() {
+        //Arrange
+        let sut = self.buildSUT()
+        self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
+        //Act
+        let isExisting = sut.header.removeValue(forKey: .custom("first"))
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, [:])
+        XCTAssertTrue(isExisting)
+    }
+    
+    func testRemoveHeaderValue_newKey() {
+        //Arrange
+        let sut = self.buildSUT()
+        let oldHeader = ["first": "value1"]
+        self.networking.headerReturnValue = Restler.Header(raw: oldHeader)
+        //Act
+        let isExisting = sut.header.removeValue(forKey: .custom("second"))
+        //Assert
+        XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, oldHeader)
+        XCTAssertFalse(isExisting)
+    }
+}
+
 // MARK: - get(url:query:expectedType:completion:)
 extension RestlerTests {
     func testGet_makesProperRequest() throws {
@@ -605,70 +672,201 @@ extension RestlerTests {
     }
 }
 
-// MARK: - header set
+// MARK: - delete(url:expectedType:completion:)
 extension RestlerTests {
-    func testSetHeader_replaceAllValues() {
+    func testDelete_makesProperRequest() throws {
         //Arrange
         let sut = self.buildSUT()
-        let newHeader = Restler.Header(raw: ["second": "value2"])
-        self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: Result<SomeObject, Error>?
         //Act
-        sut.header = newHeader
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
         //Assert
-        XCTAssertEqual(self.networking.headerSetParams.last?.value, newHeader)
+        XCTAssertNil(completionResult)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
+        XCTAssertEqual(self.networking.makeRequestParams.first?.method, .delete)
     }
     
-    func testSetHeaderValue_newKey() {
+    func testDelete_selfDeinitialized() throws {
         //Arrange
-        let sut = self.buildSUT()
-        self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
+        var sut: Restler? = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let error = TestError()
+        var completionResult: Result<SomeObject, Error>?
         //Act
-        sut.header[.custom("second")] = "value2"
+        try XCTUnwrap(sut).delete(url: url) { result in
+            completionResult = result
+        }
+        sut = nil
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
-        XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, ["first": "value1", "second": "value2"])
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
     
-    func testSetHeaderValue_existingKey() {
+    func testDelete_failure() throws {
         //Arrange
         let sut = self.buildSUT()
-        self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let error = TestError()
+        var completionResult: Result<SomeObject, Error>?
         //Act
-        sut.header[.custom("first")] = "value2"
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
-        XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, ["first": "value2"])
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
     
-    func testSetHeaderValue_nilValue() {
+    func testDelete_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
-        self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: Result<SomeObject, Error>?
         //Act
-        sut.header[.custom("first")] = nil
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
-        XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, [:])
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
     }
     
-    func testRemoveHeaderValue_existingKey() {
+    func testDelete_decodesObject() throws {
         //Arrange
         let sut = self.buildSUT()
-        self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        var completionResult: Result<SomeObject, Error>?
         //Act
-        let isExisting = sut.header.removeValue(forKey: .custom("first"))
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
-        XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, [:])
-        XCTAssertTrue(isExisting)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), SomeObject(id: 1, name: "Object"))
+    }
+}
+
+// MARK: - delete(url:expectedType:completion:)
+extension RestlerTests {
+    func testDeleteIgnoringResponse_makesProperRequest() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: Result<Void, Error>?
+        //Act
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        //Assert
+        XCTAssertNil(completionResult)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
+        XCTAssertEqual(self.networking.makeRequestParams.first?.method, .delete)
     }
     
-    func testRemoveHeaderValue_newKey() {
+    func testDeleteIgnoringResponse_selfDeinitialized() throws {
+        //Arrange
+        var sut: Restler? = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let error = TestError()
+        var completionResult: Result<Void, Error>?
+        //Act
+        try XCTUnwrap(sut).delete(url: url) { result in
+            completionResult = result
+        }
+        sut = nil
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
+    }
+    
+    func testDeleteIgnoringResponse_failure() throws {
         //Arrange
         let sut = self.buildSUT()
-        let oldHeader = ["first": "value1"]
-        self.networking.headerReturnValue = Restler.Header(raw: oldHeader)
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let error = TestError()
+        var completionResult: Result<Void, Error>?
         //Act
-        let isExisting = sut.header.removeValue(forKey: .custom("second"))
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
-        XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, oldHeader)
-        XCTAssertFalse(isExisting)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
+    }
+    
+    func testDeleteIgnoringResponse_invalidResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: Result<SomeObject, Error>?
+        //Act
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+    }
+    
+    func testDeleteIgnoringResponse_decodesObject() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        var completionResult: Result<Void, Error>?
+        //Act
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
     }
 }
 
