@@ -12,10 +12,11 @@ import Restler
 
 class CommentViewModel: ObservableObject {
     private let restler = Restler(encoder: JSONEncoder(), decoder: JSONDecoder())
+    private let comment: PostComment
     
-    let comment: PostComment
     let objectWillChange = PassthroughSubject<Void, Never>()
     
+    // MARK: - Initialization
     init(comment: PostComment) {
         self.comment = comment
     }
