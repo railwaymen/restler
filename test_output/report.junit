@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<testsuites name='RestlerTests.xctest' tests='1' failures='0'>
-  <testsuite name='RestlerTests.RestlerTests' tests='1' failures='0'>
-    <testcase classname='RestlerTests.RestlerTests' name='testExample' time='0.002'/>
-  </testsuite>
-</testsuites>

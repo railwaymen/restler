@@ -41,13 +41,14 @@ test_project:
     *setup
   script:
     - swift package generate-xcodeproj
-    - xcodebuild test -scheme Restler-Package -enableCodeCoverage YES
-    - bundle exec xcov --scheme Restler-Package --output_directory "output/codecov/xcov/"
+    - bundle exec slather setup
+    - xcodebuild test -scheme Restler-Package -enableCodeCoverage YES -derivedDataPath "output/derivedData"
+    - bundle exec slather coverage --verbose
   tags:
     - ios
   dependencies:
     - prepare_project
-  coverage: '/Restler\.framework\D*\|\D*([\d\.]*)\%/'
+  coverage: '/Test\ Coverage:\ \D*([\d\.]*)\%/'
 
 build_example_app:
   stage: build
