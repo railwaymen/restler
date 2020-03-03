@@ -5,7 +5,7 @@ extension Restler {
         var raw: [String: String]
         
         // MARK: - Getters
-        public var headers: [Key: String] {
+        public var dict: [Key: String] {
             return self.raw.reduce(into: [Key: String]()) { $0[Key(rawValue: $1.key)] = $1.value }
         }
         
@@ -30,15 +30,6 @@ extension Restler {
         }
         
         // MARK: - Mutating
-        
-        public mutating func set(_ value: String?, forKey key: Key, force: Bool = true) {
-            guard value != nil else {
-                _ = self.removeValue(forKey: key)
-                return
-            }
-            guard force || self[key] == nil else { return }
-            self[key] = value
-        }
         
         /// - Returns: True if value for the key existed
         public mutating func removeValue(forKey key: Key) -> Bool {

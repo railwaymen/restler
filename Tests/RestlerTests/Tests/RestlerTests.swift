@@ -130,7 +130,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
         //Act
-        sut.header.set("value2", forKey: .custom("second"))
+        sut.header[.custom("second")] = "value2"
         //Assert
         XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, ["first": "value1", "second": "value2"])
     }
@@ -140,7 +140,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
         //Act
-        sut.header.set("value2", forKey: .custom("first"))
+        sut.header[.custom("first")] = "value2"
         //Assert
         XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, ["first": "value2"])
     }
@@ -150,7 +150,7 @@ extension RestlerTests {
         let sut = self.buildSUT()
         self.networking.headerReturnValue = Restler.Header(raw: ["first": "value1"])
         //Act
-        sut.header.set(nil, forKey: .custom("first"))
+        sut.header[.custom("first")] = nil
         //Assert
         XCTAssertEqual(self.networking.headerSetParams.last?.value.raw, [:])
     }
