@@ -34,7 +34,7 @@ class ContentViewModel: ObservableObject {
     // MARK: - Private
     private func fetchData() {
         guard let url = URL(string: "https://jsonplaceholder.typicode.com/posts") else { return assertionFailure() }
-        self.restler.get(url: url) { (result: Result<[BlogPost], Error>) in
+        _ = self.restler.get(url: url) { (result: Result<[BlogPost], Error>) in
             switch result {
             case let .success(posts):
                 self.posts = posts

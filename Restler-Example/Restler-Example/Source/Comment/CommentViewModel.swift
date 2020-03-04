@@ -13,7 +13,7 @@ import Restler
 class CommentViewModel: ObservableObject {
     private let restler = Restler(encoder: JSONEncoder(), decoder: JSONDecoder())
     private let comment: PostComment
-    private var tasks: Set<Restler.Task>
+    private var tasks: Set<Restler.Task> = []
     
     let objectWillChange = PassthroughSubject<Void, Never>()
     
@@ -38,9 +38,16 @@ class CommentViewModel: ObservableObject {
         self.delete(url: url)
     }
     
+    func cancelAllTasks() {
+        self.tasks.forEach {
+            $0.cancel()
+            print("Task \($0.identifier) cancelled.")
+        }
+    }
+    
     // MARK: - Private
     private func post(url: URL) {
-        _ = self.restler.post(url: url, content: self.comment) { result in
+        let optionalTask = self.restler.post(url: url, content: self.comment) { result in
             switch result {
             case .success:
                 print("Comment posted")
@@ -48,10 +55,12 @@ class CommentViewModel: ObservableObject {
                 print(error)
             }
         }
+        guard let task = optionalTask else { return }
+        self.tasks.update(with: task)
     }
     
     private func put(url: URL) {
-        self.restler.put(url: url, content: self.comment) { result in
+        let optionalTask = self.restler.put(url: url, content: self.comment) { result in
             switch result {
             case .success:
                 print("Comment updated")
@@ -59,10 +68,12 @@ class CommentViewModel: ObservableObject {
                 print(error)
             }
         }
+        guard let task = optionalTask else { return }
+        self.tasks.update(with: task)
     }
     
     private func delete(url: URL) {
-        self.restler.delete(url: url) { result in
+        let optionalTask = self.restler.delete(url: url) { result in
             switch result {
             case .success:
                 print("Comment deleted")
@@ -70,5 +81,7 @@ class CommentViewModel: ObservableObject {
                 print(error)
             }
         }
+        guard let task = optionalTask else { return }
+        self.tasks.update(with: task)
     }
 }
