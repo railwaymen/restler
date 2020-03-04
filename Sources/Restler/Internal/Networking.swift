@@ -1,6 +1,6 @@
 import Foundation
 
-typealias DataResult = Result<Data, Error>
+typealias DataResult = Result<Data?, Error>
 typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType: class {
@@ -48,11 +48,11 @@ extension Networking {
     }
     
     private func handleResponse(response: HTTPRequestResponse, completion: DataCompletion) {
-        guard let data = response.data, response.error == nil, response.response?.isSuccessful ?? false else {
+        guard response.error == nil, response.response?.isSuccessful ?? false else {
             completion(.failure(self.handle(result: response)))
             return
         }
-        completion(.success(data))
+        completion(.success(response.data))
     }
     
     private func handle(result: HTTPRequestResponse) -> Error {

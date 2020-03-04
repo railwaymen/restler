@@ -55,6 +55,17 @@ extension Restler {
             completion: self.getCompletion(with: completion))
     }
     
+    public func get(
+        url: URL,
+        query: [String: String?] = [:],
+        completion: @escaping VoidCompletion
+    ) {
+        self.networking.makeRequest(
+            url: url,
+            method: .get(query: query),
+            completion: self.getCompletion(with: completion))
+    }
+    
     public func post<E, D>(
         url: URL,
         content: E,
@@ -167,7 +178,11 @@ extension Restler {
     private func responseHandlerClosure<D>(completion: @escaping DecodableCompletion<D>) -> (DataResult) -> Void where D: Decodable {
         return { [decoder] result in
             switch result {
-            case let .success(data):
+            case let .success(optionalData):
+                guard let data = optionalData else {
+                    completion(.failure(Error.invalidResponse))
+                    return
+                }
                 do {
                     let object = try decoder.decode(D.self, from: data)
                     completion(.success(object))

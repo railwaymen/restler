@@ -20,7 +20,7 @@ extension NetworkingTests {
         let queryParameters = ["some": "key", "another": "key1"]
         let header = ["key1": "value1", "key2": "value2"]
         sut.header = Restler.Header(raw: header)
-        var completionResult: Result<Data, Error>?
+        var completionResult: DataResult?
         //Act
         sut.makeRequest(url: url, method: .get(query: queryParameters)) { result in
             completionResult = result
@@ -44,7 +44,7 @@ extension NetworkingTests {
         let content = Data()
         let header = ["key1": "value1", "key2": "value2"]
         sut.header = Restler.Header(raw: header)
-        var completionResult: Result<Data, Error>?
+        var completionResult: DataResult?
         //Act
         sut.makeRequest(url: url, method: .post(content: content)) { result in
             completionResult = result
@@ -67,7 +67,7 @@ extension NetworkingTests {
         let content = Data()
         let header = ["key1": "value1", "key2": "value2"]
         sut.header = Restler.Header(raw: header)
-        var completionResult: Result<Data, Error>?
+        var completionResult: DataResult?
         //Act
         sut.makeRequest(url: url, method: .put(content: content)) { result in
             completionResult = result
@@ -89,7 +89,7 @@ extension NetworkingTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let header = ["key1": "value1", "key2": "value2"]
         sut.header = Restler.Header(raw: header)
-        var completionResult: Result<Data, Error>?
+        var completionResult: DataResult?
         //Act
         sut.makeRequest(url: url, method: .delete) { result in
             completionResult = result
@@ -112,7 +112,7 @@ extension NetworkingTests {
         let mockResponse = HTTPURLResponseMock()
         mockResponse.isSuccessfulReturnValue = true
         let responseData = Data()
-        var completionResult: Result<Data, Error>?
+        var completionResult: DataResult?
         //Act
         sut.makeRequest(url: url, method: .get(query: [:])) { result in
             completionResult = result
@@ -127,7 +127,7 @@ extension NetworkingTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let responseData = Data()
-        var completionResult: Result<Data, Error>?
+        var completionResult: DataResult?
         //Act
         sut.makeRequest(url: url, method: .get(query: [:])) { result in
             completionResult = result
@@ -145,7 +145,7 @@ extension NetworkingTests {
         mockResponse.isSuccessfulReturnValue = false
         mockResponse.statusCodeReturnValue = 404
         let responseData = Data()
-        var completionResult: Result<Data, Error>?
+        var completionResult: DataResult?
         //Act
         sut.makeRequest(url: url, method: .get(query: [:])) { result in
             completionResult = result
@@ -163,7 +163,7 @@ extension NetworkingTests {
         mockResponse.isSuccessfulReturnValue = true
         mockResponse.statusCodeReturnValue = 401
         let responseData = Data()
-        var completionResult: Result<Data, Error>?
+        var completionResult: DataResult?
         //Act
         sut.makeRequest(url: url, method: .get(query: [:])) { result in
             completionResult = result
@@ -179,14 +179,14 @@ extension NetworkingTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let mockResponse = HTTPURLResponseMock()
         mockResponse.isSuccessfulReturnValue = true
-        var completionResult: Result<Data, Error>?
+        var completionResult: DataResult?
         //Act
         sut.makeRequest(url: url, method: .get(query: [:])) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: nil, response: mockResponse, error: nil))
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.unknownError)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
     }
     
     func testMakeRequest_error() throws {
@@ -196,7 +196,7 @@ extension NetworkingTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let mockResponse = HTTPURLResponseMock()
         mockResponse.isSuccessfulReturnValue = false
-        var completionResult: Result<Data, Error>?
+        var completionResult: DataResult?
         //Act
         sut.makeRequest(url: url, method: .get(query: [:])) { result in
             completionResult = result
