@@ -1621,7 +1621,7 @@ extension RestlerTests {
 
 // MARK: - Private
 extension RestlerTests {
-    private func buildSUT(encoder: JSONEncoderType = JSONEncoder()) -> Restler {
+    private func buildSUT(encoder: RestlerJSONEncoderType = JSONEncoder()) -> Restler {
         return Restler(
             networking: self.networking,
             dispatchQueueManager: self.dispatchQueueManager,

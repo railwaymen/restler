@@ -1,7 +1,7 @@
 import Foundation
 
-public protocol JSONEncoderType: class {
+public protocol RestlerJSONEncoderType: class {
     func encode<T>(_ value: T) throws -> Data where T: Encodable
 }
 
-extension JSONEncoder: JSONEncoderType {}
+extension JSONEncoder: RestlerJSONEncoderType {}
