@@ -6,6 +6,8 @@ class URLSessionDataTaskMock {
     // MARK: - URLSessionDataTaskType
     var taskIdentifierReturnValue: Int = 0
     
+    var stateReturnValue: URLSessionTask.State = .running
+    
     private(set) var cancelParams: [CancelParams] = []
     struct CancelParams {}
     
@@ -20,6 +22,10 @@ class URLSessionDataTaskMock {
 extension URLSessionDataTaskMock: URLSessionDataTaskType {
     var taskIdentifier: Int {
         return self.taskIdentifierReturnValue
+    }
+    
+    var state: URLSessionTask.State {
+        return self.stateReturnValue
     }
     
     func cancel() {

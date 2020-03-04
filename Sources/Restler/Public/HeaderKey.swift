@@ -1,6 +1,12 @@
 import Foundation
 
 extension Restler.Header {
+    /// Key for the header.
+    ///
+    /// If you need to use your own key, use
+    /// ```
+    /// .custom("Your_Custom_Key")
+    /// ```
     public enum Key: Hashable {
         case a_im
         case accept

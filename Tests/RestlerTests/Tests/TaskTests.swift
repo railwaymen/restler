@@ -24,6 +24,20 @@ extension TaskTests {
     }
 }
 
+// MARK: - state
+extension TaskTests {
+    func testState() {
+        //Arrange
+        let sut = Restler.Task(task: self.task)
+        let expectedState: URLSessionTask.State = .suspended
+        self.task.stateReturnValue = expectedState
+        //Act
+        let state = sut.state
+        //Assert
+        XCTAssertEqual(state, expectedState)
+    }
+}
+
 // MARK: - cancel()
 extension TaskTests {
     func testCancel() {
