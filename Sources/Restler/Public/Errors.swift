@@ -20,18 +20,18 @@ extension Restler {
         // MARK: - Getters
         public var debugDescription: String {
             switch self {
-            case .forbidden: return "\(Error.prefix) The request is has been forbidden. You have no access to the accessed "
+            case .forbidden: return "\(Error.prefix) The request is has been forbidden. You have no access to the accessed."
             case .internalFrameworkError: return "\(Error.prefix) Some unexpected error in the framework have occured. Please let know to the creators about the case."
-            case .invalidParameters: return "\(Error.prefix) Parameters cannot be parsed"
+            case .invalidParameters: return "\(Error.prefix) Parameters cannot be parsed."
             case .invalidResponse: return "\(Error.prefix) Response cannot be parsed to the expected type."
             case .invalidURL: return "\(Error.prefix) Provided URL is invalid."
-            case .noInternetConnection: return "\(Error.prefix) There's no connection to the internet"
-            case .notFound: return "\(Error.prefix) Not Fount"
-            case .serverError: return "\(Error.prefix) Server internal error - 500"
+            case .noInternetConnection: return "\(Error.prefix) There's no connection to the internet."
+            case .notFound: return "\(Error.prefix) Not found."
+            case .serverError: return "\(Error.prefix) Server internal error - 500."
             case .timeout: return "\(Error.prefix) The request has been timed out."
             case .unauthorized: return "\(Error.prefix) Unauthorized - authorization is needed for this request."
             case .unknownError: return "\(Error.prefix) Unknown error occured. Probably response is not successful, but no error is provided."
-            case .validationError(let error): return "\(Error.prefix) Request validation error: \((error as NSError?)?.debugDescription ?? "nil")"
+            case .validationError(let error): return "\(Error.prefix) Request validation error: \((error as NSError?)?.debugDescription ?? "nil")."
             }
         }
         
