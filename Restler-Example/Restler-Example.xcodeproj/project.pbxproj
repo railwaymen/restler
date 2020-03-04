@@ -20,6 +20,7 @@
 		8A87AEFF24000850007FA662 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A87AEFD24000850007FA662 /* LaunchScreen.storyboard */; };
 		8A87AF0A24000D72007FA662 /* BlogPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A87AF0924000D72007FA662 /* BlogPost.swift */; };
 		8A87AF0D24000E76007FA662 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A87AF0C24000E76007FA662 /* ContentViewModel.swift */; };
+		8AAAE2C5240FD7D3004C70BE /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAAE2C4240FD7D3004C70BE /* Endpoint.swift */; };
 		8AC1C89C2403D3E500FF329E /* PostComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC1C89B2403D3E500FF329E /* PostComment.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 		8A87AF0724000A10007FA662 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		8A87AF0924000D72007FA662 /* BlogPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogPost.swift; sourceTree = "<group>"; };
 		8A87AF0C24000E76007FA662 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		8AAAE2C4240FD7D3004C70BE /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		8AC1C89B2403D3E500FF329E /* PostComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComment.swift; sourceTree = "<group>"; };
 		8AC1C89D2403D67100FF329E /* Restler-Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Restler-Example.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -157,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				8A87AF0924000D72007FA662 /* BlogPost.swift */,
+				8AAAE2C4240FD7D3004C70BE /* Endpoint.swift */,
 				8AC1C89B2403D3E500FF329E /* PostComment.swift */,
 			);
 			path = Models;
@@ -315,6 +318,7 @@
 				8AC1C89C2403D3E500FF329E /* PostComment.swift in Sources */,
 				8A5820DC2403CE9F00BC197B /* PostView.swift in Sources */,
 				8A41B562240E6D4400D96084 /* CommentViewModel.swift in Sources */,
+				8AAAE2C5240FD7D3004C70BE /* Endpoint.swift in Sources */,
 				8A87AF0D24000E76007FA662 /* ContentViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

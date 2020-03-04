@@ -11,7 +11,7 @@ import Combine
 import Restler
 
 class CommentViewModel: ObservableObject {
-    private let restler = Restler(encoder: JSONEncoder(), decoder: JSONDecoder())
+    private let restler = Restler(baseURL: URL(string: "https://jsonplaceholder.typicode.com")!)
     private let comment: PostComment
     private var tasks: Set<Restler.Task> = []
     
@@ -24,30 +24,7 @@ class CommentViewModel: ObservableObject {
     
     // MARK: - Internal
     func create() {
-        guard let url = URL(string: "https://jsonplaceholder.typicode.com/comments") else { return assertionFailure() }
-        self.post(url: url)
-    }
-    
-    func update() {
-        guard let url = URL(string: "https://jsonplaceholder.typicode.com/comments/1") else { return assertionFailure() }
-        self.put(url: url)
-    }
-    
-    func delete() {
-        guard let url = URL(string: "https://jsonplaceholder.typicode.com/comments/\(self.comment.id)") else { return assertionFailure() }
-        self.delete(url: url)
-    }
-    
-    func cancelAllTasks() {
-        self.tasks.forEach {
-            $0.cancel()
-            print("Task \($0.identifier) cancelled.")
-        }
-    }
-    
-    // MARK: - Private
-    private func post(url: URL) {
-        let optionalTask = self.restler.post(url: url, content: self.comment) { result in
+        let optionalTask = self.restler.post(endpoint: Endpoint.comments, content: self.comment) { result in
             switch result {
             case .success:
                 print("Comment posted")
@@ -59,8 +36,8 @@ class CommentViewModel: ObservableObject {
         self.tasks.update(with: task)
     }
     
-    private func put(url: URL) {
-        let optionalTask = self.restler.put(url: url, content: self.comment) { result in
+    func update() {
+        let optionalTask = self.restler.put(endpoint: Endpoint.comment(1), content: self.comment) { result in
             switch result {
             case .success:
                 print("Comment updated")
@@ -72,8 +49,8 @@ class CommentViewModel: ObservableObject {
         self.tasks.update(with: task)
     }
     
-    private func delete(url: URL) {
-        let optionalTask = self.restler.delete(url: url) { result in
+    func delete() {
+        let optionalTask = self.restler.delete(endpoint: Endpoint.comment(self.comment.id)) { result in
             switch result {
             case .success:
                 print("Comment deleted")
@@ -83,5 +60,12 @@ class CommentViewModel: ObservableObject {
         }
         guard let task = optionalTask else { return }
         self.tasks.update(with: task)
+    }
+    
+    func cancelAllTasks() {
+        self.tasks.forEach {
+            $0.cancel()
+            print("Task \($0.identifier) cancelled.")
+        }
     }
 }
