@@ -387,15 +387,12 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        XCTAssertThrowsError(
-            try sut.post(url: url, content: content) { result in
-                completionResult = result
-        }) { error in
-            XCTAssertEqual(error as? TestError, encoderMock.thrownError)
+        sut.post(url: url, content: content) { result in
+            completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: encoderMock.thrownError)
     }
     
     func testPost_makesProperRequest() throws {
@@ -405,7 +402,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -445,7 +442,7 @@ extension RestlerTests {
         let error = TestError()
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -465,7 +462,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -485,7 +482,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -506,7 +503,7 @@ extension RestlerTests {
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -528,7 +525,7 @@ extension RestlerTests {
         let error = TestError()
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -548,7 +545,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -568,7 +565,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -589,7 +586,7 @@ extension RestlerTests {
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -613,15 +610,12 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.VoidResult?
         //Act
-        XCTAssertThrowsError(
-            try sut.post(url: url, content: content) { result in
-                completionResult = result
-        }) { error in
-            XCTAssertEqual(error as? TestError, encoderMock.thrownError)
+        sut.post(url: url, content: content) { result in
+            completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: encoderMock.thrownError)
     }
     
     func testPostIgnoringResponse_makesProperRequest() throws {
@@ -631,7 +625,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.VoidResult?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -671,7 +665,7 @@ extension RestlerTests {
         let error = TestError()
         var completionResult: Restler.VoidResult?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -691,7 +685,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.VoidResult?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -711,7 +705,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.VoidResult?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -732,7 +726,7 @@ extension RestlerTests {
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
         var completionResult: Restler.VoidResult?
         //Act
-        try sut.post(url: url, content: content) { result in
+        sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -756,15 +750,12 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        XCTAssertThrowsError(
-            try sut.put(url: url, content: content) { result in
-                completionResult = result
-        }) { error in
-            XCTAssertEqual(error as? TestError, encoderMock.thrownError)
+        sut.put(url: url, content: content) { result in
+            completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: encoderMock.thrownError)
     }
     
     func testPut_makesProperRequest() throws {
@@ -774,7 +765,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -814,7 +805,7 @@ extension RestlerTests {
         let error = TestError()
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -834,7 +825,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -854,7 +845,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -875,7 +866,7 @@ extension RestlerTests {
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -897,7 +888,7 @@ extension RestlerTests {
         let error = TestError()
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -917,7 +908,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -937,7 +928,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -958,7 +949,7 @@ extension RestlerTests {
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -982,15 +973,12 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.VoidResult?
         //Act
-        XCTAssertThrowsError(
-            try sut.put(url: url, content: content) { result in
-                completionResult = result
-        }) { error in
-            XCTAssertEqual(error as? TestError, encoderMock.thrownError)
+        sut.put(url: url, content: content) { result in
+            completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: encoderMock.thrownError)
     }
     
     func testPutIgnoringResponse_makesProperRequest() throws {
@@ -1000,7 +988,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.VoidResult?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -1040,7 +1028,7 @@ extension RestlerTests {
         let error = TestError()
         var completionResult: Restler.VoidResult?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -1060,7 +1048,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.VoidResult?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -1080,7 +1068,7 @@ extension RestlerTests {
         let content = ["some": "value"]
         var completionResult: Restler.VoidResult?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -1101,7 +1089,7 @@ extension RestlerTests {
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
         var completionResult: Restler.VoidResult?
         //Act
-        try sut.put(url: url, content: content) { result in
+        sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
