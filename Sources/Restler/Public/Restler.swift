@@ -76,7 +76,7 @@ public class Restler {
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
     public func get<D>(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         query: [String: String?] = [:],
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
@@ -102,7 +102,7 @@ public class Restler {
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
     public func get<D>(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         query: [String: String?] = [:],
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
@@ -125,7 +125,7 @@ public class Restler {
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
     public func get(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         query: [String: String?] = [:],
         completion: @escaping VoidCompletion
     ) -> Task? {
@@ -152,7 +152,7 @@ public class Restler {
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
     public func post<E, D>(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         content: E,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
@@ -184,7 +184,7 @@ public class Restler {
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
     public func post<E, D>(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         content: E,
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
@@ -213,7 +213,7 @@ public class Restler {
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
     public func post<E>(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         content: E,
         completion: @escaping VoidCompletion
     ) -> Task? where E: Encodable {
@@ -246,7 +246,7 @@ public class Restler {
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
     public func put<E, D>(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         content: E,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
@@ -278,7 +278,7 @@ public class Restler {
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
     public func put<E, D>(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         content: E,
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
@@ -307,7 +307,7 @@ public class Restler {
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
     public func put<E>(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         content: E,
         completion: @escaping VoidCompletion
     ) -> Task? where E: Encodable {
@@ -339,7 +339,7 @@ public class Restler {
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
     public func delete<D>(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
     ) -> Task? where D: Decodable {
@@ -363,7 +363,7 @@ public class Restler {
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
     public func delete<D>(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
     ) -> Task? where D: Decodable {
@@ -385,7 +385,7 @@ public class Restler {
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
     public func delete(
-        endpoint: RestlerEndpointable,
+        _ endpoint: RestlerEndpointable,
         completion: @escaping VoidCompletion
     ) -> Task? {
         return self.networking.makeRequest(
