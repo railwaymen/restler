@@ -1,5 +1,5 @@
 PODS:
-  - Restler (0.1.0)
+  - Restler (0.1.1)
   - SwiftLint (0.39.1)
 
 DEPENDENCIES:
@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Restler: 79fed163cd5972e60dcaeb13ee87f55c65604da1
+  Restler: 6d0cb2b909be48285e04fb81b81c06f21fe3cc02
   SwiftLint: 55e96a4a4d537d4a3156859fc1c54bd24851a046
 
 PODFILE CHECKSUM: a746e84b50a82f68a975856a61c56608368093a0
