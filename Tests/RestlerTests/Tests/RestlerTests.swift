@@ -197,6 +197,85 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), SomeObject(id: 1, name: "Object"))
     }
+    
+    // MARK: Optional expected type
+    func testGetOptionalResponse_failure() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let error = TestError()
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        sut.get(url: url, query: [:]) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
+    }
+    
+    func testGetOptionalResponse_noResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        sut.get(url: url, query: [:]) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testGetOptionalResponse_emptyResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        sut.get(url: url, query: [:]) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testGetOptionalResponse_decodesObject() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        sut.get(url: url, query: [:]) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), SomeObject(id: 1, name: "Object"))
+    }
 }
 
 // MARK: - get(url:query:completion:)
@@ -426,6 +505,89 @@ extension RestlerTests {
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
         var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        try sut.post(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), SomeObject(id: 1, name: "Object"))
+    }
+    
+    // MARK: Optional expected type
+    func testPostOptionalResponse_failure() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        let error = TestError()
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        try sut.post(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
+    }
+    
+    func testPostOptionalResponse_noResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        try sut.post(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testPostOptionalResponse_emptyResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        try sut.post(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testPostOptionalResponse_decodesObject() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
         try sut.post(url: url, content: content) { result in
             completionResult = result
@@ -725,6 +887,89 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), SomeObject(id: 1, name: "Object"))
     }
+    
+    // MARK: Optional expected type
+    func testPutOptionalResponse_failure() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        let error = TestError()
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        try sut.put(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
+    }
+    
+    func testPutOptionalResponse_noResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        try sut.put(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testPutOptionalResponse_emptyResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        try sut.put(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testPutOptionalResponse_decodesObject() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = ["some": "value"]
+        let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        try sut.put(url: url, content: content) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), SomeObject(id: 1, name: "Object"))
+    }
 }
 
 // MARK: - put(url:content:completion:)
@@ -973,6 +1218,85 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
         var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), SomeObject(id: 1, name: "Object"))
+    }
+    
+    // MARK: Optional expected type
+    func testDeleteOptionalResponse_failure() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let error = TestError()
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
+    }
+    
+    func testDeleteOptionalResponse_noResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testDeleteOptionalResponse_emptyResponse() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        sut.delete(url: url) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
+        try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testDeleteOptionalResponse_decodesObject() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
         sut.delete(url: url) { result in
             completionResult = result
