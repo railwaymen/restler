@@ -1,15 +1,24 @@
 import Foundation
 
 extension Restler {
+    /// Header wrapper structure for Restler framework.
     public struct Header: Equatable {
         var raw: [String: String]
         
         // MARK: - Getters
+        
+        /// Dictionary representation of the header.
         public var dict: [Key: String] {
             return self.raw.reduce(into: [Key: String]()) { $0[Key(rawValue: $1.key)] = $1.value }
         }
         
         // MARK: - Initialization
+        
+        /// Default init for the Header.
+        ///
+        /// - Parameters:
+        ///   - header: Dictionary to put into the newly initialized Header.
+        ///
         public init(_ header: [Key: String] = [:]) {
             self.raw = header.reduce(into: [String: String]()) { $0[$1.key.rawValue] = $1.value }
         }
@@ -31,6 +40,13 @@ extension Restler {
         
         // MARK: - Mutating
         
+        /// Function for removing value in the dictionary.
+        ///
+        /// If you don't need the returned value, you can use subscript instead.
+        ///
+        /// - Parameters:
+        ///   - key: Key to remove value for.
+        ///
         /// - Returns: True if value for the key existed
         public mutating func removeValue(forKey key: Key) -> Bool {
             return self.raw.removeValue(forKey: key.rawValue) != nil
