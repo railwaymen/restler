@@ -6,10 +6,10 @@ public class Restler {
     private let dispatchQueueManager: DispatchQueueManagerType
     
     /// Encoder used for encoding requests' body.
-    public var encoder: JSONEncoderType
+    public var encoder: RestlerJSONEncoderType
     
     /// Decoder used for decoding response's data to expected object.
-    public var decoder: JSONDecoderType
+    public var decoder: RestlerJSONDecoderType
     
     /// Global header sent in requests.
     public var header: Restler.Header {
@@ -30,8 +30,8 @@ public class Restler {
     ///   - decoder: Decoder used for decoding response's data to expected object.
     ///
     public convenience init(
-        encoder: JSONEncoderType,
-        decoder: JSONDecoderType
+        encoder: RestlerJSONEncoderType,
+        decoder: RestlerJSONDecoderType
     ) {
         self.init(
             networking: Networking(),
@@ -43,8 +43,8 @@ public class Restler {
     init(
         networking: NetworkingType,
         dispatchQueueManager: DispatchQueueManagerType,
-        encoder: JSONEncoderType,
-        decoder: JSONDecoderType
+        encoder: RestlerJSONEncoderType,
+        decoder: RestlerJSONDecoderType
     ) {
         self.networking = networking
         self.dispatchQueueManager = dispatchQueueManager
