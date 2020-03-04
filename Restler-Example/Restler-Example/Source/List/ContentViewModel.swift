@@ -33,7 +33,7 @@ class ContentViewModel: ObservableObject {
     
     // MARK: - Private
     private func fetchData() {
-        _ = self.restler.get(endpoint: Endpoint.posts) { (result: Result<[BlogPost], Error>) in
+        _ = self.restler.get(Endpoint.posts) { (result: Result<[BlogPost], Error>) in
             switch result {
             case let .success(posts):
                 self.posts = posts
