@@ -1,16 +1,39 @@
 stages:
+  - prepare
   - build
+  - deploy
 
 variables:
   LC_ALL: "en_US.UTF-8"
+
+cache:
+  key: "bundle_dependencies"
+  paths:
+  - vendor
 
 .setup: &setup
   - export
   - rvm --create use ruby-2.6.3@restler
   - gem install bundler:2.1.4
-  - bundle config set path 'vendor/bundle'
+  - bundle config set deployment 'true'
   - bundle install
 
+.setup_example_app: &setup_example_app
+  - export
+  - rvm --create use ${RUBY_VERSION}@${CI_PROJECT_NAME}
+  - gem install bundler:2.1.4
+  - bundle config set deployment 'true'
+  - bundle install
+  - cd Restler-Example
+  - bundle exec pod install || bundle exec pod install --repo-update
+  - envsubst < Restler-Example/Configuration/env_debug.xcconfig.tpl > Restler-Example/Configuration/Debug.xcconfig
+
+prepare_project:
+  stage: prepare
+  script:
+    *setup
+  tags:
+    - ios
 
 test_project:
   stage: build
@@ -18,8 +41,50 @@ test_project:
     *setup
   script:
     - swift package generate-xcodeproj
-    - xcodebuild test -scheme Restler-Package -enableCodeCoverage YES
-    - bundle exec xcov --scheme Restler-Package --output_directory "output/codecov/xcov/"
+    - bundle exec slather setup
+    - xcodebuild test -scheme Restler-Package -enableCodeCoverage YES -derivedDataPath "output/derivedData"
+    - bundle exec slather coverage --verbose
   tags:
     - ios
-  coverage: '/Restler\.framework\D*\|\D*([\d\.]*)\%/'
+  dependencies:
+    - prepare_project
+  coverage: '/Test\ Coverage:\ \D*([\d\.]*)\%/'
+
+build_example_app:
+  stage: build
+  before_script:
+    *setup_example_app
+  script:
+    - xcodebuild clean
+    - xcodebuild build -scheme Restler-Example -workspace Restler-Example.xcworkspace
+  tags:
+    - ios
+  dependencies:
+    - prepare_project
+
+lint_podspec:
+  stage: build
+  before_script:
+    *setup
+  script:
+    - bundle exec pod lib lint --private --no-clean --skip-tests
+  dependencies:
+    - prepare_project
+  tags:
+    - ios
+
+deploy_pod:
+  stage: deploy
+  before_script:
+    *setup
+  script:
+    - bundle exec pod repo push railwaymen-open-rwm_podspec 'Restler.podspec'
+  dependencies:
+    - test_project
+    - lint_podspec
+  only:
+    - /[\d\.]*/
+  except:
+    - branches
+  tags:
+    - ios
