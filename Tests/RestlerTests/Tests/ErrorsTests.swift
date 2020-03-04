@@ -135,6 +135,16 @@ extension ErrorsTests {
         XCTAssertEqual(sut, Restler.Error.unknownError)
     }
     
+    func testInit_codeNSURLErrorCancelled() {
+        //Arrange
+        self.response.statusCodeReturnValue = NSURLErrorCancelled
+        let result = HTTPRequestResponse(data: nil, response: self.response, error: nil)
+        //Act
+        let sut = Restler.Error(result: result)
+        //Assert
+        XCTAssertEqual(sut, Restler.Error.requestCancelled)
+    }
+    
     func testInit_codeUnknownValue() {
         //Arrange
         self.response.statusCodeReturnValue = 111111111
