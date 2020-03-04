@@ -55,6 +55,18 @@ extension Restler {
             completion: self.getCompletion(with: completion))
     }
     
+    public func get<D>(
+        url: URL,
+        query: [String: String?] = [:],
+        expectedType: D?.Type = D?.self,
+        completion: @escaping DecodableCompletion<D?>
+    ) where D: Decodable {
+        self.networking.makeRequest(
+            url: url,
+            method: .get(query: query),
+            completion: self.getCompletion(with: completion))
+    }
+    
     public func get(
         url: URL,
         query: [String: String?] = [:],
@@ -71,6 +83,19 @@ extension Restler {
         content: E,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
+    ) throws where E: Encodable, D: Decodable {
+        let data = try self.encoder.encode(content)
+        self.networking.makeRequest(
+            url: url,
+            method: .post(content: data),
+            completion: self.getCompletion(with: completion))
+    }
+    
+    public func post<E, D>(
+        url: URL,
+        content: E,
+        expectedType: D?.Type = D?.self,
+        completion: @escaping DecodableCompletion<D?>
     ) throws where E: Encodable, D: Decodable {
         let data = try self.encoder.encode(content)
         self.networking.makeRequest(
@@ -104,6 +129,19 @@ extension Restler {
             completion: self.getCompletion(with: completion))
     }
     
+    public func put<E, D>(
+        url: URL,
+        content: E,
+        expectedType: D?.Type = D?.self,
+        completion: @escaping DecodableCompletion<D?>
+    ) throws where E: Encodable, D: Decodable {
+        let data = try self.encoder.encode(content)
+        self.networking.makeRequest(
+            url: url,
+            method: .put(content: data),
+            completion: self.getCompletion(with: completion))
+    }
+    
     public func put<E>(
         url: URL,
         content: E,
@@ -120,6 +158,17 @@ extension Restler {
         url: URL,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
+    ) where D: Decodable {
+        self.networking.makeRequest(
+            url: url,
+            method: .delete,
+            completion: self.getCompletion(with: completion))
+    }
+    
+    public func delete<D>(
+        url: URL,
+        expectedType: D?.Type = D?.self,
+        completion: @escaping DecodableCompletion<D?>
     ) where D: Decodable {
         self.networking.makeRequest(
             url: url,
@@ -159,6 +208,13 @@ extension Restler {
         }
     }
     
+    private func getCompletion<D>(with completion: @escaping DecodableCompletion<D?>) -> DataCompletion where D: Decodable {
+        let responseHandler = self.responseHandlerClosure(completion: self.mainThreadClosure(of: completion))
+        return { result in
+            responseHandler(result)
+        }
+    }
+    
     private func mainThreadClosure(of closure: @escaping VoidCompletion) -> VoidCompletion {
         return { [dispatchQueueManager] result in
             dispatchQueueManager.perform(on: .main, .async) {
@@ -189,6 +245,21 @@ extension Restler {
                 } catch {
                     completion(.failure(Error.invalidResponse))
                 }
+            case let .failure(error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    private func responseHandlerClosure<D>(completion: @escaping DecodableCompletion<D?>) -> (DataResult) -> Void where D: Decodable {
+        return { [decoder] result in
+            switch result {
+            case let .success(optionalData):
+                var object: D?
+                if let data = optionalData {
+                    object = try? decoder.decode(D.self, from: data)
+                }
+                completion(.success(object))
             case let .failure(error):
                 completion(.failure(error))
             }
