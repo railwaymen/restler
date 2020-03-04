@@ -48,8 +48,8 @@ public class Restler {
         query: [String: String?] = [:],
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
-    ) where D: Decodable {
-        self.networking.makeRequest(
+    ) -> Task? where D: Decodable {
+        return self.networking.makeRequest(
             url: url,
             method: .get(query: query),
             completion: self.getCompletion(with: completion))
@@ -60,8 +60,8 @@ public class Restler {
         query: [String: String?] = [:],
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
-    ) where D: Decodable {
-        self.networking.makeRequest(
+    ) -> Task? where D: Decodable {
+        return self.networking.makeRequest(
             url: url,
             method: .get(query: query),
             completion: self.getCompletion(with: completion))
@@ -71,8 +71,8 @@ public class Restler {
         url: URL,
         query: [String: String?] = [:],
         completion: @escaping VoidCompletion
-    ) {
-        self.networking.makeRequest(
+    ) -> Task? {
+        return self.networking.makeRequest(
             url: url,
             method: .get(query: query),
             completion: self.getCompletion(with: completion))
@@ -84,15 +84,16 @@ public class Restler {
         content: E,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
-    ) where E: Encodable, D: Decodable {
+    ) -> Task? where E: Encodable, D: Decodable {
         do {
             let data = try self.encoder.encode(content)
-            self.networking.makeRequest(
+            return self.networking.makeRequest(
                 url: url,
                 method: .post(content: data),
                 completion: self.getCompletion(with: completion))
         } catch {
             completion(.failure(error))
+            return nil
         }
     }
     
@@ -101,15 +102,16 @@ public class Restler {
         content: E,
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
-    ) where E: Encodable, D: Decodable {
+    ) -> Task? where E: Encodable, D: Decodable {
         do {
             let data = try self.encoder.encode(content)
-            self.networking.makeRequest(
+            return self.networking.makeRequest(
                 url: url,
                 method: .post(content: data),
                 completion: self.getCompletion(with: completion))
         } catch {
             completion(.failure(error))
+            return nil
         }
     }
     
@@ -117,15 +119,16 @@ public class Restler {
         url: URL,
         content: E,
         completion: @escaping VoidCompletion
-    ) where E: Encodable {
+    ) -> Task? where E: Encodable {
         do {
             let data = try self.encoder.encode(content)
-            self.networking.makeRequest(
+            return self.networking.makeRequest(
                 url: url,
                 method: .post(content: data),
                 completion: self.getCompletion(with: completion))
         } catch {
             completion(.failure(error))
+            return nil
         }
     }
     
@@ -135,15 +138,16 @@ public class Restler {
         content: E,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
-    ) where E: Encodable, D: Decodable {
+    ) -> Task? where E: Encodable, D: Decodable {
         do {
             let data = try self.encoder.encode(content)
-            self.networking.makeRequest(
+            return self.networking.makeRequest(
                 url: url,
                 method: .put(content: data),
                 completion: self.getCompletion(with: completion))
         } catch {
             completion(.failure(error))
+            return nil
         }
     }
     
@@ -152,15 +156,16 @@ public class Restler {
         content: E,
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
-    ) where E: Encodable, D: Decodable {
+    ) -> Task? where E: Encodable, D: Decodable {
         do {
             let data = try self.encoder.encode(content)
-            self.networking.makeRequest(
+            return self.networking.makeRequest(
                 url: url,
                 method: .put(content: data),
                 completion: self.getCompletion(with: completion))
         } catch {
             completion(.failure(error))
+            return nil
         }
     }
     
@@ -168,15 +173,16 @@ public class Restler {
         url: URL,
         content: E,
         completion: @escaping VoidCompletion
-    ) where E: Encodable {
+    ) -> Task? where E: Encodable {
         do {
             let data = try self.encoder.encode(content)
-            self.networking.makeRequest(
+            return self.networking.makeRequest(
                 url: url,
                 method: .put(content: data),
                 completion: self.getCompletion(with: completion))
         } catch {
             completion(.failure(error))
+            return nil
         }
     }
     
@@ -185,8 +191,8 @@ public class Restler {
         url: URL,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
-    ) where D: Decodable {
-        self.networking.makeRequest(
+    ) -> Task? where D: Decodable {
+        return self.networking.makeRequest(
             url: url,
             method: .delete,
             completion: self.getCompletion(with: completion))
@@ -196,8 +202,8 @@ public class Restler {
         url: URL,
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
-    ) where D: Decodable {
-        self.networking.makeRequest(
+    ) -> Task? where D: Decodable {
+        return self.networking.makeRequest(
             url: url,
             method: .delete,
             completion: self.getCompletion(with: completion))
@@ -206,8 +212,8 @@ public class Restler {
     public func delete(
         url: URL,
         completion: @escaping VoidCompletion
-    ) {
-        self.networking.makeRequest(
+    ) -> Task? {
+        return self.networking.makeRequest(
             url: url,
             method: .delete,
             completion: self.getCompletion(with: completion))

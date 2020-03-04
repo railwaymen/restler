@@ -4,6 +4,8 @@ import Foundation
 class URLSessionDataTaskMock {
     
     // MARK: - URLSessionDataTaskType
+    var taskIdentifierReturnValue: Int = 0
+    
     private(set) var cancelParams: [CancelParams] = []
     struct CancelParams {}
     
@@ -16,6 +18,10 @@ class URLSessionDataTaskMock {
 
 // MARK: - URLSessionDataTaskType
 extension URLSessionDataTaskMock: URLSessionDataTaskType {
+    var taskIdentifier: Int {
+        return self.taskIdentifierReturnValue
+    }
+    
     func cancel() {
         self.cancelParams.append(CancelParams())
     }

@@ -13,6 +13,7 @@ import Restler
 class CommentViewModel: ObservableObject {
     private let restler = Restler(encoder: JSONEncoder(), decoder: JSONDecoder())
     private let comment: PostComment
+    private var tasks: Set<Restler.Task>
     
     let objectWillChange = PassthroughSubject<Void, Never>()
     
@@ -39,7 +40,7 @@ class CommentViewModel: ObservableObject {
     
     // MARK: - Private
     private func post(url: URL) {
-        self.restler.post(url: url, content: self.comment) { result in
+        _ = self.restler.post(url: url, content: self.comment) { result in
             switch result {
             case .success:
                 print("Comment posted")
