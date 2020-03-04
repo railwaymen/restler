@@ -39,10 +39,10 @@ public class Restler {
         self.encoder = encoder
         self.decoder = decoder
     }
-}
-
-// MARK: - Restlerable
-extension Restler {
+    
+    // MARK: - Public
+    
+    // MARK: GET
     public func get<D>(
         url: URL,
         query: [String: String?] = [:],
@@ -78,17 +78,22 @@ extension Restler {
             completion: self.getCompletion(with: completion))
     }
     
+    // MARK: POST
     public func post<E, D>(
         url: URL,
         content: E,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
-    ) throws where E: Encodable, D: Decodable {
-        let data = try self.encoder.encode(content)
-        self.networking.makeRequest(
-            url: url,
-            method: .post(content: data),
-            completion: self.getCompletion(with: completion))
+    ) where E: Encodable, D: Decodable {
+        do {
+            let data = try self.encoder.encode(content)
+            self.networking.makeRequest(
+                url: url,
+                method: .post(content: data),
+                completion: self.getCompletion(with: completion))
+        } catch {
+            completion(.failure(error))
+        }
     }
     
     public func post<E, D>(
@@ -96,37 +101,50 @@ extension Restler {
         content: E,
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
-    ) throws where E: Encodable, D: Decodable {
-        let data = try self.encoder.encode(content)
-        self.networking.makeRequest(
-            url: url,
-            method: .post(content: data),
-            completion: self.getCompletion(with: completion))
+    ) where E: Encodable, D: Decodable {
+        do {
+            let data = try self.encoder.encode(content)
+            self.networking.makeRequest(
+                url: url,
+                method: .post(content: data),
+                completion: self.getCompletion(with: completion))
+        } catch {
+            completion(.failure(error))
+        }
     }
     
     public func post<E>(
         url: URL,
         content: E,
         completion: @escaping VoidCompletion
-    ) throws where E: Encodable {
-        let data = try self.encoder.encode(content)
-        self.networking.makeRequest(
-            url: url,
-            method: .post(content: data),
-            completion: self.getCompletion(with: completion))
+    ) where E: Encodable {
+        do {
+            let data = try self.encoder.encode(content)
+            self.networking.makeRequest(
+                url: url,
+                method: .post(content: data),
+                completion: self.getCompletion(with: completion))
+        } catch {
+            completion(.failure(error))
+        }
     }
     
+    // MARK: PUT
     public func put<E, D>(
         url: URL,
         content: E,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
-    ) throws where E: Encodable, D: Decodable {
-        let data = try self.encoder.encode(content)
-        self.networking.makeRequest(
-            url: url,
-            method: .put(content: data),
-            completion: self.getCompletion(with: completion))
+    ) where E: Encodable, D: Decodable {
+        do {
+            let data = try self.encoder.encode(content)
+            self.networking.makeRequest(
+                url: url,
+                method: .put(content: data),
+                completion: self.getCompletion(with: completion))
+        } catch {
+            completion(.failure(error))
+        }
     }
     
     public func put<E, D>(
@@ -134,26 +152,35 @@ extension Restler {
         content: E,
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
-    ) throws where E: Encodable, D: Decodable {
-        let data = try self.encoder.encode(content)
-        self.networking.makeRequest(
-            url: url,
-            method: .put(content: data),
-            completion: self.getCompletion(with: completion))
+    ) where E: Encodable, D: Decodable {
+        do {
+            let data = try self.encoder.encode(content)
+            self.networking.makeRequest(
+                url: url,
+                method: .put(content: data),
+                completion: self.getCompletion(with: completion))
+        } catch {
+            completion(.failure(error))
+        }
     }
     
     public func put<E>(
         url: URL,
         content: E,
         completion: @escaping VoidCompletion
-    ) throws where E: Encodable {
-        let data = try self.encoder.encode(content)
-        self.networking.makeRequest(
-            url: url,
-            method: .put(content: data),
-            completion: self.getCompletion(with: completion))
+    ) where E: Encodable {
+        do {
+            let data = try self.encoder.encode(content)
+            self.networking.makeRequest(
+                url: url,
+                method: .put(content: data),
+                completion: self.getCompletion(with: completion))
+        } catch {
+            completion(.failure(error))
+        }
     }
     
+    // MARK: DELETE
     public func delete<D>(
         url: URL,
         expectedType: D.Type = D.self,

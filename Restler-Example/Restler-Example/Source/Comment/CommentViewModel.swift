@@ -24,20 +24,12 @@ class CommentViewModel: ObservableObject {
     // MARK: - Internal
     func create() {
         guard let url = URL(string: "https://jsonplaceholder.typicode.com/comments") else { return assertionFailure() }
-        do {
-            try self.post(url: url)
-        } catch {
-            assertionFailure(error.localizedDescription)
-        }
+        self.post(url: url)
     }
     
     func update() {
         guard let url = URL(string: "https://jsonplaceholder.typicode.com/comments/1") else { return assertionFailure() }
-        do {
-            try self.put(url: url)
-        } catch {
-            assertionFailure(error.localizedDescription)
-        }
+        self.put(url: url)
     }
     
     func delete() {
@@ -46,8 +38,8 @@ class CommentViewModel: ObservableObject {
     }
     
     // MARK: - Private
-    private func post(url: URL) throws {
-        try self.restler.post(url: url, content: self.comment) { result in
+    private func post(url: URL) {
+        self.restler.post(url: url, content: self.comment) { result in
             switch result {
             case .success:
                 print("Comment posted")
@@ -57,8 +49,8 @@ class CommentViewModel: ObservableObject {
         }
     }
     
-    private func put(url: URL) throws {
-        try self.restler.put(url: url, content: self.comment) { result in
+    private func put(url: URL) {
+        self.restler.put(url: url, content: self.comment) { result in
             switch result {
             case .success:
                 print("Comment updated")
