@@ -1,20 +1,26 @@
-import Foundation
+import XCTest
 @testable import Restler
 
 extension Restler.Error: UniqueValuedEnumerator {
     var uniqueValue: Int {
-        switch self {
-        case .forbiden: return 0
-        case .internalFrameworkError: return 1
-        case .invalidParameters: return 2
-        case .invalidResponse: return 3
-        case .noInternetConnection: return 4
-        case .notFound: return 5
-        case .serverError: return 6
-        case .timeout: return 7
-        case .unauthorized: return 8
-        case .unknownError: return 9
-        case .validationError: return 10
+        let allCases: [Restler.Error] = [
+            .forbidden,
+            .internalFrameworkError,
+            .invalidParameters,
+            .invalidResponse,
+            .invalidURL,
+            .noInternetConnection,
+            .notFound,
+            .serverError,
+            .timeout,
+            .unauthorized,
+            .unknownError,
+            .validationError(nil)
+        ]
+        guard let value = allCases.firstIndex(of: self) else {
+            XCTFail("Case not found in all cases array.")
+            return -1
         }
+        return value
     }
 }
