@@ -5,7 +5,7 @@ typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType: class {
     var header: Restler.Header { get set }
-    func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion)
+    func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion) -> Restler.Task?
 }
 
 class Networking {
@@ -21,9 +21,12 @@ class Networking {
 
 // MARK: - NetworkingType
 extension Networking: NetworkingType {
-    func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion) {
-        guard let request = self.buildURLRequest(url: url, httpMethod: method) else { return completion(.failure(Restler.Error.internalFrameworkError)) }
-        self.runDataTask(request: request, completion: completion)
+    func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion) -> Restler.Task? {
+        guard let request = self.buildURLRequest(url: url, httpMethod: method) else {
+            completion(.failure(Restler.Error.internalFrameworkError))
+            return nil
+        }
+        return Restler.Task(task: self.runDataTask(request: request, completion: completion))
     }
 }
 
@@ -40,11 +43,12 @@ extension Networking {
         return request
     }
     
-    private func runDataTask(request: URLRequest, completion: @escaping DataCompletion) {
+    private func runDataTask(request: URLRequest, completion: @escaping DataCompletion) -> URLSessionDataTaskType {
         let task = self.session.dataTask(with: request) { [weak self] response in
             self?.handleResponse(response: response, completion: completion)
         }
         task.resume()
+        return task
     }
     
     private func handleResponse(response: HTTPRequestResponse, completion: DataCompletion) {
