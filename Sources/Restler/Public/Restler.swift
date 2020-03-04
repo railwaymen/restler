@@ -448,14 +448,14 @@ extension Restler {
             switch result {
             case let .success(optionalData):
                 guard let data = optionalData else {
-                    completion(.failure(Error.invalidResponse))
+                    completion(.failure(CommonError(type: .invalidResponse, base: nil)))
                     return
                 }
                 do {
                     let object = try decoder.decode(D.self, from: data)
                     completion(.success(object))
                 } catch {
-                    completion(.failure(Error.invalidResponse))
+                    completion(.failure(CommonError(type: .invalidResponse, base: error)))
                 }
             case let .failure(error):
                 completion(.failure(error))
