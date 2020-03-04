@@ -1,12 +1,17 @@
 import Foundation
 
+/// Class for making requests to the API
 public class Restler {
     private let networking: NetworkingType
     private let dispatchQueueManager: DispatchQueueManagerType
     
+    /// Encoder used for encoding requests' body.
     public var encoder: JSONEncoderType
+    
+    /// Decoder used for decoding response's data to expected object.
     public var decoder: JSONDecoderType
     
+    /// Global header sent in requests.
     public var header: Restler.Header {
         get {
             return self.networking.header
@@ -17,6 +22,13 @@ public class Restler {
     }
     
     // MARK: - Initialization
+    
+    /// Default initializer.
+    ///
+    /// - Parameters:
+    ///   - encoder: Encoder used for encoding requests' body.
+    ///   - decoder: Decoder used for decoding response's data to expected object.
+    ///
     public convenience init(
         encoder: JSONEncoderType,
         decoder: JSONDecoderType
@@ -40,9 +52,24 @@ public class Restler {
         self.decoder = decoder
     }
     
-    // MARK: - Public
+    // MARK: -
     
     // MARK: GET
+    
+    /// Sends GET request to the given URL.
+    ///
+    /// After getting the data in response it is decoded to the `expectedType`. If decoder throws an error, calls completion with a proper error.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - query: Parameters sent in query.
+    ///   - expectedType:
+    ///         Type expected on request success to decode.
+    ///         Providing optional value optionally tries to decode, but completes with success always if data task completed successfully.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
+    ///
     public func get<D>(
         url: URL,
         query: [String: String?] = [:],
@@ -55,6 +82,20 @@ public class Restler {
             completion: self.getCompletion(with: completion))
     }
     
+    /// Sends GET request to the given URL.
+    ///
+    /// After getting the data in response it is decoded to the `expectedType` if it is possible.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - query: Parameters sent in query.
+    ///   - expectedType:
+    ///         Type expected on request success to decode.
+    ///         Providing optional value optionally tries to decode, but completes with success always if data task completed successfully.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
+    ///
     public func get<D>(
         url: URL,
         query: [String: String?] = [:],
@@ -67,6 +108,17 @@ public class Restler {
             completion: self.getCompletion(with: completion))
     }
     
+    /// Sends GET request to the given URL.
+    ///
+    /// After getting a response it ignores content.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - query: Parameters sent in query.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
+    ///
     public func get(
         url: URL,
         query: [String: String?] = [:],
@@ -79,6 +131,21 @@ public class Restler {
     }
     
     // MARK: POST
+    
+    /// Sends POST request to the given URL.
+    ///
+    /// After getting the data in response it is decoded to the `expectedType`. If decoder throws an error, calls completion with a proper error.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - content: Encodable structure which will be sent in the body of the request.
+    ///   - expectedType:
+    ///         Type expected on request success to decode.
+    ///         Providing optional value optionally tries to decode, but completes with success always if data task completed successfully.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
+    ///
     public func post<E, D>(
         url: URL,
         content: E,
@@ -97,6 +164,20 @@ public class Restler {
         }
     }
     
+    /// Sends POST request to the given URL.
+    ///
+    /// After getting the data in response it is decoded to the `expectedType` if it is possible.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - content: Encodable structure which will be sent in the body of the request.
+    ///   - expectedType:
+    ///         Type expected on request success to decode.
+    ///         Providing optional value optionally tries to decode, but completes with success always if data task completed successfully.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
+    ///
     public func post<E, D>(
         url: URL,
         content: E,
@@ -115,6 +196,17 @@ public class Restler {
         }
     }
     
+    /// Sends POST request to the given URL.
+    ///
+    /// After getting a response it ignores content.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - content: Encodable structure which will be sent in the body of the request.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
+    ///
     public func post<E>(
         url: URL,
         content: E,
@@ -133,6 +225,21 @@ public class Restler {
     }
     
     // MARK: PUT
+    
+    /// Sends PUT request to the given URL.
+    ///
+    /// After getting the data in response it is decoded to the `expectedType`. If decoder throws an error, calls completion with a proper error.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - content: Encodable structure which will be sent in the body of the request.
+    ///   - expectedType:
+    ///         Type expected on request success to decode.
+    ///         Providing optional value optionally tries to decode, but completes with success always if data task completed successfully.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
+    ///
     public func put<E, D>(
         url: URL,
         content: E,
@@ -151,6 +258,20 @@ public class Restler {
         }
     }
     
+    /// Sends PUT request to the given URL.
+    ///
+    /// After getting the data in response it is decoded to the `expectedType` if it is possible.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - content: Encodable structure which will be sent in the body of the request.
+    ///   - expectedType:
+    ///         Type expected on request success to decode.
+    ///         Providing optional value optionally tries to decode, but completes with success always if data task completed successfully.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
+    ///
     public func put<E, D>(
         url: URL,
         content: E,
@@ -169,6 +290,17 @@ public class Restler {
         }
     }
     
+    /// Sends PUT request to the given URL.
+    ///
+    /// After getting a response it ignores content.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - content: Encodable structure which will be sent in the body of the request.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
+    ///
     public func put<E>(
         url: URL,
         content: E,
@@ -187,6 +319,20 @@ public class Restler {
     }
     
     // MARK: DELETE
+    
+    /// Sends DELETE request to the given URL.
+    ///
+    /// After getting the data in response it is decoded to the `expectedType`. If decoder throws an error, calls completion with a proper error.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - expectedType:
+    ///         Type expected on request success to decode.
+    ///         Providing optional value optionally tries to decode, but completes with success always if data task completed successfully.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
+    ///
     public func delete<D>(
         url: URL,
         expectedType: D.Type = D.self,
@@ -198,6 +344,19 @@ public class Restler {
             completion: self.getCompletion(with: completion))
     }
     
+    /// Sends DELETE request to the given URL.
+    ///
+    /// After getting the data in response it is decoded to the `expectedType` if it is possible.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - expectedType:
+    ///         Type expected on request success to decode.
+    ///         Providing optional value optionally tries to decode, but completes with success always if data task completed successfully.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
+    ///
     public func delete<D>(
         url: URL,
         expectedType: D?.Type = D?.self,
@@ -209,6 +368,17 @@ public class Restler {
             completion: self.getCompletion(with: completion))
     }
     
+    /// Sends DELETE request to the given URL.
+    ///
+    /// After getting a response it ignores content.
+    ///
+    /// - Parameters:
+    ///   - url: URL to send request to.
+    ///   - query: Parameters sent in query.
+    ///   - completion: Handler called at the and of the function. If an error occures before the request, the error is also passed to the completion handler.
+    ///
+    /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
+    ///
     public func delete(
         url: URL,
         completion: @escaping VoidCompletion
