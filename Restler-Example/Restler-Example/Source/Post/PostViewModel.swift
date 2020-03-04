@@ -39,7 +39,7 @@ class PostViewModel: ObservableObject {
     // MARK: - Private
     private func fetchComments() {
         guard let url = URL(string: "https://jsonplaceholder.typicode.com/comments") else { return assertionFailure() }
-        self.restler.get(url: url, query: ["postId": "\(self.post.id)"], expectedType: [PostComment].self) { result in
+        _ = self.restler.get(url: url, query: ["postId": "1"], expectedType: [PostComment].self) { result in
             switch result {
             case let .success(comments):
                 self.comments = comments

@@ -87,16 +87,19 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let queryParameters = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.get(url: url, query: queryParameters) { result in
+        let task = sut.get(url: url, query: queryParameters) { result in
             completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
         XCTAssertEqual(self.networking.makeRequestParams.first?.method, .get(query: queryParameters))
+        XCTAssertNil(completionResult)
     }
     
     func testGet_selfDeinitialized() throws {
@@ -104,15 +107,18 @@ extension RestlerTests {
         var sut: Restler? = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try XCTUnwrap(sut).get(url: url, query: [:]) { result in
+        let task = try XCTUnwrap(sut).get(url: url, query: [:]) { result in
             completionResult = result
         }
         sut = nil
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -125,14 +131,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.get(url: url, query: [:]) { result in
+        let task = sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -144,14 +153,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.get(url: url, query: [:]) { result in
+        let task = sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -163,14 +175,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.get(url: url, query: [:]) { result in
+        let task = sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -183,14 +198,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.get(url: url, query: [:]) { result in
+        let task = sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -204,14 +222,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.get(url: url, query: [:]) { result in
+        let task = sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -223,14 +244,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.get(url: url, query: [:]) { result in
+        let task = sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -242,14 +266,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.get(url: url, query: [:]) { result in
+        let task = sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -262,14 +289,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.get(url: url, query: [:]) { result in
+        let task = sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -285,16 +315,19 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let queryParameters = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.get(url: url, query: queryParameters) { result in
+        let task = sut.get(url: url, query: queryParameters) { result in
             completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
         XCTAssertEqual(self.networking.makeRequestParams.first?.method, .get(query: queryParameters))
+        XCTAssertNil(completionResult)
     }
     
     func testGetIgnoringResponse_selfDeinitialized() throws {
@@ -302,15 +335,18 @@ extension RestlerTests {
         var sut: Restler? = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        try XCTUnwrap(sut).get(url: url, query: [:]) { result in
+        let task = try XCTUnwrap(sut).get(url: url, query: [:]) { result in
             completionResult = result
         }
         sut = nil
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -323,14 +359,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.get(url: url, query: [:]) { result in
+        let task = sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -342,14 +381,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.get(url: url, query: [:]) { result in
+        let task = sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -361,14 +403,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.get(url: url, query: [:]) { result in
+        let task = sut.get(url: url, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -385,12 +430,15 @@ extension RestlerTests {
         let sut = self.buildSUT(encoder: encoderMock)
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
+        XCTAssertNil(task)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: encoderMock.thrownError)
     }
@@ -400,16 +448,19 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
         XCTAssertEqual(self.networking.makeRequestParams.first?.method, .post(content: try JSONEncoder().encode(content)))
+        XCTAssertNil(completionResult)
     }
     
     func testPost_selfDeinitialized() throws {
@@ -418,15 +469,18 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try XCTUnwrap(sut).post(url: url, content: content) { result in
+        let task = try XCTUnwrap(sut).post(url: url, content: content) { result in
             completionResult = result
         }
         sut = nil
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -440,14 +494,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -460,14 +517,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -480,14 +540,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -501,14 +564,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -523,14 +589,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -543,14 +612,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -563,14 +635,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -584,14 +659,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -608,12 +686,15 @@ extension RestlerTests {
         let sut = self.buildSUT(encoder: encoderMock)
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
+        XCTAssertNil(task)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: encoderMock.thrownError)
     }
@@ -623,16 +704,19 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
         XCTAssertEqual(self.networking.makeRequestParams.first?.method, .post(content: try JSONEncoder().encode(content)))
+        XCTAssertNil(completionResult)
     }
     
     func testPostIgnoringResponse_selfDeinitialized() throws {
@@ -641,15 +725,18 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        try XCTUnwrap(sut).post(url: url, content: content) { result in
+        let task = try XCTUnwrap(sut).post(url: url, content: content) { result in
             completionResult = result
         }
         sut = nil
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -663,14 +750,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -683,14 +773,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -703,14 +796,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -724,14 +820,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.post(url: url, content: content) { result in
+        let task = sut.post(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -748,12 +847,15 @@ extension RestlerTests {
         let sut = self.buildSUT(encoder: encoderMock)
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
+        XCTAssertNil(task)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: encoderMock.thrownError)
     }
@@ -763,16 +865,19 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
         XCTAssertEqual(self.networking.makeRequestParams.first?.method, .put(content: try JSONEncoder().encode(content)))
+        XCTAssertNil(completionResult)
     }
     
     func testPut_selfDeinitialized() throws {
@@ -781,15 +886,18 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try XCTUnwrap(sut).put(url: url, content: content) { result in
+        let task = try XCTUnwrap(sut).put(url: url, content: content) { result in
             completionResult = result
         }
         sut = nil
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -803,14 +911,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -823,14 +934,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -843,14 +957,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -864,14 +981,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -886,14 +1006,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -906,14 +1029,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -926,14 +1052,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -947,14 +1076,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -971,12 +1103,15 @@ extension RestlerTests {
         let sut = self.buildSUT(encoder: encoderMock)
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
+        XCTAssertNil(task)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: encoderMock.thrownError)
     }
@@ -986,16 +1121,19 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
         XCTAssertEqual(self.networking.makeRequestParams.first?.method, .put(content: try JSONEncoder().encode(content)))
+        XCTAssertNil(completionResult)
     }
     
     func testPutIgnoringResponse_selfDeinitialized() throws {
@@ -1004,15 +1142,18 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        try XCTUnwrap(sut).put(url: url, content: content) { result in
+        let task = try XCTUnwrap(sut).put(url: url, content: content) { result in
             completionResult = result
         }
         sut = nil
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1026,14 +1167,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1046,14 +1190,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1066,14 +1213,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1087,14 +1237,17 @@ extension RestlerTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let content = ["some": "value"]
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.put(url: url, content: content) { result in
+        let task = sut.put(url: url, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1109,16 +1262,19 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
         XCTAssertEqual(self.networking.makeRequestParams.first?.method, .delete)
+        XCTAssertNil(completionResult)
     }
     
     func testDelete_selfDeinitialized() throws {
@@ -1126,15 +1282,18 @@ extension RestlerTests {
         var sut: Restler? = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        try XCTUnwrap(sut).delete(url: url) { result in
+        let task = try XCTUnwrap(sut).delete(url: url) { result in
             completionResult = result
         }
         sut = nil
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1147,14 +1306,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1166,14 +1328,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1185,14 +1350,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1205,14 +1373,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1226,14 +1397,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1245,14 +1419,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1264,14 +1441,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1284,14 +1464,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1306,16 +1489,19 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         //Assert
-        XCTAssertNil(completionResult)
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.first?.url, url)
         XCTAssertEqual(self.networking.makeRequestParams.first?.method, .delete)
+        XCTAssertNil(completionResult)
     }
     
     func testDeleteIgnoringResponse_selfDeinitialized() throws {
@@ -1323,15 +1509,18 @@ extension RestlerTests {
         var sut: Restler? = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        try XCTUnwrap(sut).delete(url: url) { result in
+        let task = try XCTUnwrap(sut).delete(url: url) { result in
             completionResult = result
         }
         sut = nil
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1344,14 +1533,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let error = TestError()
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1363,14 +1555,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1382,14 +1577,17 @@ extension RestlerTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
@@ -1402,14 +1600,17 @@ extension RestlerTests {
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let response = try JSONSerialization.data(withJSONObject: ["id": 1, "name": "Object"], options: .prettyPrinted)
+        let returnedTask = Restler.Task(task: URLSessionDataTaskMock())
+        self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        sut.delete(url: url) { result in
+        let task = sut.delete(url: url) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
         try XCTUnwrap(self.dispatchQueueManager.performParams.last).action()
         //Assert
+        XCTAssertEqual(task, returnedTask)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)

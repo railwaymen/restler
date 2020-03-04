@@ -28,6 +28,11 @@ struct CommentView: View {
                 label: {
                     Text("DELETE")
             })
+            Button(
+                action: self.viewModel.cancelAllTasks,
+                label: {
+                    Text("CANCEL ALL TASKS")
+            }).padding(.top, 16)
         }
     }
 }

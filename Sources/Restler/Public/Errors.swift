@@ -11,6 +11,7 @@ extension Restler {
         case invalidURL
         case noInternetConnection
         case notFound
+        case requestCancelled
         case serverError
         case timeout
         case unauthorized
@@ -27,6 +28,7 @@ extension Restler {
             case .invalidURL: return "\(Error.prefix) Provided URL is invalid."
             case .noInternetConnection: return "\(Error.prefix) There's no connection to the internet."
             case .notFound: return "\(Error.prefix) Not found."
+            case .requestCancelled: return "\(Error.prefix) Request has been cancelled."
             case .serverError: return "\(Error.prefix) Server internal error - 500."
             case .timeout: return "\(Error.prefix) The request has been timed out."
             case .unauthorized: return "\(Error.prefix) Unauthorized - authorization is needed for this request."
@@ -51,6 +53,7 @@ extension Restler {
             case NSURLErrorNetworkConnectionLost: self = .noInternetConnection
             case NSURLErrorTimedOut: self = .timeout
             case NSURLErrorUnknown: self = .unknownError
+            case NSURLErrorCancelled: self = .requestCancelled
             default: return nil
             }
         }
@@ -68,6 +71,7 @@ extension Restler.Error: Equatable {
         case (.invalidURL, .invalidURL): return true
         case (.noInternetConnection, .noInternetConnection): return true
         case (.notFound, .notFound): return true
+        case (.requestCancelled, .requestCancelled): return true
         case (.serverError, .serverError): return true
         case (.timeout, .timeout): return true
         case (.unauthorized, .unauthorized): return true
