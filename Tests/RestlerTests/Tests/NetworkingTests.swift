@@ -130,15 +130,15 @@ extension NetworkingTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        let responseData = Data()
+        let response = HTTPRequestResponse(data: Data(), response: nil, error: nil)
         var completionResult: DataResult?
         //Act
         _ = sut.makeRequest(url: url, method: .get(query: [:])) { result in
             completionResult = result
         }
-        try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: responseData, response: nil, error: nil))
+        try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.unknownError)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.RequestError(type: .unknownError, response: Restler.Response(response)))
     }
     
     func testMakeRequest_notFoundResponse() throws {
@@ -148,15 +148,15 @@ extension NetworkingTests {
         let mockResponse = HTTPURLResponseMock()
         mockResponse.isSuccessfulReturnValue = false
         mockResponse.statusCodeReturnValue = 404
-        let responseData = Data()
+        let response = HTTPRequestResponse(data: Data(), response: mockResponse, error: nil)
         var completionResult: DataResult?
         //Act
         _ = sut.makeRequest(url: url, method: .get(query: [:])) { result in
             completionResult = result
         }
-        try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: responseData, response: mockResponse, error: nil))
+        try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.notFound)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.RequestError(type: .notFound, response: Restler.Response(response)))
     }
     
     func testMakeRequest_responseNotNil() throws {
@@ -166,15 +166,15 @@ extension NetworkingTests {
         let mockResponse = HTTPURLResponseMock()
         mockResponse.isSuccessfulReturnValue = true
         mockResponse.statusCodeReturnValue = 401
-        let responseData = Data()
+        let response = HTTPRequestResponse(data: Data(), response: mockResponse, error: TestError())
         var completionResult: DataResult?
         //Act
         _ = sut.makeRequest(url: url, method: .get(query: [:])) { result in
             completionResult = result
         }
-        try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: responseData, response: mockResponse, error: TestError()))
+        try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.unauthorized)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.RequestError(type: .unauthorized, response: Restler.Response(response)))
     }
     
     func testMakeRequest_noDataInResponse() throws {
@@ -200,14 +200,15 @@ extension NetworkingTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let mockResponse = HTTPURLResponseMock()
         mockResponse.isSuccessfulReturnValue = false
+        let response = HTTPRequestResponse(data: nil, response: mockResponse, error: returnedError)
         var completionResult: DataResult?
         //Act
         _ = sut.makeRequest(url: url, method: .get(query: [:])) { result in
             completionResult = result
         }
-        try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: nil, response: mockResponse, error: returnedError))
+        try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: returnedError)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.RequestError(type: .unknownError, response: Restler.Response(response)))
     }
 }
 

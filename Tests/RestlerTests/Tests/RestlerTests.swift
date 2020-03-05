@@ -150,7 +150,7 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
-    
+
     func testGet_noResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -169,9 +169,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testGet_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -190,9 +190,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testGet_decodesObject() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -497,7 +497,7 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
-    
+
     func testPost_noResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -517,9 +517,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testPost_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -539,7 +539,7 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
     
     func testPost_decodesObject() throws {
@@ -896,7 +896,7 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
-    
+
     func testPut_noResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -916,9 +916,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testPut_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -938,9 +938,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testPut_decodesObject() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -1274,7 +1274,7 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
-    
+
     func testDelete_noResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -1293,9 +1293,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testDelete_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -1314,9 +1314,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testDelete_decodesObject() throws {
         //Arrange
         let sut = self.buildSUT()
