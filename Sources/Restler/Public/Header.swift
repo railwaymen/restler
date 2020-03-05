@@ -48,8 +48,22 @@ extension Restler {
         ///   - key: Key to remove value for.
         ///
         /// - Returns: True if value for the key existed
+        ///
         public mutating func removeValue(forKey key: Key) -> Bool {
             return self.raw.removeValue(forKey: key.rawValue) != nil
+        }
+        
+        /// Encodes username and password into basic authorization header field.
+        ///
+        /// - Parameters:
+        ///   - username: The username for the basic authentication.
+        ///   - password: The password for the basic authentication.
+        ///
+        public mutating func setAuthorization(username: String, password: String) {
+            let credentialsString = "\(username):\(password)"
+            guard let credentialsData = credentialsString.data(using: .utf8) else { return }
+            let base64Credentials = credentialsData.base64EncodedString()
+            self[.authorization] = "Basic \(base64Credentials)"
         }
     }
 }
