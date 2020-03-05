@@ -78,6 +78,7 @@ deploy_pod:
   before_script:
     *setup
   script:
+    - bundle exec fastlane set_podspec_version
     - bundle exec pod repo push railwaymen-open-rwm_podspec 'Restler.podspec'
   dependencies:
     - test_project
