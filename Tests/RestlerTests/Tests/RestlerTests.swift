@@ -95,7 +95,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: queryParameters) { result in
+        let task = sut.get(EndpointMock.mock, query: queryParameters) { result in
             completionResult = result
         }
         //Assert
@@ -114,7 +114,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = try XCTUnwrap(sut).get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = try XCTUnwrap(sut).get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         sut = nil
@@ -137,7 +137,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = sut.get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -150,7 +150,7 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
-    
+
     func testGet_noResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -158,7 +158,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = sut.get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -169,9 +169,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testGet_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -179,7 +179,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = sut.get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -190,9 +190,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testGet_decodesObject() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -201,7 +201,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = sut.get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -224,7 +224,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = sut.get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -245,7 +245,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = sut.get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -266,7 +266,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = sut.get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -288,7 +288,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = sut.get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -313,7 +313,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: queryParameters) { result in
+        let task = sut.get(EndpointMock.mock, query: queryParameters) { result in
             completionResult = result
         }
         //Assert
@@ -332,7 +332,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = try XCTUnwrap(sut).get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = try XCTUnwrap(sut).get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         sut = nil
@@ -355,7 +355,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = sut.get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -376,7 +376,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = sut.get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -397,7 +397,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.get(endpoint: EndpointMock.mock, query: [:]) { result in
+        let task = sut.get(EndpointMock.mock, query: [:]) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -423,7 +423,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -440,7 +440,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -460,7 +460,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = try XCTUnwrap(sut).post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = try XCTUnwrap(sut).post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         sut = nil
@@ -484,7 +484,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -497,7 +497,7 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
-    
+
     func testPost_noResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -506,7 +506,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -517,9 +517,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testPost_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -528,7 +528,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -539,7 +539,7 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
     
     func testPost_decodesObject() throws {
@@ -551,7 +551,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -575,7 +575,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -597,7 +597,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -619,7 +619,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -642,7 +642,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -668,7 +668,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -685,7 +685,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -705,7 +705,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = try XCTUnwrap(sut).post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = try XCTUnwrap(sut).post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         sut = nil
@@ -729,7 +729,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -751,7 +751,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -773,7 +773,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -796,7 +796,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.post(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.post(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -822,7 +822,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -839,7 +839,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -859,7 +859,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = try XCTUnwrap(sut).put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = try XCTUnwrap(sut).put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         sut = nil
@@ -883,7 +883,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -896,7 +896,7 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
-    
+
     func testPut_noResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -905,7 +905,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -916,9 +916,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testPut_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -927,7 +927,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -938,9 +938,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testPut_decodesObject() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -950,7 +950,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -974,7 +974,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -996,7 +996,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -1018,7 +1018,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -1041,7 +1041,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -1067,7 +1067,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -1084,7 +1084,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         //Assert
@@ -1104,7 +1104,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = try XCTUnwrap(sut).put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = try XCTUnwrap(sut).put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         sut = nil
@@ -1128,7 +1128,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -1150,7 +1150,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -1172,7 +1172,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -1195,7 +1195,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.put(endpoint: EndpointMock.mock, content: content) { result in
+        let task = sut.put(EndpointMock.mock, content: content) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -1219,7 +1219,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         //Assert
@@ -1238,7 +1238,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = try XCTUnwrap(sut).delete(endpoint: EndpointMock.mock) { result in
+        let task = try XCTUnwrap(sut).delete(EndpointMock.mock) { result in
             completionResult = result
         }
         sut = nil
@@ -1261,7 +1261,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -1274,7 +1274,7 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: error)
     }
-    
+
     func testDelete_noResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -1282,7 +1282,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -1293,9 +1293,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testDelete_invalidResponse() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -1303,7 +1303,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -1314,9 +1314,9 @@ extension RestlerTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.thread, .main)
         XCTAssertEqual(self.dispatchQueueManager.performParams.last?.syncType, .async)
-        AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.invalidResponse)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.CommonError(type: .invalidResponse, base: nil))
     }
-    
+
     func testDelete_decodesObject() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -1325,7 +1325,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -1348,7 +1348,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -1369,7 +1369,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -1390,7 +1390,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -1412,7 +1412,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))
@@ -1436,7 +1436,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         //Assert
@@ -1455,7 +1455,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = try XCTUnwrap(sut).delete(endpoint: EndpointMock.mock) { result in
+        let task = try XCTUnwrap(sut).delete(EndpointMock.mock) { result in
             completionResult = result
         }
         sut = nil
@@ -1478,7 +1478,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.failure(error))
@@ -1499,7 +1499,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(nil))
@@ -1520,7 +1520,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(Data()))
@@ -1542,7 +1542,7 @@ extension RestlerTests {
         self.networking.makeRequestReturnValue = returnedTask
         var completionResult: Restler.VoidResult?
         //Act
-        let task = sut.delete(endpoint: EndpointMock.mock) { result in
+        let task = sut.delete(EndpointMock.mock) { result in
             completionResult = result
         }
         try XCTUnwrap(self.networking.makeRequestParams.last).completion(.success(response))

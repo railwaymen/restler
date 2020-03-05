@@ -1,6 +1,7 @@
 import Foundation
 
 extension Restler.Header {
+    
     /// Key for the header.
     ///
     /// If you need to use your own key, use

@@ -1,19 +1,19 @@
 import Foundation
 
 /// Class for making requests to the API
-public class Restler {
+open class Restler {
     private let baseURL: URL
     private let networking: NetworkingType
     private let dispatchQueueManager: DispatchQueueManagerType
     
     /// Encoder used for encoding requests' body.
-    public var encoder: RestlerJSONEncoderType
+    open var encoder: RestlerJSONEncoderType
     
     /// Decoder used for decoding response's data to expected object.
-    public var decoder: RestlerJSONDecoderType
+    open var decoder: RestlerJSONDecoderType
     
     /// Global header sent in requests.
-    public var header: Restler.Header {
+    open var header: Restler.Header {
         get {
             return self.networking.header
         }
@@ -75,8 +75,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
-    public func get<D>(
-        endpoint: RestlerEndpointable,
+    open func get<D>(
+        _ endpoint: RestlerEndpointable,
         query: [String: String?] = [:],
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
@@ -101,8 +101,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
-    public func get<D>(
-        endpoint: RestlerEndpointable,
+    open func get<D>(
+        _ endpoint: RestlerEndpointable,
         query: [String: String?] = [:],
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
@@ -124,8 +124,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
-    public func get(
-        endpoint: RestlerEndpointable,
+    open func get(
+        _ endpoint: RestlerEndpointable,
         query: [String: String?] = [:],
         completion: @escaping VoidCompletion
     ) -> Task? {
@@ -151,8 +151,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
-    public func post<E, D>(
-        endpoint: RestlerEndpointable,
+    open func post<E, D>(
+        _ endpoint: RestlerEndpointable,
         content: E,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
@@ -183,8 +183,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
-    public func post<E, D>(
-        endpoint: RestlerEndpointable,
+    open func post<E, D>(
+        _ endpoint: RestlerEndpointable,
         content: E,
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
@@ -212,8 +212,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
-    public func post<E>(
-        endpoint: RestlerEndpointable,
+    open func post<E>(
+        _ endpoint: RestlerEndpointable,
         content: E,
         completion: @escaping VoidCompletion
     ) -> Task? where E: Encodable {
@@ -245,8 +245,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
-    public func put<E, D>(
-        endpoint: RestlerEndpointable,
+    open func put<E, D>(
+        _ endpoint: RestlerEndpointable,
         content: E,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
@@ -277,8 +277,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
-    public func put<E, D>(
-        endpoint: RestlerEndpointable,
+    open func put<E, D>(
+        _ endpoint: RestlerEndpointable,
         content: E,
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
@@ -306,8 +306,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If encoding of the content failed, it returns nil. Otherwise it can be Restler framework internal error.
     ///
-    public func put<E>(
-        endpoint: RestlerEndpointable,
+    open func put<E>(
+        _ endpoint: RestlerEndpointable,
         content: E,
         completion: @escaping VoidCompletion
     ) -> Task? where E: Encodable {
@@ -338,8 +338,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
-    public func delete<D>(
-        endpoint: RestlerEndpointable,
+    open func delete<D>(
+        _ endpoint: RestlerEndpointable,
         expectedType: D.Type = D.self,
         completion: @escaping DecodableCompletion<D>
     ) -> Task? where D: Decodable {
@@ -362,8 +362,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
-    public func delete<D>(
-        endpoint: RestlerEndpointable,
+    open func delete<D>(
+        _ endpoint: RestlerEndpointable,
         expectedType: D?.Type = D?.self,
         completion: @escaping DecodableCompletion<D?>
     ) -> Task? where D: Decodable {
@@ -384,8 +384,8 @@ public class Restler {
     ///
     /// - Returns: Task for the request. If it is nil, then probably there's internal error in the Restler framework.
     ///
-    public func delete(
-        endpoint: RestlerEndpointable,
+    open func delete(
+        _ endpoint: RestlerEndpointable,
         completion: @escaping VoidCompletion
     ) -> Task? {
         return self.networking.makeRequest(
@@ -448,14 +448,14 @@ extension Restler {
             switch result {
             case let .success(optionalData):
                 guard let data = optionalData else {
-                    completion(.failure(Error.invalidResponse))
+                    completion(.failure(CommonError(type: .invalidResponse, base: nil)))
                     return
                 }
                 do {
                     let object = try decoder.decode(D.self, from: data)
                     completion(.success(object))
                 } catch {
-                    completion(.failure(Error.invalidResponse))
+                    completion(.failure(CommonError(type: .invalidResponse, base: error)))
                 }
             case let .failure(error):
                 completion(.failure(error))
