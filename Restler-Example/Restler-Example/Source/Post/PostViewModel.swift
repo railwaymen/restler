@@ -38,13 +38,17 @@ class PostViewModel: ObservableObject {
     
     // MARK: - Private
     private func fetchComments() {
-        _ = self.restler.get(Endpoint.comments, query: ["postId": "1"], expectedType: [PostComment].self) { result in
-            switch result {
-            case let .success(comments):
-                self.comments = comments
-            case let .failure(error):
-                print("Error:", error)
-            }
-        }
+        _ = self.restler.get(Endpoint.comments)
+            .query(["postId": 1])
+            .decode([PostComment].self)
+            .onCompletion({ result in
+                switch result {
+                case let .success(comments):
+                    self.comments = comments
+                case let .failure(error):
+                    print("Error:", error)
+                }
+            })
+            .start()
     }
 }

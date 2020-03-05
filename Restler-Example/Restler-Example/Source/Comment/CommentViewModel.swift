@@ -24,40 +24,51 @@ class CommentViewModel: ObservableObject {
     
     // MARK: - Internal
     func create() {
-        let optionalTask = self.restler.post(Endpoint.comments, content: self.comment) { result in
-            switch result {
-            case .success:
-                print("Comment posted")
-            case let .failure(error):
-                print(error)
-            }
-        }
+        let optionalTask = self.restler.post(Endpoint.comments)
+            .body(self.comment)
+            .decode(Void.self)
+            .onCompletion({ result in
+                switch result {
+                case .success:
+                    print("Comment posted")
+                case let .failure(error):
+                    print(error)
+                }
+            })
+            .start()
         guard let task = optionalTask else { return }
         self.tasks.update(with: task)
     }
     
     func update() {
-        let optionalTask = self.restler.put(Endpoint.comment(1), content: self.comment) { result in
-            switch result {
-            case .success:
-                print("Comment updated")
-            case let .failure(error):
-                print(error)
-            }
-        }
+        let optionalTask = self.restler.put(Endpoint.comment(1))
+            .body(self.comment)
+            .decode(Void.self)
+            .onCompletion({ result in
+                switch result {
+                case .success:
+                    print("Comment updated")
+                case let .failure(error):
+                    print(error)
+                }
+            })
+            .start()
         guard let task = optionalTask else { return }
         self.tasks.update(with: task)
     }
     
     func delete() {
-        let optionalTask = self.restler.delete(Endpoint.comment(self.comment.id)) { result in
-            switch result {
-            case .success:
-                print("Comment deleted")
-            case let .failure(error):
-                print(error)
-            }
-        }
+        let optionalTask = self.restler.delete(Endpoint.comment(self.comment.id))
+            .decode(Void.self)
+            .onCompletion({ result in
+                switch result {
+                case .success:
+                    print("Comment deleted")
+                case let .failure(error):
+                    print(error)
+                }
+            })
+            .start()
         guard let task = optionalTask else { return }
         self.tasks.update(with: task)
     }
