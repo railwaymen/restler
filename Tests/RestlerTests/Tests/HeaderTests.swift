@@ -111,9 +111,9 @@ extension HeaderTests {
     }
 }
 
-// MARK: - setAuthorization(username:password:)
+// MARK: - setBasicAuthorization(username:password:)
 extension HeaderTests {
-    func testSetAuthorization() throws {
+    func testSetBasicAuthorization() throws {
         //Arrange
         var sut = Restler.Header()
         let username = "Some user hello"
@@ -121,7 +121,7 @@ extension HeaderTests {
         let credentials = "\(username):\(password)"
         let expectedValue = "Basic \(try XCTUnwrap(credentials.data(using: .utf8)).base64EncodedString())"
         //Act
-        sut.setAuthorization(username: username, password: password)
+        sut.setBasicAuthorization(username: username, password: password)
         //Assert
         XCTAssertEqual(sut[.authorization], expectedValue)
     }

@@ -59,7 +59,7 @@ extension Restler {
         ///   - username: The username for the basic authentication.
         ///   - password: The password for the basic authentication.
         ///
-        public mutating func setAuthorization(username: String, password: String) {
+        public mutating func setBasicAuthorization(username: String, password: String) {
             let credentialsString = "\(username):\(password)"
             guard let credentialsData = credentialsString.data(using: .utf8) else { return }
             let base64Credentials = credentialsData.base64EncodedString()
