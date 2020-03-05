@@ -1,0 +1,8 @@
+default_platform(:mac)
+
+platform :mac do
+  desc "Sets podspec version to the current tag version."
+  lane :set_podspec_version do
+    version_bump_podspec(version_number: ENV['CI_COMMIT_TAG'])
+  end
+end
