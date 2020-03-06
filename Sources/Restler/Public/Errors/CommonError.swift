@@ -1,9 +1,9 @@
 import Foundation
 
 extension Restler {
-    public struct CommonError: Error {
+    public struct CommonError: Swift.Error {
         public let type: ErrorType
-        public let base: Error?
+        public let base: Swift.Error?
     }
 }
 

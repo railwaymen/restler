@@ -22,7 +22,13 @@ extension RestlerRequestInternal {
             } else if let first = errors.first, errors.count == 1 {
                 return first
             } else {
-                return Restler.MultipleErrors(errors: errors)
+                return Restler.Error.multiple(errors.map { error in
+                    if let restlerError = error as? Restler.Error {
+                        return restlerError
+                    } else {
+                        return Restler.Error.common(type: .unknownError, base: error)
+                    }
+                })
             }
         }
     }

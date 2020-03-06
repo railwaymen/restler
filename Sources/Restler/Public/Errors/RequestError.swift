@@ -1,7 +1,7 @@
 import Foundation
 
 extension Restler {
-    public struct RequestError: Error {
+    public struct RequestError: Swift.Error {
         public let type: ErrorType
         public let response: Response
     }
@@ -11,5 +11,6 @@ extension Restler {
 extension Restler.RequestError: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.type == rhs.type
+            && lhs.response == rhs.response
     }
 }

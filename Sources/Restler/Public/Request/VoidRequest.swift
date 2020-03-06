@@ -12,7 +12,7 @@ extension Restler {
         private let decodingErrors: [RestlerErrorDecodable.Type]
         
         private var successCompletionHandler: ((D) -> Void)?
-        private var failureCompletionHandler: ((Error) -> Void)?
+        private var failureCompletionHandler: ((Swift.Error) -> Void)?
         private var completionHandler: Restler.VoidCompletion = { _ in }
         
         internal let dispatchQueueManager: DispatchQueueManagerType
@@ -45,7 +45,7 @@ extension Restler {
             return self
         }
         
-        public func onFailure(_ handler: @escaping (Error) -> Void) -> Self {
+        public func onFailure(_ handler: @escaping (Swift.Error) -> Void) -> Self {
             self.failureCompletionHandler = handler
             return self
         }
@@ -58,7 +58,7 @@ extension Restler {
         public func start() -> Task? {
             let completion = self.getCompletion()
             guard self.errors.isEmpty else {
-                completion(.failure(Restler.MultipleErrors(errors: self.errors)))
+                completion(.failure(Error.multiple(self.errors)))
                 return nil
             }
             return self.networking.makeRequest(
@@ -72,17 +72,15 @@ extension Restler {
 // MARK: - Private
 extension Restler.VoidRequest {
     private func getCompletion() -> DataCompletion {
-        let successCompletion = self.mainThreadClosure(of: self.successCompletionHandler ?? { _ in })
-        let failureCompletion = self.mainThreadClosure(of: self.failureCompletionHandler ?? { _ in })
-        let mainThreadCompletion = self.mainThreadClosure(of: self.completionHandler)
-        let completion: Restler.VoidCompletion = { result in
+        let completion: Restler.VoidCompletion = {
+            [successCompletionHandler, failureCompletionHandler, completionHandler] result in
             switch result {
             case let .success(object):
-                successCompletion(object)
+                successCompletionHandler?(object)
             case let .failure(error):
-                failureCompletion(error)
+                failureCompletionHandler?(error)
             }
-            mainThreadCompletion(result)
+            completionHandler(result)
         }
         let responseHandler = self.responseHandlerClosure(completion: self.mainThreadClosure(of: completion))
         return { result in

@@ -44,7 +44,7 @@ extension Restler {
             do {
                 self.query = try self.dictEncoder.encode(object)
             } catch {
-                self.errors.append(Restler.CommonError(type: .invalidParameters, base: error))
+                self.errors.append(Error.common(type: .invalidParameters, base: error))
             }
             return self
         }
@@ -53,7 +53,7 @@ extension Restler {
             do {
                 self.body = try self.encoder.encode(object)
             } catch {
-                self.errors.append(Restler.CommonError(type: .invalidParameters, base: error))
+                self.errors.append(Error.common(type: .invalidParameters, base: error))
             }
             return self
         }
