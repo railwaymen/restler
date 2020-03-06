@@ -97,7 +97,7 @@ extension Restler.DecodableRequest {
                     let object = try decodeHandler(optionalData)
                     completion(.success(object))
                 } catch {
-                    completion(.failure(Restler.CommonError(type: .invalidResponse, base: error)))
+                    completion(.failure(Restler.Error.common(type: .invalidResponse, base: error)))
                 }
             case let .failure(error):
                 completion(.failure(errorDecodeHandler(error)))

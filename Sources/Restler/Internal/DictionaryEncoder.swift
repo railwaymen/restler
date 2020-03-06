@@ -35,7 +35,13 @@ class DictionaryEncoder: DictionaryEncoderType {
         let data = try self.encoder.encode(object)
         let json = try self.serialization.jsonObject(with: data, options: .allowFragments)
         guard let jsonDictionary = json as? [String: Any] else {
-            throw Restler.CommonError(type: .internalFrameworkError, base: nil)
+            throw Restler.Error.common(
+                type: .internalFrameworkError,
+                base: EncodingError.invalidValue(
+                    E.self,
+                    EncodingError.Context.init(
+                        codingPath: [],
+                        debugDescription: "Encoding to dictionary has failed")))
         }
         return jsonDictionary
     }
