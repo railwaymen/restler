@@ -420,6 +420,220 @@ extension InterfaceIntegrationTests {
         XCTAssertEqual(decodedObject, expectedObject)
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
     }
+    
+    // MARK: Decoding failure
+    func testGetVoid_failure_undecodableError() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        var returnedError: Error?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .failureDecode(UndecodableErrorMock.self)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(returnedError as? Restler.Error, error)
+    }
+    
+    func testGetVoid_failure_decodableError() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        var returnedError: Error?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .failureDecode(DecodableErrorMock.self)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssert(returnedError is DecodableErrorMock)
+    }
+    
+    func testGetVoid_failure_multipleErrors() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        var returnedError: Error?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .failureDecode(DecodableErrorMock.self)
+            .failureDecode(UndecodableErrorMock.self)
+            .failureDecode(DecodableErrorMock.self)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        guard case let .multiple(errors) = returnedError as? Restler.Error else { return XCTFail() }
+        XCTAssertEqual(errors.count, 2)
+        
+        guard case let .common(firstType, firstBase) = errors.first else { return XCTFail() }
+        XCTAssertEqual(firstType, .unknownError)
+        XCTAssert(firstBase is DecodableErrorMock)
+        
+        guard case let .common(secondType, secondBase) = errors.last else { return XCTFail() }
+        XCTAssertEqual(secondType, .unknownError)
+        XCTAssert(secondBase is DecodableErrorMock)
+    }
+    
+    func testGetOptionalDecodable_failure_undecodableError() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        var returnedError: Error?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .failureDecode(UndecodableErrorMock.self)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(returnedError as? Restler.Error, error)
+    }
+    
+    func testGetOptionalDecodable_failure_decodableError() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        var returnedError: Error?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .failureDecode(DecodableErrorMock.self)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssert(returnedError is DecodableErrorMock)
+    }
+    
+    func testGetOptionalDecodable_failure_multipleErrors() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        var returnedError: Error?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .failureDecode(DecodableErrorMock.self)
+            .failureDecode(UndecodableErrorMock.self)
+            .failureDecode(DecodableErrorMock.self)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        guard case let .multiple(errors) = returnedError as? Restler.Error else { return XCTFail() }
+        XCTAssertEqual(errors.count, 2)
+        
+        guard case let .common(firstType, firstBase) = errors.first else { return XCTFail() }
+        XCTAssertEqual(firstType, .unknownError)
+        XCTAssert(firstBase is DecodableErrorMock)
+        
+        guard case let .common(secondType, secondBase) = errors.last else { return XCTFail() }
+        XCTAssertEqual(secondType, .unknownError)
+        XCTAssert(secondBase is DecodableErrorMock)
+    }
+    
+    func testGetDecodable_failure_undecodableError() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        var returnedError: Error?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .failureDecode(UndecodableErrorMock.self)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(returnedError as? Restler.Error, error)
+    }
+    
+    func testGetDecodable_failure_decodableError() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        var returnedError: Error?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .failureDecode(DecodableErrorMock.self)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssert(returnedError is DecodableErrorMock)
+    }
+    
+    func testGetDecodable_failure_multipleErrors() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        var returnedError: Error?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .failureDecode(DecodableErrorMock.self)
+            .failureDecode(UndecodableErrorMock.self)
+            .failureDecode(DecodableErrorMock.self)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        guard case let .multiple(errors) = returnedError as? Restler.Error else { return XCTFail() }
+        XCTAssertEqual(errors.count, 2)
+        
+        guard case let .common(firstType, firstBase) = errors.first else { return XCTFail() }
+        XCTAssertEqual(firstType, .unknownError)
+        XCTAssert(firstBase is DecodableErrorMock)
+        
+        guard case let .common(secondType, secondBase) = errors.last else { return XCTFail() }
+        XCTAssertEqual(secondType, .unknownError)
+        XCTAssert(secondBase is DecodableErrorMock)
+    }
 }
 
 // MARK: - POST
