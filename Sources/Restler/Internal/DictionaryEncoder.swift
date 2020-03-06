@@ -1,6 +1,10 @@
 import Foundation
 
-class DictionaryEncoder {
+protocol DictionaryEncoderType: class {
+    func encode<E>(_ object: E) throws -> [String: String?] where E: Encodable
+}
+
+class DictionaryEncoder: DictionaryEncoderType {
     private let encoder: RestlerJSONEncoderType
     private let serialization: JSONSerializationType
     
@@ -14,15 +18,6 @@ class DictionaryEncoder {
     }
     
     // MARK: - Internal
-    func encode<E>(_ object: E) throws -> [String: Any] where E: Encodable {
-        let data = try self.encoder.encode(object)
-        let json = try self.serialization.jsonObject(with: data, options: .allowFragments)
-        guard let jsonDictionary = json as? [String: Any] else {
-            throw Restler.CommonError(type: .internalFrameworkError, base: nil)
-        }
-        return jsonDictionary
-    }
-    
     func encode<E>(_ object: E) throws -> [String: String?] where E: Encodable {
         let dictionary: [String: Any] = try self.encode(object)
         return dictionary.mapValues { value -> String? in
@@ -35,4 +30,14 @@ class DictionaryEncoder {
             }
         }
     }
+    
+    func encode<E>(_ object: E) throws -> [String: Any] where E: Encodable {
+        let data = try self.encoder.encode(object)
+        let json = try self.serialization.jsonObject(with: data, options: .allowFragments)
+        guard let jsonDictionary = json as? [String: Any] else {
+            throw Restler.CommonError(type: .internalFrameworkError, base: nil)
+        }
+        return jsonDictionary
+    }
+    
 }

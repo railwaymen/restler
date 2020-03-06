@@ -38,7 +38,8 @@ class PostViewModel: ObservableObject {
     
     // MARK: - Private
     private func fetchComments() {
-        _ = self.restler.get(Endpoint.comments)
+        _ = self.restler
+            .get(Endpoint.comments)
             .query(["postId": 1])
             .decode([PostComment].self)
             .onCompletion({ result in

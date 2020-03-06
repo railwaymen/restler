@@ -24,7 +24,8 @@ class CommentViewModel: ObservableObject {
     
     // MARK: - Internal
     func create() {
-        let optionalTask = self.restler.post(Endpoint.comments)
+        let optionalTask = self.restler
+            .post(Endpoint.comments)
             .body(self.comment)
             .decode(Void.self)
             .onCompletion({ result in
@@ -41,7 +42,8 @@ class CommentViewModel: ObservableObject {
     }
     
     func update() {
-        let optionalTask = self.restler.put(Endpoint.comment(1))
+        let optionalTask = self.restler
+            .put(Endpoint.comment(1))
             .body(self.comment)
             .decode(Void.self)
             .onCompletion({ result in
@@ -58,7 +60,8 @@ class CommentViewModel: ObservableObject {
     }
     
     func delete() {
-        let optionalTask = self.restler.delete(Endpoint.comment(self.comment.id))
+        let optionalTask = self.restler
+            .delete(Endpoint.comment(self.comment.id))
             .decode(Void.self)
             .onCompletion({ result in
                 switch result {

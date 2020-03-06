@@ -33,7 +33,8 @@ class ContentViewModel: ObservableObject {
     
     // MARK: - Private
     private func fetchData() {
-        _ = self.restler.get(Endpoint.posts)
+        _ = self.restler
+            .get(Endpoint.posts)
             .decode([BlogPost].self)
             .onCompletion({ result in
                 switch result {

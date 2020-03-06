@@ -8,7 +8,7 @@ extension Restler {
         private let networking: NetworkingType
         private let encoder: RestlerJSONEncoderType
         private let decoder: RestlerJSONDecoderType
-        private let dictEncoder: DictionaryEncoder
+        private let dictEncoder: DictionaryEncoderType
         private let dispatchQueueManager: DispatchQueueManagerType
         private let method: HTTPMethod
         private let endpoint: RestlerEndpointable
@@ -24,7 +24,7 @@ extension Restler {
             networking: NetworkingType,
             encoder: RestlerJSONEncoderType,
             decoder: RestlerJSONDecoderType,
-            dictEncoder: DictionaryEncoder,
+            dictEncoder: DictionaryEncoderType,
             dispatchQueueManager: DispatchQueueManagerType,
             method: HTTPMethod,
             endpoint: RestlerEndpointable
@@ -58,7 +58,7 @@ extension Restler {
             return self
         }
         
-        public func failureDecode<T>(_ type: T.Type) -> Self where T: RestlerErrorDecodable  {
+        public func failureDecode<T>(_ type: T.Type) -> Self where T: RestlerErrorDecodable {
             self.decodingErrors.append(type)
             return self
         }
