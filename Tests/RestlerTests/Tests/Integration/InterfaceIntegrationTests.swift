@@ -627,6 +627,209 @@ extension InterfaceIntegrationTests {
         XCTAssertNil(decodedObject)
         try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
     }
+    
+    // MARK: Decoding success
+    func testPostVoid_success_nil() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: Void?
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .post(self.endpoint)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNotNil(decodedObject)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testPostVoid_success_emptyData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: Void?
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .post(self.endpoint)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNotNil(decodedObject)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+
+    func testPostOptionalDecodable_success_nil() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        _ = sut
+            .post(self.endpoint)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNil(decodedObject)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+
+    func testPostOptionalDecodable_success_emptyData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        _ = sut
+            .post(self.endpoint)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNil(decodedObject)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+
+    func testPostOptionalDecodable_success_properData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let expectedObject = SomeObject(id: 1, name: "some")
+        let data = try JSONEncoder().encode(expectedObject)
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        _ = sut
+            .post(self.endpoint)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, expectedObject)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
+    }
+
+    func testPostDecodable_success_nil() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        _ = sut
+            .post(self.endpoint)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(decodedObject)
+        let restlerError = try XCTUnwrap(returnedError as? Restler.Error)
+        guard case let .common(type, base) = restlerError else { return XCTFail(returnedError.debugDescription) }
+        XCTAssertEqual(type, .invalidResponse)
+        XCTAssert(base is DecodingError)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: restlerError)
+    }
+
+    func testPostDecodable_success_emptyData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        _ = sut
+            .post(self.endpoint)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(decodedObject)
+        let restlerError = try XCTUnwrap(returnedError as? Restler.Error)
+        guard case let .common(type, base) = restlerError else { return XCTFail(returnedError.debugDescription) }
+        XCTAssertEqual(type, .invalidResponse)
+        XCTAssert(base is DecodingError)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: restlerError)
+    }
+
+    func testPostDecodable_success_properData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let expectedObject = SomeObject(id: 1, name: "some")
+        let data = try JSONEncoder().encode(expectedObject)
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        _ = sut
+            .post(self.endpoint)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, expectedObject)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
+    }
 }
 
 // MARK: - PUT
@@ -834,6 +1037,209 @@ extension InterfaceIntegrationTests {
         XCTAssertNil(decodedObject)
         try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
     }
+    
+    // MARK: Decoding success
+    func testPutVoid_success_nil() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: Void?
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .put(self.endpoint)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNotNil(decodedObject)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testPutVoid_success_emptyData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: Void?
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .put(self.endpoint)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNotNil(decodedObject)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testPutOptionalDecodable_success_nil() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        _ = sut
+            .put(self.endpoint)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNil(decodedObject)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testPutOptionalDecodable_success_emptyData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        _ = sut
+            .put(self.endpoint)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNil(decodedObject)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testPutOptionalDecodable_success_properData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let expectedObject = SomeObject(id: 1, name: "some")
+        let data = try JSONEncoder().encode(expectedObject)
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        _ = sut
+            .put(self.endpoint)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, expectedObject)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
+    }
+    
+    func testPutDecodable_success_nil() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        _ = sut
+            .put(self.endpoint)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(decodedObject)
+        let restlerError = try XCTUnwrap(returnedError as? Restler.Error)
+        guard case let .common(type, base) = restlerError else { return XCTFail(returnedError.debugDescription) }
+        XCTAssertEqual(type, .invalidResponse)
+        XCTAssert(base is DecodingError)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: restlerError)
+    }
+    
+    func testPutDecodable_success_emptyData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        _ = sut
+            .put(self.endpoint)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(decodedObject)
+        let restlerError = try XCTUnwrap(returnedError as? Restler.Error)
+        guard case let .common(type, base) = restlerError else { return XCTFail(returnedError.debugDescription) }
+        XCTAssertEqual(type, .invalidResponse)
+        XCTAssert(base is DecodingError)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: restlerError)
+    }
+    
+    func testPutDecodable_success_properData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let expectedObject = SomeObject(id: 1, name: "some")
+        let data = try JSONEncoder().encode(expectedObject)
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        _ = sut
+            .put(self.endpoint)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, expectedObject)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
+    }
 }
 
 // MARK: - DELETE
@@ -980,6 +1386,209 @@ extension InterfaceIntegrationTests {
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
         XCTAssertEqual(requestParams.method, .delete)
         XCTAssertNil(completionResult)
+    }
+    
+    // MARK: Decoding success
+    func testDeleteVoid_success_nil() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: Void?
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .delete(self.endpoint)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNotNil(decodedObject)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testDeleteVoid_success_emptyData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: Void?
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .delete(self.endpoint)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNotNil(decodedObject)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testDeleteOptionalDecodable_success_nil() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        _ = sut
+            .delete(self.endpoint)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNil(decodedObject)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testDeleteOptionalDecodable_success_emptyData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        _ = sut
+            .delete(self.endpoint)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertNil(decodedObject)
+        XCTAssertNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testDeleteOptionalDecodable_success_properData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let expectedObject = SomeObject(id: 1, name: "some")
+        let data = try JSONEncoder().encode(expectedObject)
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        _ = sut
+            .delete(self.endpoint)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, expectedObject)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
+    }
+    
+    func testDeleteDecodable_success_nil() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        _ = sut
+            .delete(self.endpoint)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(decodedObject)
+        let restlerError = try XCTUnwrap(returnedError as? Restler.Error)
+        guard case let .common(type, base) = restlerError else { return XCTFail(returnedError.debugDescription) }
+        XCTAssertEqual(type, .invalidResponse)
+        XCTAssert(base is DecodingError)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: restlerError)
+    }
+    
+    func testDeleteDecodable_success_emptyData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        _ = sut
+            .delete(self.endpoint)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(decodedObject)
+        let restlerError = try XCTUnwrap(returnedError as? Restler.Error)
+        guard case let .common(type, base) = restlerError else { return XCTFail(returnedError.debugDescription) }
+        XCTAssertEqual(type, .invalidResponse)
+        XCTAssert(base is DecodingError)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: restlerError)
+    }
+    
+    func testDeleteDecodable_success_properData() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let expectedObject = SomeObject(id: 1, name: "some")
+        let data = try JSONEncoder().encode(expectedObject)
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        _ = sut
+            .delete(self.endpoint)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, expectedObject)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
     }
 }
 

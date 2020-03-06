@@ -12,7 +12,7 @@ extension Restler {
         
         private var successCompletionHandler: ((D) -> Void)?
         private var failureCompletionHandler: ((Swift.Error) -> Void)?
-        private var completionHandler: Restler.DecodableCompletion<D> = { _ in }
+        private var completionHandler: Restler.DecodableCompletion<D>?
         
         internal let dispatchQueueManager: DispatchQueueManagerType
         
@@ -79,7 +79,7 @@ extension Restler.DecodableRequest {
             case let .failure(error):
                 failureCompletionHandler?(error)
             }
-            completionHandler(result)
+            completionHandler?(result)
         }
         let responseHandler = self.responseHandlerClosure(completion: self.mainThreadClosure(of: completion))
         return { result in
