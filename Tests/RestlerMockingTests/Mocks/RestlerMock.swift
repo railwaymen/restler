@@ -6,6 +6,8 @@ class RestlerMock {
     
     var decoder: RestlerJSONDecoderType = JSONDecoder()
     
+    var errorParser: RestlerErrorParserType = RestlerErrorParserMock()
+    
     var header: Restler.Header = .init()
     
     var getReturnValue: RestlerRequestBuilderMock = RestlerRequestBuilderMock()

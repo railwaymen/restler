@@ -12,6 +12,8 @@ open class Restler: RestlerType {
     /// Decoder used for decoding response's data to expected object.
     open var decoder: RestlerJSONDecoderType
     
+    open var errorParser: RestlerErrorParserType
+    
     /// Global header sent in requests.
     open var header: Restler.Header {
         get {
@@ -40,7 +42,8 @@ open class Restler: RestlerType {
             networking: Networking(),
             dispatchQueueManager: DispatchQueueManager(),
             encoder: encoder,
-            decoder: decoder)
+            decoder: decoder,
+            errorParser: Restler.ErrorParser())
     }
     
     init(
@@ -48,13 +51,15 @@ open class Restler: RestlerType {
         networking: NetworkingType,
         dispatchQueueManager: DispatchQueueManagerType,
         encoder: RestlerJSONEncoderType,
-        decoder: RestlerJSONDecoderType
+        decoder: RestlerJSONDecoderType,
+        errorParser: RestlerErrorParserType
     ) {
         self.baseURL = baseURL
         self.networking = networking
         self.dispatchQueueManager = dispatchQueueManager
         self.encoder = encoder
         self.decoder = decoder
+        self.errorParser = errorParser
     }
     
     // MARK: - Open
@@ -86,6 +91,7 @@ extension Restler {
             decoder: self.decoder,
             dictEncoder: DictionaryEncoder(encoder: self.encoder, serialization: CustomJSONSerialization()),
             dispatchQueueManager: self.dispatchQueueManager,
+            errorParser: self.errorParser.copy(),
             method: method,
             endpoint: endpoint)
     }

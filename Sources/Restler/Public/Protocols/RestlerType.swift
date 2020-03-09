@@ -3,6 +3,7 @@ import Foundation
 public protocol RestlerType: class {
     var encoder: RestlerJSONEncoderType { get set }
     var decoder: RestlerJSONDecoderType { get set }
+    var errorParser: RestlerErrorParserType { get set }
     var header: Restler.Header { get set }
     
     func get(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType
