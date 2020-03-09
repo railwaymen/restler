@@ -9,6 +9,7 @@ extension Restler {
         private let method: HTTPMethod
         private let errors: [Error]
         private let decodingErrors: [RestlerErrorDecodable.Type]
+        private let customHeaderFields: Restler.Header
         
         private var successCompletionHandler: ((D) -> Void)?
         private var failureCompletionHandler: ((Swift.Error) -> Void)?
@@ -25,7 +26,8 @@ extension Restler {
             dispatchQueueManager: DispatchQueueManagerType,
             method: HTTPMethod,
             errors: [Error],
-            decodingErrors: [RestlerErrorDecodable.Type]
+            decodingErrors: [RestlerErrorDecodable.Type],
+            customHeaderFields: Restler.Header
         ) {
             self.url = url
             self.networking = networking
@@ -35,6 +37,7 @@ extension Restler {
             self.method = method
             self.errors = errors
             self.decodingErrors = decodingErrors
+            self.customHeaderFields = customHeaderFields
         }
         
         // MARK: - Public
@@ -63,6 +66,7 @@ extension Restler {
             return self.networking.makeRequest(
                 url: self.url,
                 method: self.method,
+                customHeaderFields: self.customHeaderFields,
                 completion: completion)
         }
     }

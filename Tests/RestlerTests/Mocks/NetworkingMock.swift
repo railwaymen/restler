@@ -15,6 +15,7 @@ class NetworkingMock {
     struct MakeRequestParams {
         let url: URL
         let method: HTTPMethod
+        let customHeaderFields: Restler.Header
         let completion: DataCompletion
     }
 }
@@ -30,8 +31,8 @@ extension NetworkingMock: NetworkingType {
         }
     }
     
-    func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion) -> Restler.Task? {
-        self.makeRequestParams.append(MakeRequestParams(url: url, method: method, completion: completion))
+    func makeRequest(url: URL, method: HTTPMethod, customHeaderFields: Restler.Header, completion: @escaping DataCompletion) -> Restler.Task? {
+        self.makeRequestParams.append(MakeRequestParams(url: url, method: method, customHeaderFields: customHeaderFields, completion: completion))
         return self.makeRequestReturnValue
     }
 }

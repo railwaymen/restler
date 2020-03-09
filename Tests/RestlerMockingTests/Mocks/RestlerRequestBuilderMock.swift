@@ -14,6 +14,12 @@ class RestlerRequestBuilderMock {
         let object: Any
     }
     
+    private(set) var setInHeaderParams: [SetInHeaderParams] = []
+    struct SetInHeaderParams {
+        let value: String
+        let key: Restler.Header.Key
+    }
+    
     private(set) var failureDecodeParams: [FailureDecodeParams] = []
     struct FailureDecodeParams {
         let type: RestlerErrorDecodable.Type
@@ -38,6 +44,11 @@ extension RestlerRequestBuilderMock: RestlerRequestBuilderType {
     
     func body<E>(_ object: E) -> Self where E: Encodable {
         self.bodyParams.append(BodyParams(object: object))
+        return self
+    }
+    
+    func setInHeader(_ value: String, forKey key: Restler.Header.Key) -> Self {
+        self.setInHeaderParams.append(SetInHeaderParams(value: value, key: key))
         return self
     }
     
