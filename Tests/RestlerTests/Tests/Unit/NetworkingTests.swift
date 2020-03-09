@@ -138,7 +138,7 @@ extension NetworkingTests {
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.RequestError(type: .unknownError, response: Restler.Response(response)))
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.Error.request(type: .unknownError, response: Restler.Response(response)))
     }
     
     func testMakeRequest_notFoundResponse() throws {
@@ -156,7 +156,7 @@ extension NetworkingTests {
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.RequestError(type: .notFound, response: Restler.Response(response)))
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.Error.request(type: .notFound, response: Restler.Response(response)))
     }
     
     func testMakeRequest_responseNotNil() throws {
@@ -174,7 +174,7 @@ extension NetworkingTests {
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.RequestError(type: .unauthorized, response: Restler.Response(response)))
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.Error.request(type: .unauthorized, response: Restler.Response(response)))
     }
     
     func testMakeRequest_noDataInResponse() throws {
@@ -208,7 +208,7 @@ extension NetworkingTests {
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.RequestError(type: .unknownError, response: Restler.Response(response)))
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.Error.request(type: .unknownError, response: Restler.Response(response)))
     }
 }
 

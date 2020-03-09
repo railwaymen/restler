@@ -23,7 +23,9 @@ class Networking {
 extension Networking: NetworkingType {
     func makeRequest(url: URL, method: HTTPMethod, completion: @escaping DataCompletion) -> Restler.Task? {
         guard let request = self.buildURLRequest(url: url, httpMethod: method) else {
-            completion(.failure(Restler.CommonError(type: .internalFrameworkError, base: nil)))
+            completion(.failure(Restler.Error.common(
+                type: .internalFrameworkError,
+                base: NSError(domain: "Restler", code: 0, userInfo: ["file": #file, "line": #line]))))
             return nil
         }
         return Restler.Task(task: self.runDataTask(request: request, completion: completion))
@@ -61,6 +63,6 @@ extension Networking {
     
     private func handle(result: HTTPRequestResponse) -> Error {
         let errorType = Restler.ErrorType(statusCode: result.response?.statusCode ?? 0) ?? .unknownError
-        return Restler.RequestError(type: errorType, response: Restler.Response(result))
+        return Restler.Error.request(type: errorType, response: Restler.Response(result))
     }
 }
