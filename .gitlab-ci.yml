@@ -55,7 +55,7 @@ build_example_app:
   before_script:
     *setup_example_app
   script:
-    - xcodebuild clean | xcpretty
+    - xcodebuild clean | bundle exec xcpretty
     - xcodebuild build -scheme Restler-Example -workspace Restler-Example.xcworkspace | bundle exec xcpretty
   tags:
     - ios
