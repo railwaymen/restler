@@ -1,0 +1,9 @@
+{
+  "arguments" : [
+    "test"
+  ],
+  "exclude" : [
+    "Restler-Example"
+  ],
+  "executable" : "\/usr\/bin\/swift"
+}

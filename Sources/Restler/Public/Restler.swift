@@ -1,7 +1,7 @@
 import Foundation
 
 /// Class for making requests to the API
-open class Restler {
+open class Restler: RestlerType {
     private let baseURL: URL
     private let networking: NetworkingType
     private let dispatchQueueManager: DispatchQueueManagerType
@@ -58,20 +58,20 @@ open class Restler {
     }
     
     // MARK: - Open
-        
-    open func get( _ endpoint: RestlerEndpointable) -> RequestBuilder {
+    
+    open func get(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
         return self.requestBuilder(for: .get(query: [:]), to: endpoint)
     }
     
-    open func post(_ endpoint: RestlerEndpointable) -> RequestBuilder {
+    open func post(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
         return self.requestBuilder(for: .post(content: nil), to: endpoint)
     }
-        
-    open func put(_ endpoint: RestlerEndpointable) -> RequestBuilder {
+    
+    open func put(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
         return self.requestBuilder(for: .put(content: nil), to: endpoint)
     }
     
-    open func delete(_ endpoint: RestlerEndpointable) -> RequestBuilder {
+    open func delete(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
         return self.requestBuilder(for: .delete, to: endpoint)
     }
 }

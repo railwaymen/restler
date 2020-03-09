@@ -1,7 +1,7 @@
 import Foundation
 
 extension Restler {
-    public class OptionalDecodableRequest<D: Decodable>: RestlerRequest, RestlerRequestInternal {
+    public class OptionalDecodableRequest<D: Decodable>: Request<D?>, RestlerRequestInternal {
         private let url: URL
         private let networking: NetworkingType
         private let encoder: RestlerJSONEncoderType
@@ -39,22 +39,22 @@ extension Restler {
         
         // MARK: - Public
         
-        public func onSuccess(_ handler: @escaping (D?) -> Void) -> Self {
+        public override func onSuccess(_ handler: @escaping (D?) -> Void) -> Self {
             self.successCompletionHandler = handler
             return self
         }
         
-        public func onFailure(_ handler: @escaping (Swift.Error) -> Void) -> Self {
+        public override func onFailure(_ handler: @escaping (Swift.Error) -> Void) -> Self {
             self.failureCompletionHandler = handler
             return self
         }
         
-        public func onCompletion(_ handler: @escaping Restler.DecodableCompletion<D?>) -> Self {
+        public override func onCompletion(_ handler: @escaping Restler.DecodableCompletion<D?>) -> Self {
             self.completionHandler = handler
             return self
         }
         
-        public func start() -> Task? {
+        public override func start() -> RestlerTaskType? {
             let completion = self.getCompletion()
             guard self.errors.isEmpty else {
                 completion(.failure(Restler.Error.multiple(self.errors)))

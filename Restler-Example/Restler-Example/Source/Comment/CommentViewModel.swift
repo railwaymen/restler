@@ -37,7 +37,7 @@ class CommentViewModel: ObservableObject {
                 }
             })
             .start()
-        guard let task = optionalTask else { return }
+        guard let task = optionalTask as? Restler.Task else { return }
         self.tasks.update(with: task)
     }
     
@@ -55,7 +55,7 @@ class CommentViewModel: ObservableObject {
                 }
             })
             .start()
-        guard let task = optionalTask else { return }
+        guard let task = optionalTask as? Restler.Task else { return }
         self.tasks.update(with: task)
     }
     
@@ -72,7 +72,7 @@ class CommentViewModel: ObservableObject {
                 }
             })
             .start()
-        guard let task = optionalTask else { return }
+        guard let task = optionalTask as? Restler.Task else { return }
         self.tasks.update(with: task)
     }
     

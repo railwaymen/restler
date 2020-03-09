@@ -237,6 +237,7 @@ DEPENDENCIES
   cocoapods
   fastlane
   slather
+  xcpretty
 
 RUBY VERSION
    ruby 2.6.3p62
