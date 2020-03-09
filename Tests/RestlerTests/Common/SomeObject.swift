@@ -1,6 +1,7 @@
 import Foundation
 
-struct SomeObject: Decodable, Equatable {
+struct SomeObject: Codable, Equatable {
     let id: Int
     let name: String
+    let double: Double
 }
