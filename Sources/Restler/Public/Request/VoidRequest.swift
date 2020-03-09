@@ -8,7 +8,7 @@ extension Restler {
         private let decoder: RestlerJSONDecoderType
         private let method: HTTPMethod
         private let errors: [Error]
-        private let decodingErrors: [RestlerErrorDecodable.Type]
+        private let errorParser: RestlerErrorParserType
         private let customHeaderFields: Restler.Header
         
         private var successCompletionHandler: ((D) -> Void)?
@@ -26,7 +26,7 @@ extension Restler {
             dispatchQueueManager: DispatchQueueManagerType,
             method: HTTPMethod,
             errors: [Error],
-            decodingErrors: [RestlerErrorDecodable.Type],
+            errorParser: RestlerErrorParserType,
             customHeaderFields: Restler.Header
         ) {
             self.url = url
@@ -36,7 +36,7 @@ extension Restler {
             self.dispatchQueueManager = dispatchQueueManager
             self.method = method
             self.errors = errors
-            self.decodingErrors = decodingErrors
+            self.errorParser = errorParser
             self.customHeaderFields = customHeaderFields
         }
         
@@ -92,13 +92,12 @@ extension Restler.VoidRequest {
     }
     
     private func responseHandlerClosure(completion: @escaping Restler.VoidCompletion) -> (DataResult) -> Void {
-        let errorDecodeHandler = self.errorsDecodeHandler(decodingErrors: self.decodingErrors)
-        return { result in
+        return { [errorParser] result in
             switch result {
             case .success:
                 completion(.success(Void()))
             case let .failure(error):
-                completion(.failure(errorDecodeHandler(error)))
+                completion(.failure(errorParser.parse(error)))
             }
         }
     }

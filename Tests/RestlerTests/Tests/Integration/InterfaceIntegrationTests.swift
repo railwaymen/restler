@@ -1874,7 +1874,8 @@ extension InterfaceIntegrationTests {
             networking: self.networking,
             dispatchQueueManager: self.dispatchQueueManager,
             encoder: JSONEncoder(),
-            decoder: JSONDecoder())
+            decoder: JSONDecoder(),
+            errorParser: Restler.ErrorParser())
     }
     
     private func assertThrowsEncodingError<T>(expected: TestError, returnedError: Error?, completionResult: Result<T, Error>?) throws {

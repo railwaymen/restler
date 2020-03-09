@@ -10,13 +10,13 @@ extension Restler {
         private let decoder: RestlerJSONDecoderType
         private let dictEncoder: DictionaryEncoderType
         private let dispatchQueueManager: DispatchQueueManagerType
+        private let errorParser: RestlerErrorParserType
         private let method: HTTPMethod
         private let endpoint: RestlerEndpointable
         
         private var query: QueryParametersType?
         private var body: Data?
         private var errors: [Error] = []
-        private var decodingErrors: [RestlerErrorDecodable.Type] = []
         private var customHeaderFields: Restler.Header = .init()
         
         // MARK: - Initialization
@@ -27,6 +27,7 @@ extension Restler {
             decoder: RestlerJSONDecoderType,
             dictEncoder: DictionaryEncoderType,
             dispatchQueueManager: DispatchQueueManagerType,
+            errorParser: RestlerErrorParserType,
             method: HTTPMethod,
             endpoint: RestlerEndpointable
         ) {
@@ -36,6 +37,7 @@ extension Restler {
             self.decoder = decoder
             self.dictEncoder = dictEncoder
             self.dispatchQueueManager = dispatchQueueManager
+            self.errorParser = errorParser
             self.method = method
             self.endpoint = endpoint
         }
@@ -65,7 +67,7 @@ extension Restler {
         }
         
         public func failureDecode<T>(_ type: T.Type) -> Self where T: RestlerErrorDecodable {
-            self.decodingErrors.append(type)
+            self.errorParser.decode(type)
             return self
         }
         
@@ -78,7 +80,7 @@ extension Restler {
                 dispatchQueueManager: self.dispatchQueueManager,
                 method: self.buildMethod(),
                 errors: self.errors,
-                decodingErrors: self.decodingErrors,
+                errorParser: self.errorParser,
                 customHeaderFields: self.customHeaderFields)
         }
         
@@ -91,7 +93,7 @@ extension Restler {
                 dispatchQueueManager: self.dispatchQueueManager,
                 method: self.buildMethod(),
                 errors: self.errors,
-                decodingErrors: self.decodingErrors,
+                errorParser: self.errorParser,
                 customHeaderFields: self.customHeaderFields)
         }
         
@@ -104,7 +106,7 @@ extension Restler {
                 dispatchQueueManager: self.dispatchQueueManager,
                 method: self.buildMethod(),
                 errors: self.errors,
-                decodingErrors: self.decodingErrors,
+                errorParser: self.errorParser,
                 customHeaderFields: self.customHeaderFields)
         }
     }
