@@ -3,20 +3,21 @@ import Foundation
 typealias QueryParametersType = [String: String?]
 
 extension Restler {
-    public class RequestBuilder {
+    public class RequestBuilder: RestlerRequestBuilderType {
         private let baseURL: URL
         private let networking: NetworkingType
         private let encoder: RestlerJSONEncoderType
         private let decoder: RestlerJSONDecoderType
         private let dictEncoder: DictionaryEncoderType
         private let dispatchQueueManager: DispatchQueueManagerType
+        private let errorParser: RestlerErrorParserType
         private let method: HTTPMethod
         private let endpoint: RestlerEndpointable
         
         private var query: QueryParametersType?
         private var body: Data?
         private var errors: [Error] = []
-        private var decodingErrors: [RestlerErrorDecodable.Type] = []
+        private var customHeaderFields: Restler.Header = .init()
         
         // MARK: - Initialization
         internal init(
@@ -26,6 +27,7 @@ extension Restler {
             decoder: RestlerJSONDecoderType,
             dictEncoder: DictionaryEncoderType,
             dispatchQueueManager: DispatchQueueManagerType,
+            errorParser: RestlerErrorParserType,
             method: HTTPMethod,
             endpoint: RestlerEndpointable
         ) {
@@ -35,6 +37,7 @@ extension Restler {
             self.decoder = decoder
             self.dictEncoder = dictEncoder
             self.dispatchQueueManager = dispatchQueueManager
+            self.errorParser = errorParser
             self.method = method
             self.endpoint = endpoint
         }
@@ -58,12 +61,17 @@ extension Restler {
             return self
         }
         
-        public func failureDecode<T>(_ type: T.Type) -> Self where T: RestlerErrorDecodable {
-            self.decodingErrors.append(type)
+        public func setInHeader(_ value: String, forKey key: Restler.Header.Key) -> Self {
+            self.customHeaderFields[key] = value
             return self
         }
         
-        public func decode<T>(_ type: T?.Type) -> OptionalDecodableRequest<T> where T: Decodable {
+        public func failureDecode<T>(_ type: T.Type) -> Self where T: RestlerErrorDecodable {
+            self.errorParser.decode(type)
+            return self
+        }
+        
+        public func decode<T>(_ type: T?.Type) -> Request<T?> where T: Decodable {
             return OptionalDecodableRequest<T>(
                 url: self.url(for: self.endpoint),
                 networking: self.networking,
@@ -72,10 +80,11 @@ extension Restler {
                 dispatchQueueManager: self.dispatchQueueManager,
                 method: self.buildMethod(),
                 errors: self.errors,
-                decodingErrors: self.decodingErrors)
+                errorParser: self.errorParser,
+                customHeaderFields: self.customHeaderFields)
         }
         
-        public func decode<T>(_ type: T.Type) -> DecodableRequest<T> where T: Decodable {
+        public func decode<T>(_ type: T.Type) -> Request<T> where T: Decodable {
             return DecodableRequest<T>(
                 url: self.url(for: self.endpoint),
                 networking: self.networking,
@@ -84,10 +93,11 @@ extension Restler {
                 dispatchQueueManager: self.dispatchQueueManager,
                 method: self.buildMethod(),
                 errors: self.errors,
-                decodingErrors: self.decodingErrors)
+                errorParser: self.errorParser,
+                customHeaderFields: self.customHeaderFields)
         }
         
-        public func decode(_ type: Void.Type) -> VoidRequest {
+        public func decode(_ type: Void.Type) -> Request<Void> {
             return VoidRequest(
                 url: self.url(for: self.endpoint),
                 networking: self.networking,
@@ -96,7 +106,8 @@ extension Restler {
                 dispatchQueueManager: self.dispatchQueueManager,
                 method: self.buildMethod(),
                 errors: self.errors,
-                decodingErrors: self.decodingErrors)
+                errorParser: self.errorParser,
+                customHeaderFields: self.customHeaderFields)
         }
     }
 }

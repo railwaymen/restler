@@ -38,6 +38,26 @@ extension InterfaceIntegrationTests {
         XCTAssertNil(completionResult)
     }
     
+    func testGetVoid_buildingRequest_customHeaderFields() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .setInHeader("someValue", forKey: .accept)
+            .decode(Void.self)
+            .onCompletion({ completionResult = $0 })
+            .start()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .get(query: [:]))
+        XCTAssertEqual(requestParams.customHeaderFields.raw, ["Accept": "someValue"])
+        XCTAssertNil(completionResult)
+    }
+    
     func testGetVoid_buildingRequest_encodingQuery() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -128,6 +148,26 @@ extension InterfaceIntegrationTests {
         try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
     }
     
+    func testGetOptionalDecodable_buildingRequest_customHeaderFields() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .setInHeader("someValue", forKey: .accept)
+            .decode(SomeObject?.self)
+            .onCompletion({ completionResult = $0 })
+            .start()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .get(query: [:]))
+        XCTAssertEqual(requestParams.customHeaderFields.raw, ["Accept": "someValue"])
+        XCTAssertNil(completionResult)
+    }
+    
     func testGetOptionalDecodable_buildingRequest_encodingQuery() throws {
         //Arrange
         let sut = self.buildSUT()
@@ -171,6 +211,26 @@ extension InterfaceIntegrationTests {
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
         try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+    }
+    
+    func testGetDecodable_buildingRequest_customHeaderFields() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .setInHeader("someValue", forKey: .accept)
+            .decode(SomeObject.self)
+            .onCompletion({ completionResult = $0 })
+            .start()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .get(query: [:]))
+        XCTAssertEqual(requestParams.customHeaderFields.raw, ["Accept": "someValue"])
+        XCTAssertNil(completionResult)
     }
     
     func testGetDecodable_buildingRequest_encodingQuery() throws {
@@ -1814,7 +1874,8 @@ extension InterfaceIntegrationTests {
             networking: self.networking,
             dispatchQueueManager: self.dispatchQueueManager,
             encoder: JSONEncoder(),
-            decoder: JSONDecoder())
+            decoder: JSONDecoder(),
+            errorParser: Restler.ErrorParser())
     }
     
     private func assertThrowsEncodingError<T>(expected: TestError, returnedError: Error?, completionResult: Result<T, Error>?) throws {

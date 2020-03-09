@@ -93,6 +93,7 @@ extension RestlerTests {
             networking: self.networking,
             dispatchQueueManager: self.dispatchQueueManager,
             encoder: encoder,
-            decoder: JSONDecoder())
+            decoder: JSONDecoder(),
+            errorParser: Restler.ErrorParser())
     }
 }
