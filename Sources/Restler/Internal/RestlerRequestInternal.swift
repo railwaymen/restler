@@ -15,7 +15,7 @@ extension RestlerRequestInternal {
     
     func errorsDecodeHandler(decodingErrors: [RestlerErrorDecodable.Type]) -> (Error) -> Error {
         return { error in
-            guard case let .request(_, response)  = error as? Restler.Error else { return error }
+            guard case let .request(_, response) = error as? Restler.Error else { return error }
             let errors = decodingErrors.compactMap { $0.init(response: response) }
             if errors.isEmpty {
                 return error

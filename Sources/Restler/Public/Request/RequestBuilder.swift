@@ -3,7 +3,7 @@ import Foundation
 typealias QueryParametersType = [String: String?]
 
 extension Restler {
-    public class RequestBuilder {
+    public class RequestBuilder: RestlerRequestBuilderType {
         private let baseURL: URL
         private let networking: NetworkingType
         private let encoder: RestlerJSONEncoderType
@@ -63,7 +63,7 @@ extension Restler {
             return self
         }
         
-        public func decode<T>(_ type: T?.Type) -> OptionalDecodableRequest<T> where T: Decodable {
+        public func decode<T>(_ type: T?.Type) -> Request<T?> where T: Decodable {
             return OptionalDecodableRequest<T>(
                 url: self.url(for: self.endpoint),
                 networking: self.networking,
@@ -75,7 +75,7 @@ extension Restler {
                 decodingErrors: self.decodingErrors)
         }
         
-        public func decode<T>(_ type: T.Type) -> DecodableRequest<T> where T: Decodable {
+        public func decode<T>(_ type: T.Type) -> Request<T> where T: Decodable {
             return DecodableRequest<T>(
                 url: self.url(for: self.endpoint),
                 networking: self.networking,
@@ -87,7 +87,7 @@ extension Restler {
                 decodingErrors: self.decodingErrors)
         }
         
-        public func decode(_ type: Void.Type) -> VoidRequest {
+        public func decode(_ type: Void.Type) -> Request<Void> {
             return VoidRequest(
                 url: self.url(for: self.endpoint),
                 networking: self.networking,

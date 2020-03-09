@@ -1,7 +1,16 @@
 import Foundation
 
+public protocol RestlerTaskType: class {
+    var identifier: Int { get }
+    var state: URLSessionTask.State { get }
+    
+    func cancel()
+    func suspend()
+    func resume()
+}
+
 extension Restler {
-    open class Task {
+    open class Task: RestlerTaskType {
         private let task: URLSessionDataTaskType
         
         // MARK: - Getters
