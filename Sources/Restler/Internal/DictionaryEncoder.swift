@@ -25,13 +25,12 @@ class DictionaryEncoder: DictionaryEncoderType {
                 return string
             } else if let number = value as? NSNumber {
                 return number.stringValue
-            } else {
-                return nil
             }
-        }
+            return nil
+        }.filter { $0.value != nil }
     }
     
-    func encode<E>(_ object: E) throws -> [String: Any] where E: Encodable {
+    private func encode<E>(_ object: E) throws -> [String: Any] where E: Encodable {
         let data = try self.encoder.encode(object)
         let json = try self.serialization.jsonObject(with: data, options: .allowFragments)
         guard let jsonDictionary = json as? [String: Any] else {

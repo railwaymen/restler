@@ -45,7 +45,7 @@ extension InterfaceIntegrationTests {
         //Act
         _ = sut
             .get(self.endpoint)
-            .query(SomeObject(id: 1, name: "name"))
+            .query(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -53,7 +53,7 @@ extension InterfaceIntegrationTests {
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: ["id": "1", "name": "name"]))
+        XCTAssertEqual(requestParams.method, .get(query: ["id": "1", "name": "name", "double": "1.23"]))
         XCTAssertNil(completionResult)
     }
     
@@ -90,7 +90,7 @@ extension InterfaceIntegrationTests {
         //Act
         _ = sut
             .get(self.endpoint)
-            .body(SomeObject(id: 1, name: "name"))
+            .body(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -135,7 +135,7 @@ extension InterfaceIntegrationTests {
         //Act
         _ = sut
             .get(self.endpoint)
-            .query(SomeObject(id: 1, name: "name"))
+            .query(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(SomeObject?.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -143,7 +143,7 @@ extension InterfaceIntegrationTests {
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: ["id": "1", "name": "name"]))
+        XCTAssertEqual(requestParams.method, .get(query: ["id": "1", "name": "name", "double": "1.23"]))
         XCTAssertNil(completionResult)
     }
     
@@ -180,7 +180,7 @@ extension InterfaceIntegrationTests {
         //Act
         _ = sut
             .get(self.endpoint)
-            .query(SomeObject(id: 1, name: "name"))
+            .query(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(SomeObject.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -188,7 +188,7 @@ extension InterfaceIntegrationTests {
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: ["id": "1", "name": "name"]))
+        XCTAssertEqual(requestParams.method, .get(query: ["id": "1", "name": "name", "double": "1.23"]))
         XCTAssertNil(completionResult)
     }
     
@@ -318,7 +318,7 @@ extension InterfaceIntegrationTests {
     func testGetOptionalDecodable_success_properData() throws {
         //Arrange
         let sut = self.buildSUT()
-        let expectedObject = SomeObject(id: 1, name: "some")
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
         let data = try JSONEncoder().encode(expectedObject)
         var returnedError: Error?
         var decodedObject: SomeObject?
@@ -398,7 +398,7 @@ extension InterfaceIntegrationTests {
     func testGetDecodable_success_properData() throws {
         //Arrange
         let sut = self.buildSUT()
-        let expectedObject = SomeObject(id: 1, name: "some")
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
         let data = try JSONEncoder().encode(expectedObject)
         var returnedError: Error?
         var decodedObject: SomeObject?
@@ -663,7 +663,7 @@ extension InterfaceIntegrationTests {
         //Act
         _ = sut
             .post(self.endpoint)
-            .query(SomeObject(id: 1, name: "name"))
+            .query(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -704,7 +704,7 @@ extension InterfaceIntegrationTests {
     func testPostVoid_buildingRequest_encodingBody() throws {
         //Arrange
         let sut = self.buildSUT()
-        let object = SomeObject(id: 1, name: "name")
+        let object = SomeObject(id: 1, name: "name", double: 1.23)
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.VoidResult?
         //Act
@@ -751,7 +751,7 @@ extension InterfaceIntegrationTests {
     func testPostOptionalDecodable_buildingRequest_encodingBody() throws {
         //Arrange
         let sut = self.buildSUT()
-        let object = SomeObject(id: 1, name: "name")
+        let object = SomeObject(id: 1, name: "name", double: 1.23)
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
@@ -798,7 +798,7 @@ extension InterfaceIntegrationTests {
     func testPostDecodable_buildingRequest_encodingBody() throws {
         //Arrange
         let sut = self.buildSUT()
-        let object = SomeObject(id: 1, name: "name")
+        let object = SomeObject(id: 1, name: "name", double: 1.23)
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
@@ -942,7 +942,7 @@ extension InterfaceIntegrationTests {
     func testPostOptionalDecodable_success_properData() throws {
         //Arrange
         let sut = self.buildSUT()
-        let expectedObject = SomeObject(id: 1, name: "some")
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
         let data = try JSONEncoder().encode(expectedObject)
         var returnedError: Error?
         var decodedObject: SomeObject?
@@ -1022,7 +1022,7 @@ extension InterfaceIntegrationTests {
     func testPostDecodable_success_properData() throws {
         //Arrange
         let sut = self.buildSUT()
-        let expectedObject = SomeObject(id: 1, name: "some")
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
         let data = try JSONEncoder().encode(expectedObject)
         var returnedError: Error?
         var decodedObject: SomeObject?
@@ -1073,7 +1073,7 @@ extension InterfaceIntegrationTests {
         //Act
         _ = sut
             .put(self.endpoint)
-            .query(SomeObject(id: 1, name: "name"))
+            .query(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -1114,7 +1114,7 @@ extension InterfaceIntegrationTests {
     func testPutVoid_buildingRequest_encodingBody() throws {
         //Arrange
         let sut = self.buildSUT()
-        let object = SomeObject(id: 1, name: "name")
+        let object = SomeObject(id: 1, name: "name", double: 1.23)
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.VoidResult?
         //Act
@@ -1161,7 +1161,7 @@ extension InterfaceIntegrationTests {
     func testPutOptionalDecodable_buildingRequest_encodingBody() throws {
         //Arrange
         let sut = self.buildSUT()
-        let object = SomeObject(id: 1, name: "name")
+        let object = SomeObject(id: 1, name: "name", double: 1.23)
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
@@ -1208,7 +1208,7 @@ extension InterfaceIntegrationTests {
     func testPutDecodable_buildingRequest_encodingBody() throws {
         //Arrange
         let sut = self.buildSUT()
-        let object = SomeObject(id: 1, name: "name")
+        let object = SomeObject(id: 1, name: "name", double: 1.23)
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
@@ -1352,7 +1352,7 @@ extension InterfaceIntegrationTests {
     func testPutOptionalDecodable_success_properData() throws {
         //Arrange
         let sut = self.buildSUT()
-        let expectedObject = SomeObject(id: 1, name: "some")
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
         let data = try JSONEncoder().encode(expectedObject)
         var returnedError: Error?
         var decodedObject: SomeObject?
@@ -1432,7 +1432,7 @@ extension InterfaceIntegrationTests {
     func testPutDecodable_success_properData() throws {
         //Arrange
         let sut = self.buildSUT()
-        let expectedObject = SomeObject(id: 1, name: "some")
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
         let data = try JSONEncoder().encode(expectedObject)
         var returnedError: Error?
         var decodedObject: SomeObject?
@@ -1483,7 +1483,7 @@ extension InterfaceIntegrationTests {
         //Act
         _ = sut
             .delete(self.endpoint)
-            .query(SomeObject(id: 1, name: "name"))
+            .query(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -1528,7 +1528,7 @@ extension InterfaceIntegrationTests {
         //Act
         _ = sut
             .delete(self.endpoint)
-            .body(SomeObject(id: 1, name: "name"))
+            .body(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -1702,7 +1702,7 @@ extension InterfaceIntegrationTests {
     func testDeleteOptionalDecodable_success_properData() throws {
         //Arrange
         let sut = self.buildSUT()
-        let expectedObject = SomeObject(id: 1, name: "some")
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
         let data = try JSONEncoder().encode(expectedObject)
         var returnedError: Error?
         var decodedObject: SomeObject?
@@ -1782,7 +1782,7 @@ extension InterfaceIntegrationTests {
     func testDeleteDecodable_success_properData() throws {
         //Arrange
         let sut = self.buildSUT()
-        let expectedObject = SomeObject(id: 1, name: "some")
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
         let data = try JSONEncoder().encode(expectedObject)
         var returnedError: Error?
         var decodedObject: SomeObject?
