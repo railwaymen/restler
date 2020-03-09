@@ -42,7 +42,7 @@ test_project:
   script:
     - swift package generate-xcodeproj
     - bundle exec slather setup
-    - xcodebuild test -scheme Restler-Package -enableCodeCoverage YES -derivedDataPath "output/derivedData"
+    - xcodebuild test -scheme Restler-Package -enableCodeCoverage YES -derivedDataPath "output/derivedData" | bundle exec xcpretty
     - bundle exec slather coverage --verbose
   tags:
     - ios
@@ -55,8 +55,8 @@ build_example_app:
   before_script:
     *setup_example_app
   script:
-    - xcodebuild clean
-    - xcodebuild build -scheme Restler-Example -workspace Restler-Example.xcworkspace
+    - xcodebuild clean | xcpretty
+    - xcodebuild build -scheme Restler-Example -workspace Restler-Example.xcworkspace | bundle exec xcpretty
   tags:
     - ios
   dependencies:

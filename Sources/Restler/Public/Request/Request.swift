@@ -2,6 +2,8 @@ import Foundation
 
 extension Restler {
     open class Request<D>: RestlerRequest {
+        public init() {}
+        
         open func onSuccess(_ handler: @escaping (D) -> Void) -> Self {
             return self
         }
