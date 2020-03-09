@@ -17,6 +17,7 @@ extension Restler {
         private var body: Data?
         private var errors: [Error] = []
         private var decodingErrors: [RestlerErrorDecodable.Type] = []
+        private var customHeaderFields: Restler.Header = .init()
         
         // MARK: - Initialization
         internal init(
@@ -58,6 +59,11 @@ extension Restler {
             return self
         }
         
+        public func setInHeader(_ value: String, forKey key: Restler.Header.Key) -> Self {
+            self.customHeaderFields[key] = value
+            return self
+        }
+        
         public func failureDecode<T>(_ type: T.Type) -> Self where T: RestlerErrorDecodable {
             self.decodingErrors.append(type)
             return self
@@ -72,7 +78,8 @@ extension Restler {
                 dispatchQueueManager: self.dispatchQueueManager,
                 method: self.buildMethod(),
                 errors: self.errors,
-                decodingErrors: self.decodingErrors)
+                decodingErrors: self.decodingErrors,
+                customHeaderFields: self.customHeaderFields)
         }
         
         public func decode<T>(_ type: T.Type) -> Request<T> where T: Decodable {
@@ -84,7 +91,8 @@ extension Restler {
                 dispatchQueueManager: self.dispatchQueueManager,
                 method: self.buildMethod(),
                 errors: self.errors,
-                decodingErrors: self.decodingErrors)
+                decodingErrors: self.decodingErrors,
+                customHeaderFields: self.customHeaderFields)
         }
         
         public func decode(_ type: Void.Type) -> Request<Void> {
@@ -96,7 +104,8 @@ extension Restler {
                 dispatchQueueManager: self.dispatchQueueManager,
                 method: self.buildMethod(),
                 errors: self.errors,
-                decodingErrors: self.decodingErrors)
+                decodingErrors: self.decodingErrors,
+                customHeaderFields: self.customHeaderFields)
         }
     }
 }

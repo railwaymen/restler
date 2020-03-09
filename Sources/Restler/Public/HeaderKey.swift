@@ -8,7 +8,7 @@ extension Restler.Header {
     /// ```
     /// .custom("Your_Custom_Key")
     /// ```
-    public enum Key: Hashable {
+    public enum Key: Hashable, ExpressibleByStringLiteral {
         case a_im
         case accept
         case acceptCharset
@@ -145,6 +145,10 @@ extension Restler.Header {
         }
         
         // MARK: - Initialization
+        public init(stringLiteral value: String) {
+            self.init(rawValue: value)
+        }
+        
         init(rawValue: String) {
             self = Key.staticCases.first { $0.rawValue == rawValue }
                 ?? .custom(rawValue)
