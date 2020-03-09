@@ -21,15 +21,14 @@ extension RestlerRequestInternal {
                 return error
             } else if let first = errors.first, errors.count == 1 {
                 return first
-            } else {
-                return Restler.Error.multiple(errors.map { error in
-                    if let restlerError = error as? Restler.Error {
-                        return restlerError
-                    } else {
-                        return Restler.Error.common(type: .unknownError, base: error)
-                    }
-                })
             }
+            return Restler.Error.multiple(errors.map { error in
+                if let restlerError = error as? Restler.Error {
+                    return restlerError
+                }
+                return Restler.Error.common(type: .unknownError, base: error)
+            })
+            
         }
     }
 }

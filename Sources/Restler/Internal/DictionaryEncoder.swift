@@ -29,7 +29,10 @@ class DictionaryEncoder: DictionaryEncoderType {
             return nil
         }.filter { $0.value != nil }
     }
-    
+}
+
+// MARK: - Private
+extension DictionaryEncoder {
     private func encode<E>(_ object: E) throws -> [String: Any] where E: Encodable {
         let data = try self.encoder.encode(object)
         let json = try self.serialization.jsonObject(with: data, options: .allowFragments)
