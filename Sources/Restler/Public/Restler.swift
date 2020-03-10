@@ -6,15 +6,12 @@ open class Restler: RestlerType {
     private let networking: NetworkingType
     private let dispatchQueueManager: DispatchQueueManagerType
     
-    /// Encoder used for encoding requests' body.
     open var encoder: RestlerJSONEncoderType
     
-    /// Decoder used for decoding response's data to expected object.
     open var decoder: RestlerJSONDecoderType
     
     open var errorParser: RestlerErrorParserType
     
-    /// Global header sent in requests.
     open var header: Restler.Header {
         get {
             return self.networking.header
