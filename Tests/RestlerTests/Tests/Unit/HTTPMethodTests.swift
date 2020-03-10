@@ -103,3 +103,65 @@ extension HTTPMethodTests {
         XCTAssertNil(sut.content)
     }
 }
+
+// MARK: - isQueryAvailable
+extension HTTPMethodTests {
+    func testIsQueryAvailable_get() {
+        //Arrange
+        let sut: HTTPMethod = .get(query: [:])
+        //Assert
+        XCTAssertTrue(sut.isQueryAvailable)
+    }
+    
+    func testIsQueryAvailable_post() {
+        //Arrange
+        let sut: HTTPMethod = .post(content: nil)
+        //Assert
+        XCTAssertFalse(sut.isQueryAvailable)
+    }
+    
+    func testIsQueryAvailable_put() {
+        //Arrange
+        let sut: HTTPMethod = .put(content: nil)
+        //Assert
+        XCTAssertFalse(sut.isQueryAvailable)
+    }
+    
+    func testIsQueryAvailable_delete() {
+        //Arrange
+        let sut: HTTPMethod = .delete
+        //Assert
+        XCTAssertFalse(sut.isQueryAvailable)
+    }
+}
+
+// MARK: - isBodyAvailable
+extension HTTPMethodTests {
+    func testIsBodyAvailable_get() {
+        //Arrange
+        let sut: HTTPMethod = .get(query: [:])
+        //Assert
+        XCTAssertFalse(sut.isBodyAvailable)
+    }
+    
+    func testIsBodyAvailable_post() {
+        //Arrange
+        let sut: HTTPMethod = .post(content: nil)
+        //Assert
+        XCTAssertTrue(sut.isBodyAvailable)
+    }
+    
+    func testIsBodyAvailable_put() {
+        //Arrange
+        let sut: HTTPMethod = .put(content: nil)
+        //Assert
+        XCTAssertTrue(sut.isBodyAvailable)
+    }
+    
+    func testIsBodyAvailable_delete() {
+        //Arrange
+        let sut: HTTPMethod = .delete
+        //Assert
+        XCTAssertFalse(sut.isBodyAvailable)
+    }
+}
