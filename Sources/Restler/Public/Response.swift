@@ -7,6 +7,12 @@ extension Restler {
         public let error: Swift.Error?
         
         // MARK: - Initialization
+        public init(data: Data?, response: HTTPURLResponse?, error: Swift.Error?) {
+            self.data = data
+            self.response = response
+            self.error = error
+        }
+        
         init(_ result: HTTPRequestResponse) {
             self.data = result.data
             self.response = result.response as? HTTPURLResponse
