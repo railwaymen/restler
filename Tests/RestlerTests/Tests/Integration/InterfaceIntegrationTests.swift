@@ -54,7 +54,7 @@ extension InterfaceIntegrationTests {
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
         XCTAssertEqual(requestParams.method, .get(query: [:]))
-        XCTAssertEqual(requestParams.customHeaderFields.raw, ["Accept": "someValue"])
+        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
         XCTAssertNil(completionResult)
     }
     
@@ -165,7 +165,7 @@ extension InterfaceIntegrationTests {
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
         XCTAssertEqual(requestParams.method, .get(query: [:]))
-        XCTAssertEqual(requestParams.customHeaderFields.raw, ["Accept": "someValue"])
+        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
         XCTAssertNil(completionResult)
     }
     
@@ -230,7 +230,7 @@ extension InterfaceIntegrationTests {
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
         XCTAssertEqual(requestParams.method, .get(query: [:]))
-        XCTAssertEqual(requestParams.customHeaderFields.raw, ["Accept": "someValue"])
+        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
         XCTAssertNil(completionResult)
     }
     

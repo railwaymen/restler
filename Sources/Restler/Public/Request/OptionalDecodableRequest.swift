@@ -9,7 +9,7 @@ extension Restler {
         private let method: HTTPMethod
         private let errors: [Error]
         private let errorParser: RestlerErrorParserType
-        private let customHeaderFields: Restler.Header
+        private let header: Restler.Header
         
         private var successCompletionHandler: ((D?) -> Void)?
         private var failureCompletionHandler: ((Swift.Error) -> Void)?
@@ -27,7 +27,7 @@ extension Restler {
             method: HTTPMethod,
             errors: [Error],
             errorParser: RestlerErrorParserType,
-            customHeaderFields: Restler.Header
+            header: Restler.Header
         ) {
             self.url = url
             self.networking = networking
@@ -37,7 +37,7 @@ extension Restler {
             self.method = method
             self.errors = errors
             self.errorParser = errorParser
-            self.customHeaderFields = customHeaderFields
+            self.header = header
         }
         
         // MARK: - Public
@@ -66,7 +66,7 @@ extension Restler {
             return self.networking.makeRequest(
                 url: self.url,
                 method: self.method,
-                customHeaderFields: self.customHeaderFields,
+                header: self.header,
                 completion: completion)
         }
     }

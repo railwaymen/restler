@@ -4,15 +4,12 @@ typealias DataResult = Result<Data?, Error>
 typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType: class {
-    var header: Restler.Header { get set }
-    func makeRequest(url: URL, method: HTTPMethod, customHeaderFields: Restler.Header, completion: @escaping DataCompletion) -> Restler.Task?
+    func makeRequest(url: URL, method: HTTPMethod, header: Restler.Header, completion: @escaping DataCompletion) -> Restler.Task?
 }
 
 class Networking {
     private let session: URLSessionType
-    
-    var header: Restler.Header = .init()
-    
+        
     // MARK: - Initialization
     init(session: URLSessionType = URLSession.shared) {
         self.session = session
@@ -21,11 +18,11 @@ class Networking {
 
 // MARK: - NetworkingType
 extension Networking: NetworkingType {
-    func makeRequest(url: URL, method: HTTPMethod, customHeaderFields: Restler.Header, completion: @escaping DataCompletion) -> Restler.Task? {
+    func makeRequest(url: URL, method: HTTPMethod, header: Restler.Header, completion: @escaping DataCompletion) -> Restler.Task? {
         guard let request = self.buildURLRequest(
             url: url,
             httpMethod: method,
-            header: self.header.settingCustomFields(customHeaderFields)) else {
+            header: header) else {
                 completion(.failure(Restler.Error.common(
                     type: .internalFrameworkError,
                     base: NSError(domain: "Restler", code: 0, userInfo: ["file": #file, "line": #line]))))

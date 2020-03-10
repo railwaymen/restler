@@ -12,14 +12,7 @@ open class Restler: RestlerType {
     
     open var errorParser: RestlerErrorParserType
     
-    open var header: Restler.Header {
-        get {
-            return self.networking.header
-        }
-        set {
-            self.networking.header = newValue
-        }
-    }
+    open var header: Restler.Header = .init()
     
     // MARK: - Initialization
     
@@ -90,6 +83,7 @@ extension Restler {
             dispatchQueueManager: self.dispatchQueueManager,
             errorParser: self.errorParser.copy(),
             method: method,
-            endpoint: endpoint)
+            endpoint: endpoint,
+            header: self.header)
     }
 }
