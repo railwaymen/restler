@@ -142,10 +142,11 @@ extension InterfaceIntegrationTests {
             .start()
         self.dispatchQueueManager.performParams.forEach { $0.action() }
         //Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 0)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 0)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertNil(returnedError)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        XCTAssertNil(completionResult)
     }
     
     func testGetOptionalDecodable_buildingRequest_customHeaderFields() throws {
@@ -1623,10 +1624,11 @@ extension InterfaceIntegrationTests {
             .start()
         self.dispatchQueueManager.performParams.forEach { $0.action() }
         //Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 0)
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 0)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertNil(returnedError)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        XCTAssertNil(completionResult)
     }
     
     func testDeleteOptionalDecodable_buildingRequest() throws {

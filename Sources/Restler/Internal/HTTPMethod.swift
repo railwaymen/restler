@@ -32,4 +32,22 @@ enum HTTPMethod: Equatable {
         case .delete: return nil
         }
     }
+    
+    var isQueryAvailable: Bool {
+        switch self {
+        case .get: return true
+        case .post: return false
+        case .put: return false
+        case .delete: return false
+        }
+    }
+    
+    var isBodyAvailable: Bool {
+        switch self {
+        case .get: return false
+        case .post: return true
+        case .put: return true
+        case .delete: return false
+        }
+    }
 }

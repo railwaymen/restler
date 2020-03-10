@@ -44,7 +44,7 @@ extension Restler {
         
         // MARK: - Public
         public func query<E>(_ object: E) -> Self where E: Encodable {
-            guard case .get = self.method else { return self }
+            guard self.method.isQueryAvailable else { return self }
             do {
                 self.query = try self.dictEncoder.encode(object)
             } catch {
@@ -54,6 +54,7 @@ extension Restler {
         }
         
         public func body<E>(_ object: E) -> Self where E: Encodable {
+            guard self.method.isBodyAvailable else { return self }
             do {
                 self.body = try self.encoder.encode(object)
             } catch {
