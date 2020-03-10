@@ -130,6 +130,8 @@ extension Restler.RequestBuilder {
             return .post(content: self.body)
         case .put:
             return .put(content: self.body)
+        case .patch:
+            return .patch(content: self.body)
         case .delete:
             return .delete
         }

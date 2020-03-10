@@ -26,6 +26,13 @@ extension HTTPMethodTests {
         XCTAssertEqual(sut.name, "PUT")
     }
     
+    func testName_patch() {
+        //Arrange
+        let sut: HTTPMethod = .patch(content: nil)
+        //Assert
+        XCTAssertEqual(sut.name, "PATCH")
+    }
+    
     func testName_delete() {
         //Arrange
         let sut: HTTPMethod = .delete
@@ -56,6 +63,14 @@ extension HTTPMethodTests {
         //Arrange
         let content = ["key": "value", "nil": nil, "some": "another"]
         let sut: HTTPMethod = .put(content: try JSONEncoder().encode(content))
+        //Assert
+        XCTAssertNil(sut.query)
+    }
+    
+    func testQuery_patch() throws {
+        //Arrange
+        let content = ["key": "value", "nil": nil, "some": "another"]
+        let sut: HTTPMethod = .patch(content: try JSONEncoder().encode(content))
         //Assert
         XCTAssertNil(sut.query)
     }
@@ -96,6 +111,15 @@ extension HTTPMethodTests {
         XCTAssertEqual(sut.content, data)
     }
     
+    func testContent_patch() throws {
+        //Arrange
+        let content = ["key": "value", "nil": nil, "some": "another"]
+        let data = try JSONEncoder().encode(content)
+        let sut: HTTPMethod = .patch(content: data)
+        //Assert
+        XCTAssertEqual(sut.content, data)
+    }
+    
     func testContent_delete() throws {
         //Arrange
         let sut: HTTPMethod = .delete
@@ -127,6 +151,13 @@ extension HTTPMethodTests {
         XCTAssertFalse(sut.isQueryAvailable)
     }
     
+    func testIsQueryAvailable_patch() {
+        //Arrange
+        let sut: HTTPMethod = .patch(content: nil)
+        //Assert
+        XCTAssertFalse(sut.isQueryAvailable)
+    }
+    
     func testIsQueryAvailable_delete() {
         //Arrange
         let sut: HTTPMethod = .delete
@@ -154,6 +185,13 @@ extension HTTPMethodTests {
     func testIsBodyAvailable_put() {
         //Arrange
         let sut: HTTPMethod = .put(content: nil)
+        //Assert
+        XCTAssertTrue(sut.isBodyAvailable)
+    }
+    
+    func testIsBodyAvailable_patch() {
+        //Arrange
+        let sut: HTTPMethod = .patch(content: nil)
         //Assert
         XCTAssertTrue(sut.isBodyAvailable)
     }
