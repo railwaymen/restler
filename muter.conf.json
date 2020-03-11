@@ -1,9 +1,13 @@
 {
   "arguments" : [
-    "test"
+    "test",
+    "-scheme",
+    "Restler-Package",
+    "-target",
+    "Restler"
   ],
   "exclude" : [
     "Restler-Example"
   ],
-  "executable" : "\/usr\/bin\/swift"
+  "executable" : "\/usr\/bin\/xcodebuild"
 }

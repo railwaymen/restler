@@ -21,9 +21,6 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "RestlerTests",
-            dependencies: ["Restler"]),
-        .testTarget(
-            name: "RestlerMockingTests",
             dependencies: ["Restler"])
     ]
 )
