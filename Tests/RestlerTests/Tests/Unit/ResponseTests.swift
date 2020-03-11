@@ -1,16 +1,7 @@
-//
-//  File.swift
-//  
-//
-//  Created by Bartłomiej Świerad on 11/03/2020.
-//
-
 import XCTest
 @testable import Restler
 
-class ResponseTests: XCTestCase {
-    
-}
+class ResponseTests: XCTestCase {}
 
 // MARK: - Public init
 extension ResponseTests {
