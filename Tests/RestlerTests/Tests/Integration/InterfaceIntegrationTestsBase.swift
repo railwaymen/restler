@@ -28,13 +28,19 @@ class InterfaceIntegrationTestsBase: XCTestCase {
             errorParser: Restler.ErrorParser())
     }
     
-    func assertThrowsEncodingError<T>(expected: TestError, returnedError: Error?, completionResult: Result<T, Error>?, line: UInt = #line) throws {
-        let restlerError = try XCTUnwrap(returnedError as? Restler.Error, line: line)
-        guard case let .multiple(errors) = restlerError else { return XCTFail("Returned error is not multiple error", line: line) }
-        XCTAssertEqual(errors.count, 1, line: line)
-        guard case let .common(type, base) = errors.first else { return XCTFail("Error thrown is not common error", line: line) }
-        XCTAssertEqual(base as? TestError, expected, line: line)
-        XCTAssertEqual(type, Restler.ErrorType.invalidParameters, line: line)
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: restlerError, line: line)
+    func assertThrowsEncodingError<T>(
+        expected: TestError,
+        returnedError: Error?,
+        completionResult: Result<T, Error>?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        let restlerError = try XCTUnwrap(returnedError as? Restler.Error, file: file, line: line)
+        guard case let .multiple(errors) = restlerError else { return XCTFail("Returned error is not multiple error", file: file, line: line) }
+        XCTAssertEqual(errors.count, 1, file: file, line: line)
+        guard case let .common(type, base) = errors.first else { return XCTFail("Error thrown is not common error", file: file, line: line) }
+        XCTAssertEqual(base as? TestError, expected, file: file, line: line)
+        XCTAssertEqual(type, Restler.ErrorType.invalidParameters, file: file, line: line)
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: restlerError, file: file, line: line)
     }
 }
