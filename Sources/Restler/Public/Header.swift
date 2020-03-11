@@ -65,11 +65,5 @@ extension Restler {
             let base64Credentials = credentialsData.base64EncodedString()
             self[.authorization] = "Basic \(base64Credentials)"
         }
-        
-        public func settingCustomFields(_ header: Header) -> Restler.Header {
-            return Restler.Header(raw: self.raw.merging(header.raw, uniquingKeysWith: { lhs, rhs in
-                return rhs
-            }))
-        }
     }
 }

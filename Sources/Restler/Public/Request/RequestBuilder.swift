@@ -14,10 +14,10 @@ extension Restler {
         private let method: HTTPMethod
         private let endpoint: RestlerEndpointable
         
+        private var header: Restler.Header
         private var query: QueryParametersType?
         private var body: Data?
         private var errors: [Error] = []
-        private var customHeaderFields: Restler.Header = .init()
         
         // MARK: - Initialization
         internal init(
@@ -29,7 +29,8 @@ extension Restler {
             dispatchQueueManager: DispatchQueueManagerType,
             errorParser: RestlerErrorParserType,
             method: HTTPMethod,
-            endpoint: RestlerEndpointable
+            endpoint: RestlerEndpointable,
+            header: Restler.Header
         ) {
             self.baseURL = baseURL
             self.networking = networking
@@ -40,10 +41,12 @@ extension Restler {
             self.errorParser = errorParser
             self.method = method
             self.endpoint = endpoint
+            self.header = header
         }
         
         // MARK: - Public
         public func query<E>(_ object: E) -> Self where E: Encodable {
+            guard self.method.isQueryAvailable else { return self }
             do {
                 self.query = try self.dictEncoder.encode(object)
             } catch {
@@ -53,6 +56,7 @@ extension Restler {
         }
         
         public func body<E>(_ object: E) -> Self where E: Encodable {
+            guard self.method.isBodyAvailable else { return self }
             do {
                 self.body = try self.encoder.encode(object)
             } catch {
@@ -61,8 +65,8 @@ extension Restler {
             return self
         }
         
-        public func setInHeader(_ value: String, forKey key: Restler.Header.Key) -> Self {
-            self.customHeaderFields[key] = value
+        public func setInHeader(_ value: String?, forKey key: Restler.Header.Key) -> Self {
+            self.header[key] = value
             return self
         }
         
@@ -81,7 +85,7 @@ extension Restler {
                 method: self.buildMethod(),
                 errors: self.errors,
                 errorParser: self.errorParser,
-                customHeaderFields: self.customHeaderFields)
+                header: self.header)
         }
         
         public func decode<T>(_ type: T.Type) -> Request<T> where T: Decodable {
@@ -94,7 +98,7 @@ extension Restler {
                 method: self.buildMethod(),
                 errors: self.errors,
                 errorParser: self.errorParser,
-                customHeaderFields: self.customHeaderFields)
+                header: self.header)
         }
         
         public func decode(_ type: Void.Type) -> Request<Void> {
@@ -107,7 +111,7 @@ extension Restler {
                 method: self.buildMethod(),
                 errors: self.errors,
                 errorParser: self.errorParser,
-                customHeaderFields: self.customHeaderFields)
+                header: self.header)
         }
     }
 }
@@ -126,6 +130,8 @@ extension Restler.RequestBuilder {
             return .post(content: self.body)
         case .put:
             return .put(content: self.body)
+        case .patch:
+            return .patch(content: self.body)
         case .delete:
             return .delete
         }

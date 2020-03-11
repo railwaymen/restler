@@ -35,12 +35,12 @@ public protocol RestlerRequestBuilderType: class {
     ///   This function doesn't remove existing field in the header.
     ///
     /// - Parameters:
-    ///   - value: A string value for the key.
+    ///   - value: A string value for the key. If nil, a value for the key will be removed.
     ///   - key: A key for the value.
     ///
     /// - Returns: `self` for chaining.
     ///
-    func setInHeader(_ value: String, forKey key: Restler.Header.Key) -> Self
+    func setInHeader(_ value: String?, forKey key: Restler.Header.Key) -> Self
     
     
     /// Try to decode the error on failure of the data task.

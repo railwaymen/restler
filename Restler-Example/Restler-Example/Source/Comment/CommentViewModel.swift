@@ -49,7 +49,25 @@ class CommentViewModel: ObservableObject {
             .onCompletion({ result in
                 switch result {
                 case .success:
-                    print("Comment updated")
+                    print("Comment putted")
+                case let .failure(error):
+                    print(error)
+                }
+            })
+            .start()
+        guard let task = optionalTask as? Restler.Task else { return }
+        self.tasks.update(with: task)
+    }
+    
+    func patch() {
+        let optionalTask = self.restler
+            .patch(Endpoint.comment(1))
+            .body(self.comment)
+            .decode(Void.self)
+            .onCompletion({ result in
+                switch result {
+                case .success:
+                    print("Comment patched")
                 case let .failure(error):
                     print(error)
                 }

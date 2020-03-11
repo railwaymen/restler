@@ -16,7 +16,7 @@ class RestlerRequestBuilderMock {
     
     private(set) var setInHeaderParams: [SetInHeaderParams] = []
     struct SetInHeaderParams {
-        let value: String
+        let value: String?
         let key: Restler.Header.Key
     }
     
@@ -47,7 +47,7 @@ extension RestlerRequestBuilderMock: RestlerRequestBuilderType {
         return self
     }
     
-    func setInHeader(_ value: String, forKey key: Restler.Header.Key) -> Self {
+    func setInHeader(_ value: String?, forKey key: Restler.Header.Key) -> Self {
         self.setInHeaderParams.append(SetInHeaderParams(value: value, key: key))
         return self
     }

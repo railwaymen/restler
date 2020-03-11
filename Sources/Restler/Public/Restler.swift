@@ -12,20 +12,14 @@ open class Restler: RestlerType {
     
     open var errorParser: RestlerErrorParserType
     
-    open var header: Restler.Header {
-        get {
-            return self.networking.header
-        }
-        set {
-            self.networking.header = newValue
-        }
-    }
+    open var header: Restler.Header = .init()
     
     // MARK: - Initialization
     
     /// Default initializer.
     ///
     /// - Parameters:
+    ///   - baseURL: Base for endpoints calls.
     ///   - encoder: Encoder used for encoding requests' body.
     ///   - decoder: Decoder used for decoding response's data to expected object.
     ///
@@ -73,6 +67,10 @@ open class Restler: RestlerType {
         return self.requestBuilder(for: .put(content: nil), to: endpoint)
     }
     
+    open func patch(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
+        return self.requestBuilder(for: .patch(content: nil), to: endpoint)
+    }
+    
     open func delete(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
         return self.requestBuilder(for: .delete, to: endpoint)
     }
@@ -90,6 +88,7 @@ extension Restler {
             dispatchQueueManager: self.dispatchQueueManager,
             errorParser: self.errorParser.copy(),
             method: method,
-            endpoint: endpoint)
+            endpoint: endpoint,
+            header: self.header)
     }
 }
