@@ -5,7 +5,7 @@ extension Restler {
         private var decodingErrors: [RestlerErrorDecodable.Type] = []
         
         // MARK: - Initialization
-        internal init(decodingErrors: [RestlerErrorDecodable.Type] = []) {
+        public init(decodingErrors: [RestlerErrorDecodable.Type] = []) {
             self.decodingErrors = decodingErrors
         }
         
@@ -31,9 +31,6 @@ extension Restler {
                 return first
             }
             return Restler.Error.multiple(errors.map { error in
-                if let restlerError = error as? Restler.Error {
-                    return restlerError
-                }
                 return Restler.Error.common(type: .unknownError, base: error)
             })
         }

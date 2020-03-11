@@ -19,6 +19,7 @@ open class Restler: RestlerType {
     /// Default initializer.
     ///
     /// - Parameters:
+    ///   - baseURL: Base for endpoints calls.
     ///   - encoder: Encoder used for encoding requests' body.
     ///   - decoder: Decoder used for decoding response's data to expected object.
     ///
