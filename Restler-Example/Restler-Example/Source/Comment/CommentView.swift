@@ -24,6 +24,11 @@ struct CommentView: View {
                     Text("PUT")
             })
             Button(
+                action: self.viewModel.patch,
+                label: {
+                    Text("PATCH")
+            })
+            Button(
                 action: self.viewModel.delete,
                 label: {
                     Text("DELETE")
