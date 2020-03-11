@@ -4,6 +4,7 @@ enum HTTPMethod: Equatable {
     case get(query: [String: String?])
     case post(content: Data?)
     case put(content: Data?)
+    case patch(content: Data?)
     case delete
     
     var name: String {
@@ -11,6 +12,7 @@ enum HTTPMethod: Equatable {
         case .get: return "GET"
         case .post: return "POST"
         case .put: return "PUT"
+        case .patch: return "PATCH"
         case .delete: return "DELETE"
         }
     }
@@ -20,6 +22,7 @@ enum HTTPMethod: Equatable {
         case let .get(query): return query
         case .post: return nil
         case .put: return nil
+        case .patch: return nil
         case .delete: return nil
         }
     }
@@ -29,6 +32,7 @@ enum HTTPMethod: Equatable {
         case .get: return nil
         case let .post(content): return content
         case let .put(content): return content
+        case let .patch(content): return content
         case .delete: return nil
         }
     }
@@ -38,6 +42,7 @@ enum HTTPMethod: Equatable {
         case .get: return true
         case .post: return false
         case .put: return false
+        case .patch: return false
         case .delete: return false
         }
     }
@@ -47,6 +52,7 @@ enum HTTPMethod: Equatable {
         case .get: return false
         case .post: return true
         case .put: return true
+        case .patch: return true
         case .delete: return false
         }
     }

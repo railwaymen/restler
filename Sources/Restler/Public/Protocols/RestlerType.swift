@@ -40,6 +40,14 @@ public protocol RestlerType: class {
     ///
     func put(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType
     
+    /// Creates PATCH request builder.
+    ///
+    /// - Parameter endpoint: Endpoint for the request
+    ///
+    /// - Returns: Restler.RequestBuilder for building the request in the functional way.
+    ///
+    func patch(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType
+    
     /// Creates DELETE request builder.
     ///
     /// - Parameter endpoint: Endpoint for the request

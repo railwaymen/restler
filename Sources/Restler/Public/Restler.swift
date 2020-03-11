@@ -66,6 +66,10 @@ open class Restler: RestlerType {
         return self.requestBuilder(for: .put(content: nil), to: endpoint)
     }
     
+    open func patch(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
+        return self.requestBuilder(for: .patch(content: nil), to: endpoint)
+    }
+    
     open func delete(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
         return self.requestBuilder(for: .delete, to: endpoint)
     }
