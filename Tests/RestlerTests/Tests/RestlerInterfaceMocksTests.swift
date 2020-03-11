@@ -1,14 +1,6 @@
 import XCTest
 import Restler
 
-class DecodableErrorMock: RestlerErrorDecodable {
-    required init?(response _: Restler.Response) {}
-}
-
-struct SomeObject: Codable, Equatable {
-    let id: Int
-}
-
 class RestlerInterfaceMocksTests: XCTestCase {
     private var restler: RestlerMock!
     
@@ -21,7 +13,7 @@ class RestlerInterfaceMocksTests: XCTestCase {
 extension RestlerInterfaceMocksTests {
     func test() throws {
         //Arrange
-        let object = SomeObject(id: 12)
+        let object = SomeObject(id: 12, name: "some", double: 1.23)
         var completionResult: Result<SomeObject, Error>?
         //Act
         _ = self.restler
