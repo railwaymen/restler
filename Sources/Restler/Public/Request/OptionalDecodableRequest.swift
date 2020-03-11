@@ -96,7 +96,9 @@ extension Restler.OptionalDecodableRequest {
             switch result {
             case let .success(optionalData):
                 var object: D?
-                if let data = optionalData {
+                if let data = optionalData as? D {
+                    object = data
+                } else if let data = optionalData {
                     object = try? decoder.decode(D.self, from: data)
                 }
                 completion(.success(object))

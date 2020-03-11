@@ -113,6 +113,9 @@ extension Restler.DecodableRequest {
             guard let data = optionalData else {
                 throw DecodingError.valueNotFound(Data.self, DecodingError.Context(codingPath: [], debugDescription: "Response"))
             }
+            if let data = optionalData as? D {
+                return data
+            }
             return try decoder.decode(D.self, from: data)
         }
     }
