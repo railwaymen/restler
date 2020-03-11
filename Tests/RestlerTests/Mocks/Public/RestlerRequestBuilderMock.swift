@@ -31,9 +31,27 @@ class RestlerRequestBuilderMock {
         let type: Any
     }
     
-    func getDecodeReturnedMock<T>(at index: Int = 0) -> RestlerRequestMock<T>? {
-        return decodeReturnedMocks[index] as? RestlerRequestMock<T>
-    }}
+    // MARK: - Internal
+    func callCompletion<T>(type: T.Type, result: Result<T, Error>) throws {
+        guard let request = self.decodeReturnedMocks.last as? RestlerRequestMock<T> else { throw "Decode hasn't return value with a specified type." }
+        var isCalledAnything = false
+        switch result {
+        case let .success(object):
+            guard let successHandler = request.onSuccessParams.last?.handler else { break }
+            successHandler(object)
+            isCalledAnything = true
+        case let .failure(error):
+            guard let failureHandler = request.onFailureParams.last?.handler else { break }
+            failureHandler(error)
+            isCalledAnything = true
+        }
+        if let completionHandler = request.onCompletionParams.last?.handler {
+            completionHandler(result)
+            isCalledAnything = true
+        }
+        guard isCalledAnything else { throw "None handler has been called." }
+    }
+}
 
 // MARK: - RestlerRequestBuilderType
 extension RestlerRequestBuilderMock: RestlerRequestBuilderType {
