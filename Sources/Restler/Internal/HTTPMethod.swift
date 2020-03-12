@@ -1,7 +1,7 @@
 import Foundation
 
 enum HTTPMethod: Equatable {
-    case get(query: [String: String?])
+    case get(query: [URLQueryItem])
     case post(content: Data?)
     case put(content: Data?)
     case patch(content: Data?)
@@ -17,7 +17,7 @@ enum HTTPMethod: Equatable {
         }
     }
     
-    var query: [String: String?]? {
+    var query: [URLQueryItem]? {
         switch self {
         case let .get(query): return query
         case .post: return nil

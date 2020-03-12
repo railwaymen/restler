@@ -17,7 +17,7 @@ extension NetworkingTests {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        let queryParameters = ["some": "key", "another": "key1"]
+        let queryParameters = ["some": "key", "another": "key1"].map { URLQueryItem(name: $0, value: $1) }
         let header = ["key1": "value1", "key2": "value2"]
         var completionResult: DataResult?
         //Act
@@ -114,7 +114,7 @@ extension NetworkingTests {
         let responseData = Data()
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: [:]), header: .init()) { result in
+        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: responseData, response: mockResponse, error: nil))
@@ -129,7 +129,7 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: Data(), response: nil, error: nil)
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: [:]), header: .init()) { result in
+        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
@@ -147,7 +147,7 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: Data(), response: mockResponse, error: nil)
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: [:]), header: .init()) { result in
+        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
@@ -165,7 +165,7 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: Data(), response: mockResponse, error: TestError())
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: [:]), header: .init()) { result in
+        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
@@ -181,7 +181,7 @@ extension NetworkingTests {
         mockResponse.isSuccessfulReturnValue = true
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: [:]), header: .init()) { result in
+        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: nil, response: mockResponse, error: nil))
@@ -199,7 +199,7 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: nil, response: mockResponse, error: returnedError)
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: [:]), header: .init()) { result in
+        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)

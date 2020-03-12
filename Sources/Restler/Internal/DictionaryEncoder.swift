@@ -1,7 +1,7 @@
 import Foundation
 
 protocol DictionaryEncoderType: class {
-    func encodeToQuery<E>(_ object: E) throws -> [String: String?] where E: RestlerQueryEncodable
+    func encodeToQuery<E>(_ object: E) throws -> [URLQueryItem] where E: RestlerQueryEncodable
 }
 
 class DictionaryEncoder: DictionaryEncoderType {
@@ -15,7 +15,7 @@ class DictionaryEncoder: DictionaryEncoderType {
     }
     
     // MARK: - Internal
-    func encodeToQuery<E>(_ object: E) throws -> [String: String?] where E: RestlerQueryEncodable {
+    func encodeToQuery<E>(_ object: E) throws -> [URLQueryItem] where E: RestlerQueryEncodable {
         return try self.encoder.encode(object)
     }
 }

@@ -56,7 +56,7 @@ open class Restler: RestlerType {
     // MARK: - Open
     
     open func get(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
-        return self.requestBuilder(for: .get(query: [:]), to: endpoint)
+        return self.requestBuilder(for: .get(query: []), to: endpoint)
     }
     
     open func post(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {

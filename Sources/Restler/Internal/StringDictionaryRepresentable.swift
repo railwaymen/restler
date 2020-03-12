@@ -1,5 +1,5 @@
 import Foundation
 
-internal protocol StringDictionaryRepresentable {
-    var dictionary: [String: String] { get }
+internal protocol QueryItemsRepresentable {
+    var tuples: [(key: String, value: String)] { get }
 }

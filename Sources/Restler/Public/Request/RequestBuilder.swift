@@ -1,6 +1,6 @@
 import Foundation
 
-typealias QueryParametersType = [String: String?]
+typealias QueryParametersType = [URLQueryItem]
 
 extension Restler {
     public class RequestBuilder: RestlerRequestBuilderType {
@@ -125,7 +125,7 @@ extension Restler.RequestBuilder {
     private func buildMethod() -> HTTPMethod {
         switch self.method {
         case .get:
-            return .get(query: self.query ?? [:])
+            return .get(query: self.query ?? [])
         case .post:
             return .post(content: self.body)
         case .put:

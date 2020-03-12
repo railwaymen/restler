@@ -2,7 +2,7 @@ import Foundation
 
 extension Restler {
     public class QueryEncoder: RestlerQueryEncoderType {
-        private var containers: [StringDictionaryRepresentable] = []
+        private var containers: [QueryItemsRepresentable] = []
         
         // MARK: - Public functions
         public func container<Key: CodingKey>(using: Key.Type) -> KeyedContainer<Key> {
@@ -17,10 +17,13 @@ extension Restler {
             return container
         }
         
-        public func encode<T: RestlerQueryEncodable>(_ object: T) throws -> [String: String] {
+        public func encode<T: RestlerQueryEncodable>(_ object: T) throws -> [URLQueryItem] {
             try object.encodeToQuery(using: self)
-            return self.containers.reduce(into: [String: String]()) { result, container in
-                result.merge(container.dictionary, uniquingKeysWith: { _, rhs in return rhs })
+            return self.containers.reduce(into: [URLQueryItem]()) { result, container in
+                let queryItems = container.tuples.map { key, value in
+                    URLQueryItem(name: key, value: value)
+                }
+                result.append(contentsOf: queryItems)
             }
         }
     }
