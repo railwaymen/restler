@@ -1,21 +1,49 @@
 import Foundation
 
 public protocol RestlerQueryEncoderType {
-    func container<T: CodingKey>(using: T.Type) -> Restler.QueryEncoder.Container<T>
-    func encode<T: RestlerQueryEncodable>(_ object: T) throws -> [String: String]
+    func container<Key: CodingKey>(using: Key.Type) -> Restler.QueryEncoder.KeyedContainer<Key>
+    func stringKeyedContainer() -> Restler.QueryEncoder.StringKeyedContainer
+    func encode<Key: RestlerQueryEncodable>(_ object: Key) throws -> [String: String]
 }
 
-internal protocol RestlerQueryContainerType {
+public protocol RestlerQueryEncoderContainerType {
+    associatedtype Key
+    func encode(_ value: Decimal?, forKey key: Key) throws
+    func encode(_ value: Double?, forKey key: Key) throws
+    func encode(_ value: Float?, forKey key: Key) throws
+    func encode(_ value: Int?, forKey key: Key) throws
+    func encode(_ value: Int8?, forKey key: Key) throws
+    func encode(_ value: Int16?, forKey key: Key) throws
+    func encode(_ value: Int32?, forKey key: Key) throws
+    func encode(_ value: Int64?, forKey key: Key) throws
+    func encode(_ value: UInt?, forKey key: Key) throws
+    func encode(_ value: UInt8?, forKey key: Key) throws
+    func encode(_ value: UInt16?, forKey key: Key) throws
+    func encode(_ value: UInt32?, forKey key: Key) throws
+    func encode(_ value: UInt64?, forKey key: Key) throws
+    func encode(_ value: String?, forKey key: Key) throws
+    func encode(_ value: UUID?, forKey key: Key) throws
+    func encode(_ value: URL?, forKey key: Key) throws
+    func encode(_ value: Bool?, forKey key: Key) throws
+}
+
+internal protocol StringDictionaryRepresentable {
     var dictionary: [String: String] { get }
 }
 
 extension Restler {
     public class QueryEncoder: RestlerQueryEncoderType {
-        private var containers: [RestlerQueryContainerType] = []
+        private var containers: [StringDictionaryRepresentable] = []
         
         // MARK: - Public functions
-        public func container<T: CodingKey>(using: T.Type) -> Container<T> {
-            let container = Container<T>()
+        public func container<Key: CodingKey>(using: Key.Type) -> KeyedContainer<Key> {
+            let container = KeyedContainer<Key>()
+            self.containers.append(container)
+            return container
+        }
+        
+        public func stringKeyedContainer() -> StringKeyedContainer {
+            let container = StringKeyedContainer()
             self.containers.append(container)
             return container
         }
@@ -29,88 +57,159 @@ extension Restler {
     }
 }
 
-// MARK: - Container
+// MARK: - KeyedContainer
 extension Restler.QueryEncoder {
-    public class Container<T: CodingKey> {
+    public class KeyedContainer<Key: CodingKey>: RestlerQueryEncoderContainerType {
         internal var dictionary: [String: String] = [:]
         
-        // Public
-        public func encode(_ value: Decimal?, forKey key: T) throws {
+        // MARK: - Public
+        public func encode(_ value: Decimal?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: Double?, forKey key: T) throws {
+        public func encode(_ value: Double?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: Float?, forKey key: T) throws {
+        public func encode(_ value: Float?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: Int?, forKey key: T) throws {
+        public func encode(_ value: Int?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: Int8?, forKey key: T) throws {
+        public func encode(_ value: Int8?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: Int16?, forKey key: T) throws {
+        public func encode(_ value: Int16?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: Int32?, forKey key: T) throws {
+        public func encode(_ value: Int32?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: Int64?, forKey key: T) throws {
+        public func encode(_ value: Int64?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: UInt?, forKey key: T) throws {
+        public func encode(_ value: UInt?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: UInt8?, forKey key: T) throws {
+        public func encode(_ value: UInt8?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: UInt16?, forKey key: T) throws {
+        public func encode(_ value: UInt16?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: UInt32?, forKey key: T) throws {
+        public func encode(_ value: UInt32?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: UInt64?, forKey key: T) throws {
+        public func encode(_ value: UInt64?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: String?, forKey key: T) throws {
+        public func encode(_ value: String?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value
         }
         
-        public func encode(_ value: UUID?, forKey key: T) throws {
+        public func encode(_ value: UUID?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: URL?, forKey key: T) throws {
+        public func encode(_ value: URL?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
         
-        public func encode(_ value: Bool?, forKey key: T) throws {
+        public func encode(_ value: Bool?, forKey key: Key) throws {
             self.dictionary[key.stringValue] = value?.description
         }
     }
 }
 
-// MARK: - RestlerQueryContainerType
-extension Restler.QueryEncoder.Container: RestlerQueryContainerType {}
+extension Restler.QueryEncoder {
+    public class StringKeyedContainer: RestlerQueryEncoderContainerType {
+        public typealias Key = String
+        
+        internal var dictionary: [String: String] = [:]
+        
+        // MARK: - Public
+        public func encode(_ value: Decimal?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: Double?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: Float?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: Int?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: Int8?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: Int16?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: Int32?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: Int64?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: UInt?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: UInt8?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: UInt16?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: UInt32?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: UInt64?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: String?, forKey key: Key) throws {
+            self.dictionary[key] = value
+        }
+        
+        public func encode(_ value: UUID?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: URL?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+        
+        public func encode(_ value: Bool?, forKey key: Key) throws {
+            self.dictionary[key] = value?.description
+        }
+    }
+}
 
-// MARK: -
-//extension Dictionary: RestlerQueryEncodable where Key == String, Value == String {
-//    public func encodeToQuery(using encoder: Restler.QueryEncoder) throws {
-//        var container = try encoder.container(using: <#T##CodingKey.Protocol#>)
-//    }
-//}
+// MARK: - RestlerQueryContainerType
+extension Restler.QueryEncoder.KeyedContainer: StringDictionaryRepresentable {}
+extension Restler.QueryEncoder.StringKeyedContainer: StringDictionaryRepresentable {}

@@ -88,6 +88,26 @@ extension GetInterfaceIntegrationTests {
         try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
     }
     
+    func testGetVoid_buildingRequest_encodingDictionaryQuery() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let header = ["id": "1", "name": "name", "double": "1.23"]
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .get(self.endpoint)
+            .query(header)
+            .decode(Void.self)
+            .onCompletion({ completionResult = $0 })
+            .start()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .get(query: header))
+        XCTAssertNil(completionResult)
+    }
+    
     func testGetVoid_buildingRequest_encodingBody() throws {
         //Arrange
         let sut = self.buildSUT()
