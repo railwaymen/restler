@@ -55,7 +55,7 @@ class RestlerRequestBuilderMock {
 
 // MARK: - RestlerRequestBuilderType
 extension RestlerRequestBuilderMock: RestlerRequestBuilderType {
-    func query<E>(_ object: E) -> Self where E: Encodable {
+    func query<E>(_ object: E) -> Self where E: RestlerQueryEncodable {
         self.queryParams.append(QueryParams(object: object))
         return self
     }

@@ -3,12 +3,7 @@ import XCTest
 
 class DictionaryEncoderTests: XCTestCase {
     private let encoder = JSONEncoder()
-    private var serialization: CustomJSONSerializationMock!
-    
-    override func setUp() {
-        super.setUp()
-        self.serialization = CustomJSONSerializationMock()
-    }
+    private let someObject = SomeObject(id: 1, name: "some", double: 1.23)
 }
 
 // MARK: - encode(_:)
@@ -21,56 +16,81 @@ extension DictionaryEncoderTests {
         object.thrownError = expectedError
         //Act
         //Assert
-        XCTAssertThrowsError(try sut.encode(object)) { error in
+        XCTAssertThrowsError(try sut.encodeToQuery(object)) { error in
             XCTAssertEqual(error as? TestError, expectedError)
         }
     }
     
-    func testEncode_decodingFailed() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        let object = SomeObject(id: 1, name: "some", double: 1.23)
-        let expectedError = TestError()
-        self.serialization.jsonObjectThrownError = expectedError
-        //Act
-        //Assert
-        XCTAssertThrowsError(try sut.encode(object)) { error in
-            XCTAssertEqual(error as? TestError, expectedError)
-        }
-    }
-    
-    func testEncode_decodedObjectNotADictionary() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        let object = SomeObject(id: 1, name: "some", double: 1.23)
-        self.serialization.jsonObjectReturnValue = object
-        //Act
-        //Assert
-        XCTAssertThrowsError(try sut.encode(object)) { error in
-            guard case let .common(type, base) = error as? Restler.Error else { return XCTFail() }
-            XCTAssertEqual(type, .internalFrameworkError)
-            XCTAssert(base is EncodingError)
-        }
-    }
-    
-    func testEncode_parsesData() throws {
+    func testEncode_parsesFullData() throws {
         //Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://example.com"))
-        let object = SomeObject(id: 1, name: "some", double: 1.23)
-        self.serialization.jsonObjectReturnValue = ["id": 1, "name": "some", "double": 1.23, "unexpected": url] as [String: Any]
+        let uuid = UUID()
+        let object = ComplexObject(
+            id: uuid,
+            currency: "USD",
+            image: url,
+            itemsCount: 0,
+            summaryPrice: 2.56,
+            multiplier: -4,
+            floatValue: 92.4,
+            decimalValue: 3.221,
+            isAvailable: true)
+        let expectedResult: [String: String?] = [
+            "id": uuid.uuidString,
+            "currency": "USD",
+            "image": url.absoluteString,
+            "itemsCount": "0",
+            "summaryPrice": "2.56",
+            "multiplier": "-4",
+            "floatValue": "92.4",
+            "decimalValue": "3.221",
+            "isAvailable": "true",
+        ]
         //Act
-        let dictionary = try sut.encode(object)
+        let dictionary = try sut.encodeToQuery(object)
         //Assert
-        XCTAssertEqual(dictionary, ["id": "1", "name": "some", "double": "1.23"])
+        XCTAssertEqual(dictionary.count, expectedResult.count)
+        expectedResult.forEach {
+            if let lhsString = dictionary[$0.key] as? String, let lhsValue = Double(lhsString),
+                let rhsString = $0.value, let rhsValue = Double(rhsString) {
+                XCTAssertEqual(lhsValue, rhsValue, accuracy: 0.01)
+            } else {
+                XCTAssertEqual(dictionary[$0.key], $0.value, "key: \($0.key)")
+            }
+        }
     }
 }
 
 // MARK: - Private
 extension DictionaryEncoderTests {
     private func buildSUT() -> DictionaryEncoder {
-        return DictionaryEncoder(
-            encoder: self.encoder,
-            serialization: self.serialization)
+        return DictionaryEncoder(encoder: Restler.QueryEncoder())
+    }
+}
+
+// MARK: - Structure
+private struct ComplexObject: Codable, RestlerQueryEncodable {
+    let id: UUID?
+    let currency: String?
+    let image: URL?
+    let itemsCount: UInt?
+    let summaryPrice: Double?
+    let multiplier: Int?
+    let floatValue: Float?
+    let decimalValue: Decimal?
+    let isAvailable: Bool?
+    
+    func encodeToQuery(using encoder: RestlerQueryEncoderType) throws {
+        let container = encoder.container(using: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.currency, forKey: .currency)
+        try container.encode(self.image, forKey: .image)
+        try container.encode(self.itemsCount, forKey: .itemsCount)
+        try container.encode(self.summaryPrice, forKey: .summaryPrice)
+        try container.encode(self.multiplier, forKey: .multiplier)
+        try container.encode(self.floatValue, forKey: .floatValue)
+        try container.encode(self.decimalValue, forKey: .decimalValue)
+        try container.encode(self.isAvailable, forKey: .isAvailable)
     }
 }

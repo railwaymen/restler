@@ -45,10 +45,10 @@ extension Restler {
         }
         
         // MARK: - Public
-        public func query<E>(_ object: E) -> Self where E: Encodable {
+        public func query<E>(_ object: E) -> Self where E: RestlerQueryEncodable {
             guard self.method.isQueryAvailable else { return self }
             do {
-                self.query = try self.dictEncoder.encode(object)
+                self.query = try self.dictEncoder.encodeToQuery(object)
             } catch {
                 self.errors.append(Error.common(type: .invalidParameters, base: error))
             }

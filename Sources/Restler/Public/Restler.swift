@@ -84,7 +84,7 @@ extension Restler {
             networking: self.networking,
             encoder: self.encoder,
             decoder: self.decoder,
-            dictEncoder: DictionaryEncoder(encoder: self.encoder, serialization: CustomJSONSerialization()),
+            dictEncoder: DictionaryEncoder(encoder: Restler.QueryEncoder()),
             dispatchQueueManager: self.dispatchQueueManager,
             errorParser: self.errorParser.copy(),
             method: method,
