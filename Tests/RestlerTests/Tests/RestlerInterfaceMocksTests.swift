@@ -18,6 +18,7 @@ extension RestlerInterfaceMocksTests {
         //Act
         _ = self.restler
             .post(EndpointMock.mock)
+            .query(["some": "name"])
             .body(object)
             .failureDecode(DecodableErrorMock.self)
             .decode(SomeObject.self)

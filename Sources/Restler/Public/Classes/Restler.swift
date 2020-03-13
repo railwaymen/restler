@@ -56,7 +56,7 @@ open class Restler: RestlerType {
     // MARK: - Open
     
     open func get(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
-        return self.requestBuilder(for: .get(query: [:]), to: endpoint)
+        return self.requestBuilder(for: .get(query: []), to: endpoint)
     }
     
     open func post(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
@@ -84,7 +84,7 @@ extension Restler {
             networking: self.networking,
             encoder: self.encoder,
             decoder: self.decoder,
-            dictEncoder: DictionaryEncoder(encoder: self.encoder, serialization: CustomJSONSerialization()),
+            queryEncoder: Restler.QueryEncoder(),
             dispatchQueueManager: self.dispatchQueueManager,
             errorParser: self.errorParser.copy(),
             method: method,

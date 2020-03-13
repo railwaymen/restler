@@ -1,6 +1,7 @@
 import Foundation
+import Restler
 
-class ThrowingObject: Codable {
+class ThrowingObject: Codable, RestlerQueryEncodable {
     var thrownError: Error = TestError()
     
     init() {}
@@ -10,6 +11,10 @@ class ThrowingObject: Codable {
     }
     
     func encode(to encoder: Encoder) throws {
+        throw self.thrownError
+    }
+    
+    func encodeToQuery(using encoder: RestlerQueryEncoderType) throws {
         throw self.thrownError
     }
 }
