@@ -3,6 +3,7 @@ import Restler
 
 class RestlerStringEncodableTests: XCTestCase {}
 
+// MARK: - restlerStringValue
 extension RestlerStringEncodableTests {
     func testRestlerStringValue_decimal() {
         //Arrange

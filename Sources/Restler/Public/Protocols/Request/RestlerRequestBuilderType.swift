@@ -10,7 +10,7 @@ public protocol RestlerRequestBuilderType: class {
     /// - Parameters:
     ///   - object: A query encodable object.
     ///
-    /// - Returns: `self` for chaining.x`
+    /// - Returns: `self` for chaining.
     ///
     func query<E>(_ object: E) -> Self where E: RestlerQueryEncodable
     

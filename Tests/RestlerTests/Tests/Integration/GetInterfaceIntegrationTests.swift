@@ -1129,9 +1129,3 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), data)
     }
 }
-
-private extension Array where Element == (String, String) {
-    func toQueryItems() -> [URLQueryItem] {
-        self.map { URLQueryItem(name: $0, value: $1) }
-    }
-}
