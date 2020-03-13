@@ -7,7 +7,7 @@ class HTTPMethodTests: XCTestCase {}
 extension HTTPMethodTests {
     func testName_get() {
         //Arrange
-        let sut: HTTPMethod = .get(query: [:])
+        let sut: HTTPMethod = .get(query: [])
         //Assert
         XCTAssertEqual(sut.name, "GET")
     }
@@ -45,7 +45,7 @@ extension HTTPMethodTests {
 extension HTTPMethodTests {
     func testQuery_get() {
         //Arrange
-        let queryParameters = ["key": "value", "nil": nil, "some": "another"]
+        let queryParameters = ["key": "value", "nil": nil, "some": "another"].map { URLQueryItem(name: $0, value: $1) }
         let sut: HTTPMethod = .get(query: queryParameters)
         //Assert
         XCTAssertEqual(sut.query, queryParameters)
@@ -87,7 +87,7 @@ extension HTTPMethodTests {
 extension HTTPMethodTests {
     func testContent_get() {
         //Arrange
-        let queryParameters = ["key": "value", "nil": nil, "some": "another"]
+        let queryParameters = ["key": "value", "nil": nil, "some": "another"].map { URLQueryItem(name: $0, value: $1) }
         let sut: HTTPMethod = .get(query: queryParameters)
         //Assert
         XCTAssertNil(sut.content)
@@ -132,7 +132,7 @@ extension HTTPMethodTests {
 extension HTTPMethodTests {
     func testIsQueryAvailable_get() {
         //Arrange
-        let sut: HTTPMethod = .get(query: [:])
+        let sut: HTTPMethod = .get(query: [])
         //Assert
         XCTAssertTrue(sut.isQueryAvailable)
     }
@@ -170,7 +170,7 @@ extension HTTPMethodTests {
 extension HTTPMethodTests {
     func testIsBodyAvailable_get() {
         //Arrange
-        let sut: HTTPMethod = .get(query: [:])
+        let sut: HTTPMethod = .get(query: [])
         //Assert
         XCTAssertFalse(sut.isBodyAvailable)
     }

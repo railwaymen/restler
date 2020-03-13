@@ -36,7 +36,7 @@ extension Networking: NetworkingType {
 extension Networking {
     private func buildURLRequest(url: URL, httpMethod: HTTPMethod, header: Restler.Header) -> URLRequest? {
         guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
-        urlComponents.queryItems = httpMethod.query?.map { URLQueryItem(name: $0.key, value: $0.value) }
+        urlComponents.queryItems = httpMethod.query
         guard let url = urlComponents.url else { return nil }
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = header.raw

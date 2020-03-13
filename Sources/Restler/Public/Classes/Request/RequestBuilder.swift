@@ -1,6 +1,6 @@
 import Foundation
 
-typealias QueryParametersType = [String: String?]
+typealias QueryParametersType = [URLQueryItem]
 
 extension Restler {
     public class RequestBuilder: RestlerRequestBuilderType {
@@ -8,7 +8,7 @@ extension Restler {
         private let networking: NetworkingType
         private let encoder: RestlerJSONEncoderType
         private let decoder: RestlerJSONDecoderType
-        private let dictEncoder: DictionaryEncoderType
+        private let queryEncoder: RestlerQueryEncoderType
         private let dispatchQueueManager: DispatchQueueManagerType
         private let errorParser: RestlerErrorParserType
         private let method: HTTPMethod
@@ -25,7 +25,7 @@ extension Restler {
             networking: NetworkingType,
             encoder: RestlerJSONEncoderType,
             decoder: RestlerJSONDecoderType,
-            dictEncoder: DictionaryEncoderType,
+            queryEncoder: RestlerQueryEncoderType,
             dispatchQueueManager: DispatchQueueManagerType,
             errorParser: RestlerErrorParserType,
             method: HTTPMethod,
@@ -36,7 +36,7 @@ extension Restler {
             self.networking = networking
             self.encoder = encoder
             self.decoder = decoder
-            self.dictEncoder = dictEncoder
+            self.queryEncoder = queryEncoder
             self.dispatchQueueManager = dispatchQueueManager
             self.errorParser = errorParser
             self.method = method
@@ -45,10 +45,10 @@ extension Restler {
         }
         
         // MARK: - Public
-        public func query<E>(_ object: E) -> Self where E: Encodable {
+        public func query<E>(_ object: E) -> Self where E: RestlerQueryEncodable {
             guard self.method.isQueryAvailable else { return self }
             do {
-                self.query = try self.dictEncoder.encode(object)
+                self.query = try self.queryEncoder.encode(object)
             } catch {
                 self.errors.append(Error.common(type: .invalidParameters, base: error))
             }
@@ -125,7 +125,7 @@ extension Restler.RequestBuilder {
     private func buildMethod() -> HTTPMethod {
         switch self.method {
         case .get:
-            return .get(query: self.query ?? [:])
+            return .get(query: self.query ?? [])
         case .post:
             return .post(content: self.body)
         case .put:

@@ -8,11 +8,11 @@ public protocol RestlerRequestBuilderType: class {
     /// If error while encoding occurs, it's returned in the completion of the request inside the `Restler.Error.multiple`.
     ///
     /// - Parameters:
-    ///   - object: An encodable object which is parsable to the `[String: String?]` type.
+    ///   - object: A query encodable object.
     ///
     /// - Returns: `self` for chaining.
     ///
-    func query<E>(_ object: E) -> Self where E: Encodable
+    func query<E>(_ object: E) -> Self where E: RestlerQueryEncodable
     
     /// Sets body of the request. Works only with POST and PUT request.
     ///
