@@ -14,7 +14,15 @@ extension Restler.QueryEncoder {
                 self.tuples.removeAll(where: { $0.key == key })
             }
         }
-
+        
+        public func encode(_ value: [RestlerStringEncodable]?, forKey key: String) throws {
+            if let array = value {
+                let queries: [(String, String)] = array.map { (key + "[]", $0.restlerStringValue) }
+                self.tuples.append(contentsOf: queries)
+            } else {
+                self.tuples.removeAll { $0.key == key }
+            }
+        }
     }
 }
 

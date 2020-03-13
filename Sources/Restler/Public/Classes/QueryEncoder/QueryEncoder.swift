@@ -5,7 +5,7 @@ extension Restler {
         private var containers: [QueryItemsRepresentable] = []
         
         // MARK: - Public functions
-        public func container<Key: CodingKey>(using: Key.Type) -> KeyedContainer<Key> {
+        public func container<Key: CodingKey>(using _: Key.Type) -> KeyedContainer<Key> {
             let container = KeyedContainer<Key>()
             self.containers.append(container)
             return container
