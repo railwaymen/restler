@@ -1,7 +1,7 @@
 import Foundation
 import Restler
 
-class ThrowingObject: Codable, RestlerQueryEncodable {
+class ThrowingObject: Codable, RestlerQueryEncodable, RestlerMultipartEncodable {
     var thrownError: Error = TestError()
     
     init() {}
@@ -15,6 +15,10 @@ class ThrowingObject: Codable, RestlerQueryEncodable {
     }
     
     func encodeToQuery(using encoder: RestlerQueryEncoderType) throws {
+        throw self.thrownError
+    }
+    
+    func encodeToMultipart(encoder: RestlerMultipartEncoderType) throws {
         throw self.thrownError
     }
 }

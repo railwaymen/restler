@@ -20,6 +20,7 @@ extension PostInterfaceIntegrationTests {
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
         XCTAssertEqual(requestParams.method, .post(content: nil))
+        XCTAssertNil(requestParams.header[.contentType])
         XCTAssertNil(completionResult)
     }
     
@@ -39,6 +40,7 @@ extension PostInterfaceIntegrationTests {
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
         XCTAssertEqual(requestParams.method, .post(content: nil))
+        XCTAssertNil(requestParams.header[.contentType])
         XCTAssertNil(completionResult)
     }
     
@@ -87,6 +89,7 @@ extension PostInterfaceIntegrationTests {
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
         XCTAssertEqual(requestParams.method, .post(content: data))
+        XCTAssertEqual(requestParams.header[.contentType], "application/json")
         XCTAssertNil(completionResult)
     }
     
@@ -103,6 +106,76 @@ extension PostInterfaceIntegrationTests {
         _ = sut
             .post(self.endpoint)
             .body(object)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 0)
+        XCTAssertNil(decodedObject)
+        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+    }
+    
+    func testPostVoid_buildingRequest_encodingMultipart() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let imageString = "some image data"
+        let object = ImageEncoder(
+            id: 1,
+            title: "My Image",
+            image: Restler.MultipartObject(
+                filename: "image.png",
+                contentType: "image/png",
+                body: imageString.data(using: .utf8)!))
+        let data = """
+            --boundary\r\n\
+            Content-Disposition: form-data; name="id"\r\n\
+            \r\n\
+            1\r\n\
+            --boundary\r\n\
+            Content-Disposition: form-data; name="title"\r\n\
+            \r\n\
+            My Image\r\n\
+            --boundary\r\n\
+            Content-Disposition: form-data; name="image"; filename="image.png"\r\n\
+            Content-Type: image/png\r\n\
+            \r\n\
+            \(imageString)\r\n\
+            --boundary--\r\n
+            """.data(using: .utf8)!
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .post(self.endpoint)
+            .multipart(object, boundary: "boundary")
+            .decode(Void.self)
+            .onCompletion({ completionResult = $0 })
+            .start()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .post(content: data))
+        XCTAssertEqual(requestParams.header[.contentType], "multipart/form-data; charset=utf-8; boundary=boundary")
+        XCTAssertNil(completionResult)
+    }
+    
+    func testPostVoid_buildingRequest_encodingMultipartFails() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let object = ThrowingObject()
+        let expectedError = TestError()
+        object.thrownError = expectedError
+        var returnedError: Error?
+        var decodedObject: Void?
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .post(self.endpoint)
+            .multipart(object)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })

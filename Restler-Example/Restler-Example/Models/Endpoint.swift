@@ -24,3 +24,13 @@ enum Endpoint: RestlerEndpointable {
         }
     }
 }
+
+enum ImgurEndpoint: RestlerEndpointable {
+    case upload
+    
+    var stringValue: String {
+        switch self {
+        case .upload: return "/upload"
+        }
+    }
+}

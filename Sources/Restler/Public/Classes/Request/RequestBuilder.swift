@@ -9,6 +9,7 @@ extension Restler {
         private let encoder: RestlerJSONEncoderType
         private let decoder: RestlerJSONDecoderType
         private let queryEncoder: RestlerQueryEncoderType
+        private let multipartEncoder: RestlerMultipartEncoderType
         private let dispatchQueueManager: DispatchQueueManagerType
         private let errorParser: RestlerErrorParserType
         private let method: HTTPMethod
@@ -26,6 +27,7 @@ extension Restler {
             encoder: RestlerJSONEncoderType,
             decoder: RestlerJSONDecoderType,
             queryEncoder: RestlerQueryEncoderType,
+            multipartEncoder: RestlerMultipartEncoderType,
             dispatchQueueManager: DispatchQueueManagerType,
             errorParser: RestlerErrorParserType,
             method: HTTPMethod,
@@ -37,6 +39,7 @@ extension Restler {
             self.encoder = encoder
             self.decoder = decoder
             self.queryEncoder = queryEncoder
+            self.multipartEncoder = multipartEncoder
             self.dispatchQueueManager = dispatchQueueManager
             self.errorParser = errorParser
             self.method = method
@@ -49,6 +52,7 @@ extension Restler {
             guard self.method.isQueryAvailable else { return self }
             do {
                 self.query = try self.queryEncoder.encode(object)
+                self.header[.contentType] = "application/x-www-form-urlencoded"
             } catch {
                 self.errors.append(Error.common(type: .invalidParameters, base: error))
             }
@@ -59,6 +63,19 @@ extension Restler {
             guard self.method.isBodyAvailable else { return self }
             do {
                 self.body = try self.encoder.encode(object)
+                self.header[.contentType] = "application/json"
+            } catch {
+                self.errors.append(Error.common(type: .invalidParameters, base: error))
+            }
+            return self
+        }
+        
+        public func multipart<E>(_ object: E, boundary: String? = nil) -> Self where E: RestlerMultipartEncodable {
+            guard self.method.isMultipartAvailable else { return self }
+            do {
+                let unwrappedBoundary = boundary ?? "Boundary--\(UUID().uuidString)"
+                self.body = try self.multipartEncoder.encode(object, boundary: unwrappedBoundary)
+                self.header[.contentType] = "multipart/form-data; charset=utf-8; boundary=\(unwrappedBoundary)"
             } catch {
                 self.errors.append(Error.common(type: .invalidParameters, base: error))
             }

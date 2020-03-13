@@ -17,6 +17,16 @@ class CommentViewModel: ObservableObject {
     
     let objectWillChange = PassthroughSubject<Void, Never>()
     
+    private var imageEncoder: ImgurImageEncoder {
+        return ImgurImageEncoder(
+            title: "Desktop",
+            description: "Little image of my desktop",
+            image: Restler.MultipartObject(
+                filename: "desktop.png",
+                contentType: "image/png",
+                body: #imageLiteral(resourceName: "imgurImage").pngData()!))
+    }
+    
     // MARK: - Initialization
     init(comment: PostComment) {
         self.comment = comment
@@ -24,7 +34,7 @@ class CommentViewModel: ObservableObject {
     
     // MARK: - Internal
     func create() {
-        let optionalTask = self.restler
+        let task = self.restler
             .post(Endpoint.comments)
             .body(self.comment)
             .decode(Void.self)
@@ -37,12 +47,11 @@ class CommentViewModel: ObservableObject {
                 }
             })
             .start()
-        guard let task = optionalTask as? Restler.Task else { return }
-        self.tasks.update(with: task)
+        self.add(task: task)
     }
     
     func update() {
-        let optionalTask = self.restler
+        let task = self.restler
             .put(Endpoint.comment(1))
             .body(self.comment)
             .decode(Void.self)
@@ -55,12 +64,11 @@ class CommentViewModel: ObservableObject {
                 }
             })
             .start()
-        guard let task = optionalTask as? Restler.Task else { return }
-        self.tasks.update(with: task)
+        self.add(task: task)
     }
     
     func patch() {
-        let optionalTask = self.restler
+        let task = self.restler
             .patch(Endpoint.comment(1))
             .body(self.comment)
             .decode(Void.self)
@@ -73,12 +81,11 @@ class CommentViewModel: ObservableObject {
                 }
             })
             .start()
-        guard let task = optionalTask as? Restler.Task else { return }
-        self.tasks.update(with: task)
+        self.add(task: task)
     }
     
     func delete() {
-        let optionalTask = self.restler
+        let task = self.restler
             .delete(Endpoint.comment(self.comment.id))
             .decode(Void.self)
             .onCompletion({ result in
@@ -90,8 +97,7 @@ class CommentViewModel: ObservableObject {
                 }
             })
             .start()
-        guard let task = optionalTask as? Restler.Task else { return }
-        self.tasks.update(with: task)
+        self.add(task: task)
     }
     
     func cancelAllTasks() {
@@ -99,5 +105,11 @@ class CommentViewModel: ObservableObject {
             $0.cancel()
             print("Task \($0.identifier) cancelled.")
         }
+    }
+    
+    // MARK: - Private
+    private func add(task: RestlerTaskType?) {
+        guard let task = task as? Restler.Task else { return }
+        self.tasks.update(with: task)
     }
 }
