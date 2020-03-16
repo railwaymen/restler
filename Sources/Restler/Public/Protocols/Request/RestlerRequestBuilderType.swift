@@ -25,7 +25,7 @@ public protocol RestlerRequestBuilderType: class {
     ///
     func body<E>(_ object: E) -> Self where E: Encodable
     
-    /// Sets body of the request. Works only with POST and PUT request.
+    /// Sets body of the request. Works only with POST request.
     ///
     /// If error while encoding occurs, it's returned in the completion of the request inside the `Restler.Error.multiple`.
     ///
@@ -105,10 +105,15 @@ public protocol RestlerRequestBuilderType: class {
 
 extension RestlerRequestBuilderType {
     
-    /// TODO
+    /// Sets body of the request. Works only with POST request.
+    ///
+    /// If error while encoding occurs, it's returned in the completion of the request inside the `Restler.Error.multiple`.
     ///
     /// - Parameters:
-    ///   - object: TODO
+    ///   - object: A multipart encodable object.
+    ///
+    /// - Returns: `self` for chaining.
+    ///
     public func multipart<E>(_ object: E) -> Self where E: RestlerMultipartEncodable {
         return self.multipart(object, boundary: nil)
     }
