@@ -10,3 +10,9 @@ public protocol RestlerEndpointable {
     ///
     var stringValue: String { get }
 }
+
+extension String: RestlerEndpointable {
+    public var stringValue: String {
+        return self
+    }
+}
