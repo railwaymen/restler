@@ -23,9 +23,7 @@ extension Networking: NetworkingType {
             url: url,
             httpMethod: method,
             header: header) else {
-                completion(.failure(Restler.Error.common(
-                    type: .internalFrameworkError,
-                    base: NSError(domain: "Restler", code: 0, userInfo: ["file": #file, "line": #line]))))
+                completion(.failure(Restler.internalError()))
                 return nil
         }
         return Restler.Task(task: self.runDataTask(request: request, completion: completion))

@@ -2,7 +2,14 @@ import Foundation
 
 extension Restler.QueryEncoder {
     public class KeyedContainer<Key: CodingKey>: RestlerQueryEncoderContainerType {
+        private let jsonEncoder: RestlerJSONEncoderType
+        
         internal var tuples: [(key: String, value: String)] = []
+        
+        // MARK: - Initialization
+        init(jsonEncoder: RestlerJSONEncoderType) {
+            self.jsonEncoder = jsonEncoder
+        }
         
         // MARK: - Public
         public func encode(_ value: RestlerStringEncodable?, forKey key: Key) throws {
@@ -26,6 +33,15 @@ extension Restler.QueryEncoder {
             if let dictionary = value {
                 let queries: [(String, String)] = dictionary.map { (key.stringValue + "[\($0.key)]", $0.value.restlerStringValue) }
                 self.tuples.append(contentsOf: queries)
+            } else {
+                self.removeAll(for: key)
+            }
+        }
+        
+        public func encode(_ value: Date?, forKey key: Key) throws {
+            if let date = value {
+                let stringDate = try date.toString(using: self.jsonEncoder)
+                self.tuples.append((key.stringValue, stringDate))
             } else {
                 self.removeAll(for: key)
             }
