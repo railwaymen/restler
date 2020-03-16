@@ -15,7 +15,7 @@ enum Endpoint: RestlerEndpointable {
     case posts
     case users
     
-    var stringValue: String {
+    var restlerEndpointValue: String {
         switch self {
         case let .comment(id): return "/comments/\(id)"
         case .comments: return "/comments"

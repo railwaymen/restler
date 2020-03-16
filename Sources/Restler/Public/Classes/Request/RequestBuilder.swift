@@ -136,7 +136,7 @@ extension Restler {
 // MARK: - Private
 extension Restler.RequestBuilder {
     private func url(for endpoint: RestlerEndpointable) -> URL {
-        return self.baseURL.appendingPathComponent(endpoint.stringValue)
+        return self.baseURL.appendingPathComponent(endpoint.restlerEndpointValue)
     }
     
     private func buildMethod() -> HTTPMethod {
