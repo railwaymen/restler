@@ -60,7 +60,7 @@ extension Networking {
     }
     
     private func handle(result: HTTPRequestResponse) -> Error {
-        let errorType = Restler.ErrorType(statusCode: result.response?.statusCode ?? 0) ?? .unknownError
+        let errorType = Restler.ErrorType(statusCode: result.response?.statusCode ?? (result.error as NSError?)?.code ?? 0) ?? .unknownError
         return Restler.Error.request(type: errorType, response: Restler.Response(result))
     }
 }
