@@ -206,6 +206,22 @@ extension NetworkingTests {
         //Assert
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.Error.request(type: .unknownError, response: Restler.Response(response)))
     }
+    
+    func testMakeRequest_NSURLErrorCancelled() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let returnedError = NSError(domain: "URLSession Error", code: NSURLErrorCancelled, userInfo: nil)
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let response = HTTPRequestResponse(data: nil, response: nil, error: returnedError)
+        var completionResult: DataResult?
+        //Act
+        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
+            completionResult = result
+        }
+        try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
+        //Assert
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.Error.request(type: .requestCancelled, response: Restler.Response(response)))
+    }
 }
 
 // MARK: - Private
