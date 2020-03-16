@@ -24,6 +24,25 @@ extension GetInterfaceIntegrationTests {
         XCTAssertNil(completionResult)
     }
     
+    func testGetVoid_stringEndpoint_buildingRequest() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .get("mock")
+            .decode(Void.self)
+            .onCompletion({ completionResult = $0 })
+            .start()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .get(query: []))
+        XCTAssertNil(requestParams.header[.contentType])
+        XCTAssertNil(completionResult)
+    }
+    
     func testGetVoid_buildingRequest_customHeaderFields() throws {
         //Arrange
         let sut = self.buildSUT()
