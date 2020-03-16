@@ -4,7 +4,7 @@ import Foundation
 enum EndpointMock: RestlerEndpointable {
     case mock
     
-    var stringValue: String {
+    var restlerEndpointValue: String {
         return "mock"
     }
 }

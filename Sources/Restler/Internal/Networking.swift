@@ -46,8 +46,8 @@ extension Networking {
     }
     
     private func runDataTask(request: URLRequest, completion: @escaping DataCompletion) -> URLSessionDataTaskType {
-        let task = self.session.dataTask(with: request) { [weak self] response in
-            self?.handleResponse(response: response, completion: completion)
+        let task = self.session.dataTask(with: request) { response in
+            self.handleResponse(response: response, completion: completion)
         }
         task.resume()
         return task

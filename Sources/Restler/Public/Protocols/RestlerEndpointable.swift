@@ -8,5 +8,11 @@ public protocol RestlerEndpointable {
     /// It should be in format `/path/for/request`.
     /// It is appended to the base URL.
     ///
-    var stringValue: String { get }
+    var restlerEndpointValue: String { get }
+}
+
+extension String: RestlerEndpointable {
+    public var restlerEndpointValue: String {
+        return self
+    }
 }
