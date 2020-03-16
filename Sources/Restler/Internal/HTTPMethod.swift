@@ -56,4 +56,14 @@ enum HTTPMethod: Equatable {
         case .delete: return false
         }
     }
+    
+    var isMultipartAvailable: Bool {
+        switch self {
+        case .get: return false
+        case .post: return true
+        case .put: return false
+        case .patch: return false
+        case .delete: return false
+        }
+    }
 }

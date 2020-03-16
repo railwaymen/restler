@@ -19,6 +19,11 @@ struct CommentView: View {
                     Text("POST")
             })
             Button(
+                action: self.viewModel.postMultipart,
+                label: {
+                    Text("POST MULTIPART")
+            })
+            Button(
                 action: self.viewModel.update,
                 label: {
                     Text("PUT")

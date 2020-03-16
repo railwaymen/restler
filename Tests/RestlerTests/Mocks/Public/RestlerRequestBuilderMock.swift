@@ -14,6 +14,12 @@ class RestlerRequestBuilderMock {
         let object: Any
     }
     
+    private(set) var multipartParams: [MultipartParams] = []
+    struct MultipartParams {
+        let object: Any
+        let boundary: String?
+    }
+    
     private(set) var setInHeaderParams: [SetInHeaderParams] = []
     struct SetInHeaderParams {
         let value: String?
@@ -62,6 +68,11 @@ extension RestlerRequestBuilderMock: RestlerRequestBuilderType {
     
     func body<E>(_ object: E) -> Self where E: Encodable {
         self.bodyParams.append(BodyParams(object: object))
+        return self
+    }
+    
+    func multipart<E>(_ object: E, boundary: String?) -> Self where E : RestlerMultipartEncodable {
+        self.multipartParams.append(MultipartParams(object: object, boundary: boundary))
         return self
     }
     

@@ -123,6 +123,51 @@ extension PatchInterfaceIntegrationTests {
         try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
     }
     
+    func testPatchVoid_buildingRequest_encodingMultipart() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let object = SomeObject(id: 1, name: "some", double: 1.23)
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .patch(self.endpoint)
+            .multipart(object)
+            .decode(Void.self)
+            .onCompletion({ completionResult = $0 })
+            .start()
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .patch(content: nil))
+        XCTAssertNil(requestParams.header[.contentType])
+        XCTAssertNil(completionResult)
+    }
+    
+    func testPatchVoid_buildingRequest_encodingMultipartFails() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let object = ThrowingObject()
+        let expectedError = TestError()
+        object.thrownError = expectedError
+        var completionResult: Restler.VoidResult?
+        //Act
+        _ = sut
+            .patch(self.endpoint)
+            .multipart(object)
+            .decode(Void.self)
+            .onCompletion({ completionResult = $0 })
+            .start()
+        self.dispatchQueueManager.performParams.forEach { $0.action() }
+        //Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .patch(content: nil))
+        XCTAssertNil(requestParams.header[.contentType])
+        XCTAssertNil(completionResult)
+    }
+    
     // MARK: Decoding success
     func testPatchVoid_success_nil() throws {
         //Arrange
