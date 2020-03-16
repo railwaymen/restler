@@ -12,7 +12,7 @@ import Restler
 enum ImgurEndpoint: RestlerEndpointable {
     case upload
     
-    var stringValue: String {
+    var restlerEndpointValue: String {
         switch self {
         case .upload: return "/upload"
         }
