@@ -7,9 +7,7 @@ extension Restler.MultipartEncoder {
         // MARK: - Public
         public func encode(_ value: RestlerStringEncodable, forKey key: Key) throws {
             guard let data = value.restlerStringValue.data(using: .utf8) else {
-                throw Restler.Error.common(
-                    type: .internalFrameworkError,
-                    base: NSError(domain: "Restler", code: 0, userInfo: ["file": #file, "line": #line]))
+                throw Restler.internalError()
             }
             self.sections.append(Restler.MultipartSection(key: key.stringValue, body: data))
         }

@@ -2,6 +2,21 @@ import Foundation
 
 /// Class for making requests to the API
 open class Restler: RestlerType {
+    
+    // MARK: - Internal Static
+    internal static func internalError(file: StaticString = #file, line: UInt = #line) -> Restler.Error {
+        return Restler.Error.common(
+            type: .internalFrameworkError,
+            base: NSError(
+                domain: "Restler",
+                code: 0,
+                userInfo: [
+                    "file": #file,
+                    "line": #line
+            ]))
+    }
+    
+    // MARK: - Properties
     private let baseURL: URL
     private let networking: NetworkingType
     private let dispatchQueueManager: DispatchQueueManagerType
@@ -84,7 +99,7 @@ extension Restler {
             networking: self.networking,
             encoder: self.encoder,
             decoder: self.decoder,
-            queryEncoder: Restler.QueryEncoder(),
+            queryEncoder: Restler.QueryEncoder(jsonEncoder: self.encoder),
             multipartEncoder: Restler.MultipartEncoder(),
             dispatchQueueManager: self.dispatchQueueManager,
             errorParser: self.errorParser.copy(),

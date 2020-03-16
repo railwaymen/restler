@@ -2,17 +2,24 @@ import Foundation
 
 extension Restler {
     public class QueryEncoder: RestlerQueryEncoderType {
+        private let jsonEncoder: RestlerJSONEncoderType
+        
         private var containers: [QueryItemsRepresentable] = []
+        
+        // MARK: - Initialization
+        init(jsonEncoder: RestlerJSONEncoderType) {
+            self.jsonEncoder = jsonEncoder
+        }
         
         // MARK: - Public functions
         public func container<Key: CodingKey>(using _: Key.Type) -> KeyedContainer<Key> {
-            let container = KeyedContainer<Key>()
+            let container = KeyedContainer<Key>(jsonEncoder: self.jsonEncoder)
             self.containers.append(container)
             return container
         }
         
         public func stringKeyedContainer() -> StringKeyedContainer {
-            let container = StringKeyedContainer()
+            let container = StringKeyedContainer(jsonEncoder: self.jsonEncoder)
             self.containers.append(container)
             return container
         }
