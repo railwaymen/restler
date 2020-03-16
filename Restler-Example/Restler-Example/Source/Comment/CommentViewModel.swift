@@ -50,6 +50,19 @@ class CommentViewModel: ObservableObject {
         self.add(task: task)
     }
     
+    func postMultipart() {
+        guard let clientID = Bundle.main.infoDictionary?["IMGUR_CLIENT_ID"] as? String else { return }
+        let restler = Restler(baseURL: URL(string: "https://api.imgur.com/3")!)
+        let task = restler
+            .post(ImgurEndpoint.upload)
+            .setInHeader("Client-ID \(clientID)", forKey: .authorization)
+            .multipart(self.imageEncoder)
+            .decode(Void.self)
+            .onCompletion({ print("Multipart request result:", $0) })
+            .start()
+        self.add(task: task)
+    }
+    
     func update() {
         let task = self.restler
             .put(Endpoint.comment(1))
