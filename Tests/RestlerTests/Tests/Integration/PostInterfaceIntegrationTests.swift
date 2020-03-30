@@ -24,53 +24,6 @@ extension PostInterfaceIntegrationTests {
         XCTAssertNil(completionResult)
     }
     
-    func testPostVoid_buildingRequest_encodingQuery() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.VoidResult?
-        //Act
-        _ = sut
-            .post(self.endpoint)
-            .query(SomeObject(id: 1, name: "name", double: 1.23))
-            .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        //Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .post(content: nil))
-        XCTAssertNil(requestParams.header[.contentType])
-        XCTAssertNil(completionResult)
-    }
-    
-    func testPostVoid_buildingRequest_encodingQueryFails() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        let object = ThrowingObject()
-        let expectedError = TestError()
-        object.thrownError = expectedError
-        var returnedError: Error?
-        var decodedObject: Void?
-        var completionResult: Restler.VoidResult?
-        //Act
-        _ = sut
-            .post(self.endpoint)
-            .query(object)
-            .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 0)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertNil(returnedError)
-        XCTAssertNil(decodedObject)
-        XCTAssertNil(completionResult)
-    }
-    
     func testPostVoid_buildingRequest_encodingBody() throws {
         //Arrange
         let sut = self.buildSUT()
