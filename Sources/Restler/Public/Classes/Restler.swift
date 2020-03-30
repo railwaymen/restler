@@ -89,6 +89,10 @@ open class Restler: RestlerType {
     open func delete(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
         return self.requestBuilder(for: .delete, to: endpoint)
     }
+    
+    open func head(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
+        return self.requestBuilder(for: .head, to: endpoint)
+    }
 }
 
 // MARK: - Private

@@ -33,6 +33,20 @@ class CommentViewModel: ObservableObject {
     }
     
     // MARK: - Internal
+    func checkExistence() {
+        let task = self.restler
+            .head(Endpoint.comments)
+            .decode(Void.self)
+            .onSuccess({
+                print("Endpoint exists")
+            })
+            .onFailure({ error in
+                print("Request HEAD error:", error)
+            })
+            .start()
+        self.add(task: task)
+    }
+    
     func create() {
         let task = self.restler
             .post(Endpoint.comments)
