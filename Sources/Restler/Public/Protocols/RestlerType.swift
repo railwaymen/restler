@@ -15,7 +15,6 @@ public protocol RestlerType: class {
     /// Global header sent in requests.
     var header: Restler.Header { get set }
     
-    
     /// Creates GET request builder.
     ///
     /// - Parameter endpoint: Endpoint for the request

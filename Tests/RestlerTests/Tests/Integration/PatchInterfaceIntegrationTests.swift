@@ -382,4 +382,3 @@ extension PatchInterfaceIntegrationTests {
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
     }
 }
-

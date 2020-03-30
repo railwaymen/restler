@@ -1012,3 +1012,4 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), data)
     }
 }
+// swiftlint:disable:this file_length

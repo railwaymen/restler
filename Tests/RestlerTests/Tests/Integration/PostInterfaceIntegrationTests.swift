@@ -447,3 +447,4 @@ extension PostInterfaceIntegrationTests {
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
     }
 }
+// swiftlint:disable:this file_length

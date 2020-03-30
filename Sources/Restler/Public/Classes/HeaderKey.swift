@@ -1,5 +1,6 @@
 import Foundation
 
+// swiftlint:disable identifier_name
 extension Restler.Header {
     
     /// Key for the header.
@@ -155,3 +156,4 @@ extension Restler.Header {
         }
     }
 }
+// swiftlint:enable identifier_name
