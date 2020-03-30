@@ -1,7 +1,3 @@
-opt_in_rules:
-  - unused_import
-  - unused_declaration
-
 disabled_rules:
   - trailing_whitespace
   - xctfail_message
@@ -20,8 +16,6 @@ identifier_name:
 
 warning_threshold: 5
 
-excluded:
-  - .build
-  - Restler-Example
-  - fastlane
-  - vendor
+included:
+  - Sources
+  - Tests

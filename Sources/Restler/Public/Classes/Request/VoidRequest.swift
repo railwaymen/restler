@@ -11,7 +11,7 @@ extension Restler {
         private let errorParser: RestlerErrorParserType
         private let header: Restler.Header
         
-        private var successCompletionHandler: ((D) -> Void)?
+        private var successCompletionHandler: ((SuccessfulResponseObject) -> Void)?
         private var failureCompletionHandler: ((Swift.Error) -> Void)?
         private var completionHandler: Restler.VoidCompletion?
         
@@ -42,7 +42,7 @@ extension Restler {
         
         // MARK: - Public
         
-        public override func onSuccess(_ handler: @escaping (D) -> Void) -> Self {
+        public override func onSuccess(_ handler: @escaping (SuccessfulResponseObject) -> Void) -> Self {
             self.successCompletionHandler = handler
             return self
         }
