@@ -39,6 +39,12 @@ class RestlerMock {
     struct DeleteParams {
         let endpoint: RestlerEndpointable
     }
+    
+    var headReturnValue: RestlerRequestBuilderMock = RestlerRequestBuilderMock()
+    private(set) var headParams: [HeadParams] = []
+    struct HeadParams {
+        let endpoint: RestlerEndpointable
+    }
 }
 
 // MARK: - RestlerType
@@ -66,5 +72,10 @@ extension RestlerMock: RestlerType {
     func delete(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
         self.deleteParams.append(DeleteParams(endpoint: endpoint))
         return self.deleteReturnValue
+    }
+    
+    func head(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
+        self.headParams.append(HeadParams(endpoint: endpoint))
+        return self.headReturnValue
     }
 }

@@ -55,4 +55,12 @@ public protocol RestlerType: class {
     /// - Returns: Restler.RequestBuilder for building the request in the functional way.
     ///
     func delete(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType
+    
+    /// Creates HEAD request builder.
+    ///
+    /// - Parameter endpoint: Endpoint for the request
+    ///
+    /// - Returns: Restler.RequestBuilder for building the request in the functional way.
+    ///
+    func head(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType
 }

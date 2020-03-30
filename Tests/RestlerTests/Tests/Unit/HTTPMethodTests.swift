@@ -39,6 +39,13 @@ extension HTTPMethodTests {
         //Assert
         XCTAssertEqual(sut.name, "DELETE")
     }
+    
+    func testName_head() {
+        //Arrange
+        let sut: HTTPMethod = .head
+        //Assert
+        XCTAssertEqual(sut.name, "HEAD")
+    }
 }
 
 // MARK: - query
@@ -78,6 +85,13 @@ extension HTTPMethodTests {
     func testQuery_delete() throws {
         //Arrange
         let sut: HTTPMethod = .delete
+        //Assert
+        XCTAssertNil(sut.query)
+    }
+    
+    func testQuery_head() throws {
+        //Arrange
+        let sut: HTTPMethod = .head
         //Assert
         XCTAssertNil(sut.query)
     }
@@ -126,6 +140,13 @@ extension HTTPMethodTests {
         //Assert
         XCTAssertNil(sut.content)
     }
+    
+    func testContent_head() throws {
+        //Arrange
+        let sut: HTTPMethod = .head
+        //Assert
+        XCTAssertNil(sut.content)
+    }
 }
 
 // MARK: - isQueryAvailable
@@ -164,6 +185,13 @@ extension HTTPMethodTests {
         //Assert
         XCTAssertFalse(sut.isQueryAvailable)
     }
+    
+    func testIsQueryAvailable_head() {
+        //Arrange
+        let sut: HTTPMethod = .head
+        //Assert
+        XCTAssertFalse(sut.isQueryAvailable)
+    }
 }
 
 // MARK: - isBodyAvailable
@@ -199,6 +227,13 @@ extension HTTPMethodTests {
     func testIsBodyAvailable_delete() {
         //Arrange
         let sut: HTTPMethod = .delete
+        //Assert
+        XCTAssertFalse(sut.isBodyAvailable)
+    }
+    
+    func testIsBodyAvailable_head() {
+        //Arrange
+        let sut: HTTPMethod = .head
         //Assert
         XCTAssertFalse(sut.isBodyAvailable)
     }

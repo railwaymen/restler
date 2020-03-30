@@ -151,6 +151,8 @@ extension Restler.RequestBuilder {
             return .patch(content: self.body)
         case .delete:
             return .delete
+        case .head:
+            return .head
         }
     }
 }
