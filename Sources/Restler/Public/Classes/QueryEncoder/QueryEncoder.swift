@@ -7,7 +7,7 @@ extension Restler {
         private var containers: [QueryItemsRepresentable] = []
         
         // MARK: - Initialization
-        init(jsonEncoder: RestlerJSONEncoderType) {
+        public init(jsonEncoder: RestlerJSONEncoderType) {
             self.jsonEncoder = jsonEncoder
         }
         
