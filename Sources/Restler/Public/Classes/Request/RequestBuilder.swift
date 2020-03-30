@@ -3,7 +3,7 @@ import Foundation
 typealias QueryParametersType = [URLQueryItem]
 
 extension Restler {
-    public class RequestBuilder: RestlerRequestBuilderType {
+    public class RequestBuilder {
         private let baseURL: URL
         private let networking: NetworkingType
         private let encoder: RestlerJSONEncoderType
@@ -46,90 +46,104 @@ extension Restler {
             self.endpoint = endpoint
             self.header = header
         }
-        
-        // MARK: - Public
-        public func query<E>(_ object: E) -> Self where E: RestlerQueryEncodable {
-            guard self.method.isQueryAvailable else { return self }
-            do {
-                self.query = try self.queryEncoder.encode(object)
-                self.header[.contentType] = "application/x-www-form-urlencoded"
-            } catch {
-                self.errors.append(Error.common(type: .invalidParameters, base: error))
-            }
-            return self
+    }
+}
+
+// MARK: - RestlerBasicRequestBuilderType
+extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
+    public func setInHeader(_ value: String?, forKey key: Restler.Header.Key) -> Self {
+        self.header[key] = value
+        return self
+    }
+    
+    public func failureDecode<T>(_ type: T.Type) -> Self where T: RestlerErrorDecodable {
+        self.errorParser.decode(type)
+        return self
+    }
+    
+    public func decode(_ type: Void.Type) -> Restler.Request<Void> {
+        return Restler.VoidRequest(
+            url: self.url(for: self.endpoint),
+            networking: self.networking,
+            encoder: self.encoder,
+            decoder: self.decoder,
+            dispatchQueueManager: self.dispatchQueueManager,
+            method: self.buildMethod(),
+            errors: self.errors,
+            errorParser: self.errorParser,
+            header: self.header)
+    }
+}
+
+// MARK: - RestlerQueryRequestBuilderType
+extension Restler.RequestBuilder: RestlerQueryRequestBuilderType {
+    public func query<E>(_ object: E) -> Self where E: RestlerQueryEncodable {
+        guard self.method.isQueryAvailable else { return self }
+        do {
+            self.query = try self.queryEncoder.encode(object)
+            self.header[.contentType] = "application/x-www-form-urlencoded"
+        } catch {
+            self.errors.append(Restler.Error.common(type: .invalidParameters, base: error))
         }
-        
-        public func body<E>(_ object: E) -> Self where E: Encodable {
-            guard self.method.isBodyAvailable else { return self }
-            do {
-                self.body = try self.encoder.encode(object)
-                self.header[.contentType] = "application/json"
-            } catch {
-                self.errors.append(Error.common(type: .invalidParameters, base: error))
-            }
-            return self
+        return self
+    }
+}
+
+// MARK: - RestlerBodyRequestBuilderType
+extension Restler.RequestBuilder: RestlerBodyRequestBuilderType {
+    public func body<E>(_ object: E) -> Self where E: Encodable {
+        guard self.method.isBodyAvailable else { return self }
+        do {
+            self.body = try self.encoder.encode(object)
+            self.header[.contentType] = "application/json"
+        } catch {
+            self.errors.append(Restler.Error.common(type: .invalidParameters, base: error))
         }
-        
-        public func multipart<E>(_ object: E, boundary: String? = nil) -> Self where E: RestlerMultipartEncodable {
-            guard self.method.isMultipartAvailable else { return self }
-            do {
-                let unwrappedBoundary = boundary ?? "Boundary--\(UUID().uuidString)"
-                self.body = try self.multipartEncoder.encode(object, boundary: unwrappedBoundary)
-                self.header[.contentType] = "multipart/form-data; charset=utf-8; boundary=\(unwrappedBoundary)"
-            } catch {
-                self.errors.append(Error.common(type: .invalidParameters, base: error))
-            }
-            return self
+        return self
+    }
+}
+
+// MARK: - RestlerMultipartRequestBuilderType
+extension Restler.RequestBuilder: RestlerMultipartRequestBuilderType {
+    public func multipart<E>(_ object: E, boundary: String? = nil) -> Self where E: RestlerMultipartEncodable {
+        guard self.method.isMultipartAvailable else { return self }
+        do {
+            let unwrappedBoundary = boundary ?? "Boundary--\(UUID().uuidString)"
+            self.body = try self.multipartEncoder.encode(object, boundary: unwrappedBoundary)
+            self.header[.contentType] = "multipart/form-data; charset=utf-8; boundary=\(unwrappedBoundary)"
+        } catch {
+            self.errors.append(Restler.Error.common(type: .invalidParameters, base: error))
         }
-        
-        public func setInHeader(_ value: String?, forKey key: Restler.Header.Key) -> Self {
-            self.header[key] = value
-            return self
-        }
-        
-        public func failureDecode<T>(_ type: T.Type) -> Self where T: RestlerErrorDecodable {
-            self.errorParser.decode(type)
-            return self
-        }
-        
-        public func decode<T>(_ type: T?.Type) -> Request<T?> where T: Decodable {
-            return OptionalDecodableRequest<T>(
-                url: self.url(for: self.endpoint),
-                networking: self.networking,
-                encoder: self.encoder,
-                decoder: self.decoder,
-                dispatchQueueManager: self.dispatchQueueManager,
-                method: self.buildMethod(),
-                errors: self.errors,
-                errorParser: self.errorParser,
-                header: self.header)
-        }
-        
-        public func decode<T>(_ type: T.Type) -> Request<T> where T: Decodable {
-            return DecodableRequest<T>(
-                url: self.url(for: self.endpoint),
-                networking: self.networking,
-                encoder: self.encoder,
-                decoder: self.decoder,
-                dispatchQueueManager: self.dispatchQueueManager,
-                method: self.buildMethod(),
-                errors: self.errors,
-                errorParser: self.errorParser,
-                header: self.header)
-        }
-        
-        public func decode(_ type: Void.Type) -> Request<Void> {
-            return VoidRequest(
-                url: self.url(for: self.endpoint),
-                networking: self.networking,
-                encoder: self.encoder,
-                decoder: self.decoder,
-                dispatchQueueManager: self.dispatchQueueManager,
-                method: self.buildMethod(),
-                errors: self.errors,
-                errorParser: self.errorParser,
-                header: self.header)
-        }
+        return self
+    }
+}
+
+// MARK: - RestlerDecodableResponseRequestBuilderType
+extension Restler.RequestBuilder: RestlerDecodableResponseRequestBuilderType {
+    public func decode<T>(_ type: T?.Type) -> Restler.Request<T?> where T: Decodable {
+        return Restler.OptionalDecodableRequest<T>(
+            url: self.url(for: self.endpoint),
+            networking: self.networking,
+            encoder: self.encoder,
+            decoder: self.decoder,
+            dispatchQueueManager: self.dispatchQueueManager,
+            method: self.buildMethod(),
+            errors: self.errors,
+            errorParser: self.errorParser,
+            header: self.header)
+    }
+    
+    public func decode<T>(_ type: T.Type) -> Restler.Request<T> where T: Decodable {
+        return Restler.DecodableRequest<T>(
+            url: self.url(for: self.endpoint),
+            networking: self.networking,
+            encoder: self.encoder,
+            decoder: self.decoder,
+            dispatchQueueManager: self.dispatchQueueManager,
+            method: self.buildMethod(),
+            errors: self.errors,
+            errorParser: self.errorParser,
+            header: self.header)
     }
 }
 

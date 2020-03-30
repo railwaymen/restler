@@ -22,7 +22,7 @@ public protocol RestlerType: class {
     ///
     /// - Returns: Restler.RequestBuilder for building the request in the functional way.
     ///
-    func get(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType
+    func get(_ endpoint: RestlerEndpointable) -> RestlerGetRequestBuilderType
     
     /// Creates POST request builder.
     ///
@@ -30,7 +30,7 @@ public protocol RestlerType: class {
     ///
     /// - Returns: Restler.RequestBuilder for building the request in the functional way.
     ///
-    func post(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType
+    func post(_ endpoint: RestlerEndpointable) -> RestlerPostRequestBuilderType
     
     /// Creates PUT request builder.
     ///
@@ -38,7 +38,7 @@ public protocol RestlerType: class {
     ///
     /// - Returns: Restler.RequestBuilder for building the request in the functional way.
     ///
-    func put(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType
+    func put(_ endpoint: RestlerEndpointable) -> RestlerPutRequestBuilderType
     
     /// Creates PATCH request builder.
     ///
@@ -46,7 +46,7 @@ public protocol RestlerType: class {
     ///
     /// - Returns: Restler.RequestBuilder for building the request in the functional way.
     ///
-    func patch(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType
+    func patch(_ endpoint: RestlerEndpointable) -> RestlerPatchRequestBuilderType
     
     /// Creates DELETE request builder.
     ///
@@ -54,7 +54,7 @@ public protocol RestlerType: class {
     ///
     /// - Returns: Restler.RequestBuilder for building the request in the functional way.
     ///
-    func delete(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType
+    func delete(_ endpoint: RestlerEndpointable) -> RestlerDeleteRequestBuilderType
     
     /// Creates HEAD request builder.
     ///
@@ -62,5 +62,5 @@ public protocol RestlerType: class {
     ///
     /// - Returns: Restler.RequestBuilder for building the request in the functional way.
     ///
-    func head(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType
+    func head(_ endpoint: RestlerEndpointable) -> RestlerHeadRequestBuilderType
 }

@@ -11,5 +11,5 @@ Pod::Spec.new do |s|
   s.source = { :git => 'ssh://git@git.railwaymen.org:10522/open/restler.git', :tag => s.version.to_s }
   s.ios.deployment_target = '11.4'
   s.source_files = 'Sources/**/*'
-  s.swift_versions = '5.1'
+  s.swift_versions = '5.2'
 end
