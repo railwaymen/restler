@@ -101,7 +101,7 @@ extension RestlerRequestBuilderMock: RestlerBodyRequestBuilderType {
 
 // MARK: - RestlerMultipartRequestBuilderType
 extension RestlerRequestBuilderMock: RestlerMultipartRequestBuilderType {
-    func multipart<E>(_ object: E, boundary: String?) -> Self where E : RestlerMultipartEncodable {
+    func multipart<E>(_ object: E, boundary: String?) -> Self where E: RestlerMultipartEncodable {
         self.multipartParams.append(MultipartParams(object: object, boundary: boundary))
         return self
     }

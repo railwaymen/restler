@@ -9,7 +9,7 @@ extension Restler.QueryEncoder {
         internal var tuples: [(key: String, value: String)] = []
         
         // MARK: - Initialization
-        init(jsonEncoder: RestlerJSONEncoderType) {
+        public init(jsonEncoder: RestlerJSONEncoderType) {
             self.jsonEncoder = jsonEncoder
         }
         
