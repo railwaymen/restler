@@ -104,7 +104,17 @@ extension QueryEncoderIntegrationTests {
 
 // MARK: - Private
 extension QueryEncoderIntegrationTests {
-    private func buildDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, file: StaticString = #file, line: UInt = #line) throws -> Date {
+    // swiftlint:disable:next function_parameter_count
+    private func buildDate(
+        year: Int,
+        month: Int,
+        day: Int,
+        hour: Int,
+        minute: Int,
+        second: Int,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> Date {
         let components = DateComponents(
             calendar: .init(identifier: .iso8601),
             timeZone: TimeZone(secondsFromGMT: 0),

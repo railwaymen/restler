@@ -133,98 +133,6 @@ extension GetInterfaceIntegrationTests {
         XCTAssertNil(completionResult)
     }
     
-    func testGetVoid_buildingRequest_encodingBody() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.VoidResult?
-        //Act
-        _ = sut
-            .get(self.endpoint)
-            .body(SomeObject(id: 1, name: "name", double: 1.23))
-            .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        //Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertNil(requestParams.header[.contentType])
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetVoid_buildingRequest_encodingBodyFails() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        let object = ThrowingObject()
-        let expectedError = TestError()
-        object.thrownError = expectedError
-        var returnedError: Error?
-        var decodedObject: Void?
-        var completionResult: Restler.VoidResult?
-        //Act
-        _ = sut
-            .get(self.endpoint)
-            .body(object)
-            .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 0)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertNil(returnedError)
-        XCTAssertNil(decodedObject)
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetVoid_buildingRequest_encodingMultipart() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        let object = SomeObject(id: 1, name: "some", double: 1.23)
-        var completionResult: Restler.VoidResult?
-        //Act
-        _ = sut
-            .get(self.endpoint)
-            .multipart(object)
-            .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        //Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertNil(requestParams.header[.contentType])
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetVoid_buildingRequest_encodingMultipartFails() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        let object = ThrowingObject()
-        let expectedError = TestError()
-        object.thrownError = expectedError
-        var completionResult: Restler.VoidResult?
-        //Act
-        _ = sut
-            .get(self.endpoint)
-            .multipart(object)
-            .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertNil(requestParams.header[.contentType])
-        XCTAssertNil(completionResult)
-    }
-    
     // MARK: Success Decoding
     func testGetVoid_success_nil() throws {
         //Arrange
@@ -868,52 +776,6 @@ extension GetInterfaceIntegrationTests {
         try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
     }
     
-    func testGetData_buildingRequest_encodingBody() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.DecodableResult<Data>?
-        //Act
-        _ = sut
-            .get(self.endpoint)
-            .body(SomeObject(id: 1, name: "name", double: 1.23))
-            .decode(Data.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        //Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetData_buildingRequest_encodingBodyFails() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        let object = ThrowingObject()
-        let expectedError = TestError()
-        object.thrownError = expectedError
-        var returnedError: Error?
-        var decodedObject: Data?
-        var completionResult: Restler.DecodableResult<Data>?
-        //Act
-        _ = sut
-            .get(self.endpoint)
-            .body(object)
-            .decode(Data.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 0)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertNil(returnedError)
-        XCTAssertNil(decodedObject)
-        XCTAssertNil(completionResult)
-    }
-    
     // MARK: Success Decoding
     func testGetData_success_nil() throws {
         //Arrange
@@ -1075,52 +937,6 @@ extension GetInterfaceIntegrationTests {
         try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
     }
     
-    func testGetOptionalData_buildingRequest_encodingBody() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.DecodableResult<Data?>?
-        //Act
-        _ = sut
-            .get(self.endpoint)
-            .body(SomeObject(id: 1, name: "name", double: 1.23))
-            .decode(Data?.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        //Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetOptionalData_buildingRequest_encodingBodyFails() throws {
-        //Arrange
-        let sut = self.buildSUT()
-        let object = ThrowingObject()
-        let expectedError = TestError()
-        object.thrownError = expectedError
-        var returnedError: Error?
-        var decodedObject: Data?
-        var completionResult: Restler.DecodableResult<Data?>?
-        //Act
-        _ = sut
-            .get(self.endpoint)
-            .body(object)
-            .decode(Data?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 0)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertNil(returnedError)
-        XCTAssertNil(decodedObject)
-        XCTAssertNil(completionResult)
-    }
-    
     // MARK: Success Decoding
     func testGetOptionalData_success_nil() throws {
         //Arrange
@@ -1196,3 +1012,4 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), data)
     }
 }
+// swiftlint:disable:this file_length

@@ -6,10 +6,10 @@ Pod::Spec.new do |s|
     Restler is a framework for type-safe and easy REST API requests in Swift.
   DESC
   s.homepage = 'https://git.railwaymen.org/open/restler'
-  s.license = { :type => 'Custom', :file => 'LICENSE'}
+  s.license = { :type => 'MIT', :file => 'LICENSE'}
   s.author = { 'Bartłomiej Świerad' => 'bartlomiej.swierad@railwaymen.org' }
   s.source = { :git => 'ssh://git@git.railwaymen.org:10522/open/restler.git', :tag => s.version.to_s }
   s.ios.deployment_target = '11.4'
   s.source_files = 'Sources/**/*'
-  s.swift_versions = '5.1'
+  s.swift_versions = '5.2'
 end

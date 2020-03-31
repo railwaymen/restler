@@ -748,7 +748,6 @@ extension HeaderKeyTests {
     }
 }
 
-
 // MARK: - init(rawValue:)
 extension HeaderKeyTests {
     func testInitFromRawValue_a_im() {
@@ -1120,3 +1119,4 @@ extension HeaderKeyTests {
         XCTAssertEqual(sut, expectedValue)
     }
 }
+// swiftlint:disable:this file_length

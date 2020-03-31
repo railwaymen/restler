@@ -1,5 +1,6 @@
 stages:
   - prepare
+  - lint
   - build
   - deploy
 
@@ -10,6 +11,7 @@ cache:
   key: "bundle_dependencies"
   paths:
   - vendor
+  - Pods
 
 .setup: &setup
   - export
@@ -62,8 +64,25 @@ build_example_app:
   dependencies:
     - prepare_project
 
+lint_project:
+  stage: lint
+  before_script:
+    *setup
+  script:
+    - bundle exec fastlane lint_package
+  dependencies:
+    - prepare_project
+  artifacts:
+    name: "SwiftLint_${CI_BUILD_NAME}_${CI_BUILD_REF_NAME}_${CI_BUILD_ID}"
+    expire_in: 1 week
+    when: always
+    paths:
+      - output/swiftlint.html
+  tags:
+    - ios
+
 lint_podspec:
-  stage: build
+  stage: lint
   before_script:
     *setup
   script:
@@ -82,7 +101,9 @@ deploy_pod:
     - bundle exec pod repo push railwaymen-open-rwm_podspec 'Restler.podspec'
   dependencies:
     - test_project
+    - build_example_app
     - lint_podspec
+    - lint_project
   only:
     - /[\d\.]*/
   except:

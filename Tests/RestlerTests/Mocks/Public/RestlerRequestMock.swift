@@ -18,7 +18,7 @@ class RestlerRequestMock<T>: Restler.Request<T> {
         let handler: (Result<T, Error>) -> Void
     }
     
-    var startReturnValue: RestlerTaskType? = nil
+    var startReturnValue: RestlerTaskType?
     private(set) var startParams: [StartParams] = []
     struct StartParams {}
     

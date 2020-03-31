@@ -2,6 +2,7 @@ import Foundation
 
 extension Restler.QueryEncoder {
     public class StringKeyedContainer: RestlerQueryEncoderContainerType {
+        // swiftlint:disable:next nesting
         public typealias Key = String
         
         private let jsonEncoder: RestlerJSONEncoderType
@@ -9,7 +10,7 @@ extension Restler.QueryEncoder {
         internal var tuples: [(key: String, value: String)] = []
         
         // MARK: - Initialization
-        init(jsonEncoder: RestlerJSONEncoderType) {
+        public init(jsonEncoder: RestlerJSONEncoderType) {
             self.jsonEncoder = jsonEncoder
         }
         

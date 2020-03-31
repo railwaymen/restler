@@ -14,6 +14,11 @@ struct CommentView: View {
     var body: some View {
         VStack(spacing: 16) {
             Button(
+                action: self.viewModel.checkExistence,
+                label: {
+                    Text("HEAD")
+            })
+            Button(
                 action: self.viewModel.create,
                 label: {
                     Text("POST")

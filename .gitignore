@@ -2,6 +2,7 @@
 /.build
 /Packages
 /*.xcodeproj
+/*.xcworkspace
 /xcuserdata
 /output
 *.xcconfig

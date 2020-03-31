@@ -70,24 +70,28 @@ open class Restler: RestlerType {
     
     // MARK: - Open
     
-    open func get(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
+    open func get(_ endpoint: RestlerEndpointable) -> RestlerGetRequestBuilderType {
         return self.requestBuilder(for: .get(query: []), to: endpoint)
     }
     
-    open func post(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
+    open func post(_ endpoint: RestlerEndpointable) -> RestlerPostRequestBuilderType {
         return self.requestBuilder(for: .post(content: nil), to: endpoint)
     }
     
-    open func put(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
+    open func put(_ endpoint: RestlerEndpointable) -> RestlerPutRequestBuilderType {
         return self.requestBuilder(for: .put(content: nil), to: endpoint)
     }
     
-    open func patch(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
+    open func patch(_ endpoint: RestlerEndpointable) -> RestlerPatchRequestBuilderType {
         return self.requestBuilder(for: .patch(content: nil), to: endpoint)
     }
     
-    open func delete(_ endpoint: RestlerEndpointable) -> RestlerRequestBuilderType {
+    open func delete(_ endpoint: RestlerEndpointable) -> RestlerDeleteRequestBuilderType {
         return self.requestBuilder(for: .delete, to: endpoint)
+    }
+    
+    open func head(_ endpoint: RestlerEndpointable) -> RestlerHeadRequestBuilderType {
+        return self.requestBuilder(for: .head, to: endpoint)
     }
 }
 
