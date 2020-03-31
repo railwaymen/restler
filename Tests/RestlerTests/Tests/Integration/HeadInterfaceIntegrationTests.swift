@@ -4,7 +4,7 @@ import XCTest
 class HeadInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
 
 // MARK: - Void response
-extension HeadInterfaceIntegrationTests  {
+extension HeadInterfaceIntegrationTests {
     func testHead_buildingRequest() throws {
         //Arrange
         let sut = self.buildSUT()

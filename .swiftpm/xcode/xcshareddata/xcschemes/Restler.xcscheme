@@ -22,10 +22,10 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "YES"
+            buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "RestlerTests"
@@ -50,16 +50,6 @@
                BlueprintIdentifier = "RestlerTests"
                BuildableName = "RestlerTests"
                BlueprintName = "RestlerTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "RestlerMockingTests"
-               BuildableName = "RestlerMockingTests"
-               BlueprintName = "RestlerMockingTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

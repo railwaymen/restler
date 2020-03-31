@@ -2,6 +2,7 @@ import Foundation
 
 extension Restler.QueryEncoder {
     public class StringKeyedContainer: RestlerQueryEncoderContainerType {
+        // swiftlint:disable:next nesting
         public typealias Key = String
         
         private let jsonEncoder: RestlerJSONEncoderType

@@ -1,8 +1,18 @@
 default_platform(:mac)
 
 platform :mac do
+
   desc "Sets podspec version to the current tag version."
   lane :set_podspec_version do
     version_bump_podspec(version_number: ENV['CI_COMMIT_TAG'])
+  end
+
+  desc "Lint package"
+  lane :lint_package do
+    sh("mkdir -p ../output")
+    swiftlint(
+      output_file: "output/swiftlint.html",
+      strict: true,
+      reporter: "html")
   end
 end

@@ -1,0 +1,21 @@
+disabled_rules:
+  - trailing_whitespace
+  - xctfail_message
+  - trailing_comma
+
+line_length:
+  warning: 160
+  error: 160
+
+function_body_length:
+  warning: 50
+
+identifier_name:
+  excluded:
+    - id
+
+warning_threshold: 5
+
+included:
+  - Sources
+  - Tests

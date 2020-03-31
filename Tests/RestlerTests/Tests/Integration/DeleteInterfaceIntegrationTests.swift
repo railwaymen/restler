@@ -4,7 +4,7 @@ import XCTest
 class DeleteInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
 
 // MARK: - Void response
-extension DeleteInterfaceIntegrationTests  {
+extension DeleteInterfaceIntegrationTests {
     func testDeleteVoid_buildingRequest() throws {
         //Arrange
         let sut = self.buildSUT()

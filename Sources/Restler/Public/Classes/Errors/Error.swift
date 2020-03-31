@@ -12,7 +12,7 @@ extension Restler {
 extension Restler.Error: Equatable {
     public static func == (lhs: Restler.Error, rhs: Restler.Error) -> Bool {
         switch (lhs, rhs) {
-        case let (.common(lhsType, _),.common(rhsType, _)):
+        case let (.common(lhsType, _), .common(rhsType, _)):
             return lhsType == rhsType
             
         case let (.request(lhsType, lhsResponse), .request(rhsType, rhsResponse)):

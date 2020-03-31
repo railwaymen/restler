@@ -1,6 +1,8 @@
 import XCTest
 @testable import Restler
 
+// swiftlint:disable identifier_name
+
 /// Calls `XCTFail` if error of the given result isn't expected error case.
 ///
 /// It does simple switch on the result to determine if the case is the same.
@@ -63,6 +65,8 @@ func XCTUnwrap<T>(_ optional: @autoclosure () -> T?, file: StaticString = #file,
     }
     return unwrapped
 }
+
+// swiftlint:enable identifier_name
 
 // MARK: - Private extensions
 private extension Result where Failure == Error {

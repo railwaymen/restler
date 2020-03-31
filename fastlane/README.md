@@ -21,6 +21,11 @@ or alternatively using `brew cask install fastlane`
 fastlane mac set_podspec_version
 ```
 Sets podspec version to the current tag version.
+### mac lint_package
+```
+fastlane mac lint_package
+```
+Lint package
 
 ----
 
