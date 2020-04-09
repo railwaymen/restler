@@ -1,29 +1,18 @@
 # Restler
 
-[![pipeline status](https://git.railwaymen.org/open/restler/badges/develop/pipeline.svg)](https://git.railwaymen.org/open/restler/commits/develop)
-
-[![coverage report](https://git.railwaymen.org/open/restler/badges/develop/coverage.svg)](https://git.railwaymen.org/open/restler/commits/develop)
-
 The Restler framework has been built to use features of the newest versions of Swift. Inspiration for it is Vapor library for building Server-side with Swift. What we love is functional programming, so you can build your desired request just calling some chained functions. The main goal of the framework is to provide nice interface for making API requests the easiest as possible and the fastest as possible.
 
 ## List of Content
 
 - [Instalation](#instalation)
 - [Usage](#usage)
-
   - [Examples](#examples)
-
     - [GET](#get)
     - [POST](#post)
-
   - [Error Parser](#error-parser)
-
   - [Header](#header)
-
 - [Contribution](#contribution)
-
   - [Dependencies](#dependencies)
-
     - [Gems](#gems)
 
 ## Instalation
@@ -146,6 +135,10 @@ restler.header.setBasicAuthentication(username: "me", password: "password")
 ```
 
 ## Contribution
+
+If you want to contribute in this framework, simply put your pull request here.
+If you have found any bug, file it in the issues.
+If you would like Restler to do something else, create an issue for feature request.
 
 ### Dependencies
 
