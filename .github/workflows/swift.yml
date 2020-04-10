@@ -1,0 +1,33 @@
+name: Swift
+
+on:
+  push:
+    branches: [ master develop ]
+  pull_request:
+
+jobs:
+  lint_swift:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: SwiftLint
+        uses: norio-nomura/action-swiftlint@3.1.0
+
+  lint_podspec:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Lint podspec
+        run: pod lib lint
+
+  test:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: swift build -v
+      - name: Run tests
+        run: swift test -v --enable-code-coverage
