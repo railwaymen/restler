@@ -1,0 +1,42 @@
+name: Example App Actions
+
+on:
+  push:
+    branches: [ master develop ]
+  pull_request:
+
+jobs:
+  build_example_app:
+    runs-on: macos-latest
+
+    env:
+      working-directory: "./Restler-Example"
+      BUNDLE_ID: ${{ secrets.BUNDLE_ID }}
+      DEVELOPMENT_TEAM_ID: ${{ secrets.DEVELOPMENT_TEAM_ID }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install gettext
+        run: |
+          brew install gettext
+          brew link --force gettext 
+
+      - name: Set up config files
+        run: envsubst < Restler-Example/Configuration/env_debug.xcconfig.tpl > Restler-Example/Configuration/Debug.xcconfig
+        working-directory: ${{ env.working-directory }}
+        shell: bash
+
+      - name: Install dependencies
+        run: pod install || pod install --repo-update
+        working-directory: ${{ env.working-directory }}
+
+      - name: Clean
+        run: xcodebuild clean | xcpretty
+        working-directory: ${{ env.working-directory }}
+        shell: bash
+
+      - name: Build
+        run: xcodebuild build -scheme Restler-Example -workspace Restler-Example.xcworkspace | xcpretty --color
+        working-directory: ${{ env.working-directory }}
+        shell: bash
