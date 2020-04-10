@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout branch
+        uses: actions/checkout@v2
       - name: SwiftLint
         uses: norio-nomura/action-swiftlint@3.1.0
 
@@ -18,7 +19,8 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout branch
+        uses: actions/checkout@v2
       - name: Lint podspec
         run: pod lib lint
 
@@ -26,8 +28,23 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout branch
+        uses: actions/checkout@v2
+
       - name: Build
         run: swift build
+
       - name: Run tests
         run: swift test --enable-code-coverage
+
+      - name: Generate code coverage report
+        run: xcrun llvm-cov export -format="lcov" .build/debug/RestlerPackageTests.xctest/Contents/MacOS/RestlerPackageTests
+          -instr-profile .build/debug/codecov/default.profdata
+          --ignore-filename-regex="Test|Mock"
+          > info.lcov
+
+      - name: Upload code coverage report
+        uses: coverallsapp/github-action@v1.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./info.lcov
