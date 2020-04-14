@@ -15,12 +15,13 @@ jobs:
       DEVELOPMENT_TEAM_ID: ${{ secrets.DEVELOPMENT_TEAM_ID }}
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout branch
+        uses: actions/checkout@v2
 
       - name: Install gettext
         run: |
           brew install gettext
-          brew link --force gettext 
+          brew link --force gettext
 
       - name: Set up config files
         run: envsubst < Restler-Example/Configuration/env_debug.xcconfig.tpl > Restler-Example/Configuration/Debug.xcconfig

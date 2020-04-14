@@ -2,6 +2,7 @@
 
 [![Package Build Status](https://github.com/railwaymen/restler/workflows/Package%20Actions/badge.svg)](https://github.com/railwaymen/restler/actions)
 [![Example App Build Status](https://github.com/railwaymen/restler/workflows/Example%20App%20Actions/badge.svg)](https://github.com/railwaymen/restler/actions)
+[![Coverage Status](https://coveralls.io/repos/github/railwaymen/restler/badge.svg?branch=master)](https://coveralls.io/github/railwaymen/restler?branch=master)
 
 The Restler framework has been built to use features of the newest versions of Swift. Inspiration for it is Vapor library for building Server-side with Swift. What we love is functional programming, so you can build your desired request just calling some chained functions. The main goal of the framework is to provide nice interface for making API requests the easiest as possible and the fastest as possible.
 
