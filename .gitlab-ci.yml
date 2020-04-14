@@ -86,7 +86,7 @@ lint_podspec:
   before_script:
     *setup
   script:
-    - bundle exec pod lib lint --private --no-clean --skip-tests
+    - bundle exec pod lib lint --no-clean --skip-tests
   dependencies:
     - prepare_project
   tags:
@@ -98,7 +98,7 @@ deploy_pod:
     *setup
   script:
     - bundle exec fastlane set_podspec_version
-    - bundle exec pod repo push railwaymen-open-rwm_podspec 'Restler.podspec'
+    - bundle exec pod trunk push Restler.podspec
   dependencies:
     - test_project
     - build_example_app
