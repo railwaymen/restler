@@ -1,0 +1,27 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: macos-latest
+
+    steps:
+        - name: Checkout branch
+          uses: actions/checkout@v2
+
+        - name: Set version in podspec
+          uses: maierj/fastlane-action@v1.4.0
+          with:
+            lane: set_podspec_version
+
+        - name: Get the version
+          id: get_version
+          run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+        - name: Release to CocoaPods
+          run: pod trunk push Restler.podspec
+          env:
+            CI_COMMIT_TAG: ${{ steps.get_version.outputs.VERSION }}
