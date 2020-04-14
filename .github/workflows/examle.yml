@@ -2,9 +2,15 @@ name: Example App Actions
 
 on:
   push:
-    branches: [ master develop ]
+    branches:
+      - master
+      - develop
+      - 'release/*'
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    branches:
+      - master
+      - develop
+      - 'release/*'
 
 jobs:
   build_example_app:
