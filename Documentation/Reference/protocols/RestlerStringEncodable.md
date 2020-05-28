@@ -1,0 +1,6 @@
+**PROTOCOL**
+
+# `RestlerStringEncodable`
+
+## Properties
+### `restlerStringValue`
