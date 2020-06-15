@@ -56,6 +56,7 @@ extension Restler {
         ///   Restler.Task interface for managing the task (e.g. cancelling it) if the task is created properly.
         ///   Returns nil if the task couldn't be created because of encoding errors.
         ///
+        @discardableResult
         open func start() -> RestlerTaskType? {
             return nil
         }
