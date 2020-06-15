@@ -15,6 +15,11 @@ class RestlerRequestBuilderMock {
         let type: RestlerErrorDecodable.Type
     }
     
+    private(set) var customRequestModificationParams: [CustomRequestModificationParams] = []
+    struct CustomRequestModificationParams {
+        let modification: ((inout URLRequest) -> Void)?
+    }
+    
     // MARK: - RestlerQueryRequestBuilderType
     private(set) var queryParams: [QueryParams] = []
     struct QueryParams {
@@ -72,6 +77,11 @@ extension RestlerRequestBuilderMock: RestlerBasicRequestBuilderType {
     
     func failureDecode<T>(_ type: T.Type) -> Self where T: RestlerErrorDecodable {
         self.failureDecodeParams.append(FailureDecodeParams(type: type))
+        return self
+    }
+    
+    func customRequestModification(_ modification: ((inout URLRequest) -> Void)?) -> Self {
+        self.customRequestModificationParams.append(CustomRequestModificationParams(modification: modification))
         return self
     }
     

@@ -10,6 +10,7 @@ extension Restler {
         private let errors: [Error]
         private let errorParser: RestlerErrorParserType
         private let header: Restler.Header
+        private let customRequestModification: ((inout URLRequest) -> Void)?
         
         private var successCompletionHandler: ((D) -> Void)?
         private var failureCompletionHandler: ((Swift.Error) -> Void)?
@@ -27,7 +28,8 @@ extension Restler {
             method: HTTPMethod,
             errors: [Error],
             errorParser: RestlerErrorParserType,
-            header: Restler.Header
+            header: Restler.Header,
+            customRequestModification: ((inout URLRequest) -> Void)?
         ) {
             self.url = url
             self.networking = networking
@@ -38,6 +40,7 @@ extension Restler {
             self.errors = errors
             self.errorParser = errorParser
             self.header = header
+            self.customRequestModification = customRequestModification
         }
         
         // MARK: - Public
@@ -67,6 +70,7 @@ extension Restler {
                 url: self.url,
                 method: self.method,
                 header: self.header,
+                customRequestModification: self.customRequestModification,
                 completion: completion)
         }
     }

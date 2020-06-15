@@ -19,6 +19,7 @@ extension Restler {
         private var query: QueryParametersType?
         private var body: Data?
         private var errors: [Error] = []
+        private var customRequestModification: ((inout URLRequest) -> Void)?
         
         // MARK: - Initialization
         internal init(
@@ -61,6 +62,11 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
         return self
     }
     
+    public func customRequestModification(_ modification: ((inout URLRequest) -> Void)?) -> Self {
+        self.customRequestModification = modification
+        return self
+    }
+    
     public func decode(_ type: Void.Type) -> Restler.Request<Void> {
         return Restler.VoidRequest(
             url: self.url(for: self.endpoint),
@@ -71,7 +77,8 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
             method: self.buildMethod(),
             errors: self.errors,
             errorParser: self.errorParser,
-            header: self.header)
+            header: self.header,
+            customRequestModification: self.customRequestModification)
     }
 }
 
@@ -130,7 +137,8 @@ extension Restler.RequestBuilder: RestlerDecodableResponseRequestBuilderType {
             method: self.buildMethod(),
             errors: self.errors,
             errorParser: self.errorParser,
-            header: self.header)
+            header: self.header,
+            customRequestModification: self.customRequestModification)
     }
     
     public func decode<T>(_ type: T.Type) -> Restler.Request<T> where T: Decodable {
@@ -143,7 +151,8 @@ extension Restler.RequestBuilder: RestlerDecodableResponseRequestBuilderType {
             method: self.buildMethod(),
             errors: self.errors,
             errorParser: self.errorParser,
-            header: self.header)
+            header: self.header,
+            customRequestModification: self.customRequestModification)
     }
 }
 
