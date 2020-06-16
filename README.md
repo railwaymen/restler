@@ -148,7 +148,6 @@ If you would like Restler to do something else, create an issue for feature requ
 
 #### Gems
 
-- [cocoapods](https://rubygems.org/gems/cocoapods) 1.8.4
-- [fastlane](https://rubygems.org/gems/fastlane) 2.143.0
-- [slather](https://rubygems.org/gems/slather) 2.4.7
-- [xcpretty](https://rubygems.org/gems/xcpretty) 0.3.0
+- [cocoapods](https://rubygems.org/gems/cocoapods) 1.9.3
+- [fastlane](https://rubygems.org/gems/fastlane) 2.149.1
+- [slather](https://rubygems.org/gems/slather) 2.4.9
