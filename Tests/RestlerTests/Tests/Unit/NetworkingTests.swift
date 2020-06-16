@@ -4,6 +4,10 @@ import XCTest
 class NetworkingTests: XCTestCase {
     private var session: URLSessionMock!
     
+    private var cacheModification: (inout URLRequest) -> Void = { request in
+        request.cachePolicy = .reloadIgnoringCacheData
+    }
+    
     // MARK: - Setup
     override func setUp() {
         super.setUp()
@@ -21,8 +25,12 @@ extension NetworkingTests {
         let header = ["key1": "value1", "key2": "value2"]
         var completionResult: DataResult?
         //Act
-        let task = sut.makeRequest(url: url, method: .get(query: queryParameters), header: Restler.Header(raw: header)) { result in
-            completionResult = result
+        let task = sut.makeRequest(
+            url: url,
+            method: .get(query: queryParameters),
+            header: Restler.Header(raw: header),
+            customRequestModification: self.cacheModification) { result in
+                completionResult = result
         }
         //Assert
         XCTAssertEqual(self.session.dataTaskParams.count, 1)
@@ -32,6 +40,7 @@ extension NetworkingTests {
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "GET")
         XCTAssertNil(self.session.dataTaskParams.last?.request.httpBody)
         XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.cachePolicy, .reloadIgnoringCacheData)
         XCTAssertNil(completionResult)
         XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)
         XCTAssertNotNil(task)
@@ -45,8 +54,12 @@ extension NetworkingTests {
         let header = ["key1": "value1", "key2": "value2"]
         var completionResult: DataResult?
         //Act
-        let task = sut.makeRequest(url: url, method: .post(content: content), header: Restler.Header(raw: header)) { result in
-            completionResult = result
+        let task = sut.makeRequest(
+            url: url,
+            method: .post(content: content),
+            header: Restler.Header(raw: header),
+            customRequestModification: self.cacheModification) { result in
+                completionResult = result
         }
         //Assert
         XCTAssertEqual(self.session.dataTaskParams.count, 1)
@@ -55,6 +68,7 @@ extension NetworkingTests {
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "POST")
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpBody, content)
         XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.cachePolicy, .reloadIgnoringCacheData)
         XCTAssertNil(completionResult)
         XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)
         XCTAssertNotNil(task)
@@ -68,8 +82,12 @@ extension NetworkingTests {
         let header = ["key1": "value1", "key2": "value2"]
         var completionResult: DataResult?
         //Act
-        let task = sut.makeRequest(url: url, method: .put(content: content), header: Restler.Header(raw: header)) { result in
-            completionResult = result
+        let task = sut.makeRequest(
+            url: url,
+            method: .put(content: content),
+            header: Restler.Header(raw: header),
+            customRequestModification: self.cacheModification) { result in
+                completionResult = result
         }
         //Assert
         XCTAssertEqual(self.session.dataTaskParams.count, 1)
@@ -78,6 +96,7 @@ extension NetworkingTests {
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "PUT")
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpBody, content)
         XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.cachePolicy, .reloadIgnoringCacheData)
         XCTAssertNil(completionResult)
         XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)
         XCTAssertNotNil(task)
@@ -90,8 +109,12 @@ extension NetworkingTests {
         let header = ["key1": "value1", "key2": "value2"]
         var completionResult: DataResult?
         //Act
-        let task = sut.makeRequest(url: url, method: .delete, header: Restler.Header(raw: header)) { result in
-            completionResult = result
+        let task = sut.makeRequest(
+            url: url,
+            method: .delete,
+            header: Restler.Header(raw: header),
+            customRequestModification: self.cacheModification) { result in
+                completionResult = result
         }
         //Assert
         XCTAssertEqual(self.session.dataTaskParams.count, 1)
@@ -100,6 +123,7 @@ extension NetworkingTests {
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "DELETE")
         XCTAssertNil(self.session.dataTaskParams.last?.request.httpBody)
         XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
+        XCTAssertEqual(self.session.dataTaskParams.last?.request.cachePolicy, .reloadIgnoringCacheData)
         XCTAssertNil(completionResult)
         XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)
         XCTAssertNotNil(task)
@@ -114,8 +138,12 @@ extension NetworkingTests {
         let responseData = Data()
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
-            completionResult = result
+        _ = sut.makeRequest(
+            url: url,
+            method: .get(query: []),
+            header: .init(),
+            customRequestModification: nil) { result in
+                completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: responseData, response: mockResponse, error: nil))
         //Assert
@@ -129,8 +157,12 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: Data(), response: nil, error: nil)
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
-            completionResult = result
+        _ = sut.makeRequest(
+            url: url,
+            method: .get(query: []),
+            header: .init(),
+            customRequestModification: nil) { result in
+                completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
@@ -147,8 +179,12 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: Data(), response: mockResponse, error: nil)
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
-            completionResult = result
+        _ = sut.makeRequest(
+            url: url,
+            method: .get(query: []),
+            header: .init(),
+            customRequestModification: nil) { result in
+                completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
@@ -165,8 +201,12 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: Data(), response: mockResponse, error: TestError())
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
-            completionResult = result
+        _ = sut.makeRequest(
+            url: url,
+            method: .get(query: []),
+            header: .init(),
+            customRequestModification: nil) { result in
+                completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
@@ -181,8 +221,12 @@ extension NetworkingTests {
         mockResponse.isSuccessfulReturnValue = true
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
-            completionResult = result
+        _ = sut.makeRequest(
+            url: url,
+            method: .get(query: []),
+            header: .init(),
+            customRequestModification: nil) { result in
+                completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: nil, response: mockResponse, error: nil))
         //Assert
@@ -199,8 +243,12 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: nil, response: mockResponse, error: returnedError)
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
-            completionResult = result
+        _ = sut.makeRequest(
+            url: url,
+            method: .get(query: []),
+            header: .init(),
+            customRequestModification: nil) { result in
+                completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
@@ -215,8 +263,12 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: nil, response: nil, error: returnedError)
         var completionResult: DataResult?
         //Act
-        _ = sut.makeRequest(url: url, method: .get(query: []), header: .init()) { result in
-            completionResult = result
+        _ = sut.makeRequest(
+            url: url,
+            method: .get(query: []),
+            header: .init(),
+            customRequestModification: nil) { result in
+                completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
