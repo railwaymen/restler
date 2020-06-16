@@ -73,4 +73,21 @@ enum HTTPMethod: Equatable {
         case .head: return false
         }
     }
+    
+    func combinedWith(query: [URLQueryItem]?, body: Data?) -> HTTPMethod {
+        switch self {
+        case .get:
+            return .get(query: query ?? [])
+        case .post:
+            return .post(content: body)
+        case .put:
+            return .put(content: body)
+        case .patch:
+            return .patch(content: body)
+        case .delete:
+            return .delete
+        case .head:
+            return .head
+        }
+    }
 }
