@@ -52,7 +52,7 @@ open class Restler: RestlerType {
             errorParser: Restler.ErrorParser())
     }
     
-    init(
+    internal init(
         baseURL: URL,
         networking: NetworkingType,
         dispatchQueueManager: DispatchQueueManagerType,

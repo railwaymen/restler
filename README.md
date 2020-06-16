@@ -6,16 +6,16 @@
 
 The Restler framework has been built to use features of the newest versions of Swift. Inspiration for it is Vapor library for building Server-side with Swift. What we love is functional programming, so you can build your desired request just calling some chained functions. The main goal of the framework is to provide nice interface for making API requests the easiest as possible and the fastest as possible.
 
+- [Full Documentation](Documentation/Reference)
+
 ## List of Content
 
-- [Instalation](#instalation)
-- [Usage](#usage)
+1. [Instalation](#instalation)
+2. [Usage](#usage)
   - [Examples](#examples)
-    - [GET](#get)
-    - [POST](#post)
   - [Error Parser](#error-parser)
   - [Header](#header)
-- [Contribution](#contribution)
+3. [Contribution](#contribution)
   - [Dependencies](#dependencies)
     - [Gems](#gems)
 
@@ -105,7 +105,7 @@ Restler(baseURL: myBaseURL)
   .start()
 ```
 
-### Error parser
+### [Error parser](Documentation/Reference/protocols/RestlerErrorParserType.md)
 
 If you don't want to add the same error to be parsed on failure of every request, simply add the error directly to the error parser of the Restler object.
 
@@ -119,7 +119,7 @@ If you don't want to decode it anymore, simply stop decoding it:
 restler.errorParser.stopDecoding(ErrorToDecodeOnFailure.self)
 ```
 
-### Header
+### [Header](Documentation/Reference/structs/Restler.Header.md)
 
 Setting header values is very easy. Simply set it as a dictionary:
 
