@@ -2,70 +2,150 @@
 
 # `RestlerType`
 
-> Interface of the main functional class of the Restler framework.
+```swift
+public protocol RestlerType: class
+```
+
+Interface of the main functional class of the Restler framework.
 
 ## Properties
 ### `encoder`
 
-> Encoder used for encoding requests' body.
+```swift
+var encoder: RestlerJSONEncoderType
+```
+
+Encoder used for encoding requests' body.
 
 ### `decoder`
 
-> Decoder used for decoding response's data to expected object.
+```swift
+var decoder: RestlerJSONDecoderType
+```
+
+Decoder used for decoding response's data to expected object.
 
 ### `errorParser`
 
-> Error parser for failed requests. Setting its decoded errors makes trying to decode them globally.
+```swift
+var errorParser: RestlerErrorParserType
+```
+
+Error parser for failed requests. Setting its decoded errors makes trying to decode them globally.
 
 ### `header`
 
-> Global header sent in requests.
+```swift
+var header: Restler.Header
+```
+
+Global header sent in requests.
 
 ## Methods
 ### `get(_:)`
 
-> Creates GET request builder.
->
-> - Parameter endpoint: Endpoint for the request
->
-> - Returns: Restler.RequestBuilder for building the request in the functional way.
+```swift
+func get(_ endpoint: RestlerEndpointable) -> RestlerGetRequestBuilderType
+```
+
+Creates GET request builder.
+
+- Parameter endpoint: Endpoint for the request
+
+- Returns: Restler.RequestBuilder for building the request in the functional way.
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| endpoint | Endpoint for the request |
 
 ### `post(_:)`
 
-> Creates POST request builder.
->
-> - Parameter endpoint: Endpoint for the request
->
-> - Returns: Restler.RequestBuilder for building the request in the functional way.
+```swift
+func post(_ endpoint: RestlerEndpointable) -> RestlerPostRequestBuilderType
+```
+
+Creates POST request builder.
+
+- Parameter endpoint: Endpoint for the request
+
+- Returns: Restler.RequestBuilder for building the request in the functional way.
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| endpoint | Endpoint for the request |
 
 ### `put(_:)`
 
-> Creates PUT request builder.
->
-> - Parameter endpoint: Endpoint for the request
->
-> - Returns: Restler.RequestBuilder for building the request in the functional way.
+```swift
+func put(_ endpoint: RestlerEndpointable) -> RestlerPutRequestBuilderType
+```
+
+Creates PUT request builder.
+
+- Parameter endpoint: Endpoint for the request
+
+- Returns: Restler.RequestBuilder for building the request in the functional way.
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| endpoint | Endpoint for the request |
 
 ### `patch(_:)`
 
-> Creates PATCH request builder.
->
-> - Parameter endpoint: Endpoint for the request
->
-> - Returns: Restler.RequestBuilder for building the request in the functional way.
+```swift
+func patch(_ endpoint: RestlerEndpointable) -> RestlerPatchRequestBuilderType
+```
+
+Creates PATCH request builder.
+
+- Parameter endpoint: Endpoint for the request
+
+- Returns: Restler.RequestBuilder for building the request in the functional way.
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| endpoint | Endpoint for the request |
 
 ### `delete(_:)`
 
-> Creates DELETE request builder.
->
-> - Parameter endpoint: Endpoint for the request
->
-> - Returns: Restler.RequestBuilder for building the request in the functional way.
+```swift
+func delete(_ endpoint: RestlerEndpointable) -> RestlerDeleteRequestBuilderType
+```
+
+Creates DELETE request builder.
+
+- Parameter endpoint: Endpoint for the request
+
+- Returns: Restler.RequestBuilder for building the request in the functional way.
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| endpoint | Endpoint for the request |
 
 ### `head(_:)`
 
-> Creates HEAD request builder.
->
-> - Parameter endpoint: Endpoint for the request
->
-> - Returns: Restler.RequestBuilder for building the request in the functional way.
+```swift
+func head(_ endpoint: RestlerEndpointable) -> RestlerHeadRequestBuilderType
+```
+
+Creates HEAD request builder.
+
+- Parameter endpoint: Endpoint for the request
+
+- Returns: Restler.RequestBuilder for building the request in the functional way.
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| endpoint | Endpoint for the request |
