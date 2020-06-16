@@ -10,8 +10,7 @@ extension DeleteInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .delete(self.endpoint)
+        sut.delete(self.endpoint)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -31,8 +30,7 @@ extension DeleteInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .delete(self.endpoint)
+        sut.delete(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -55,8 +53,7 @@ extension DeleteInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .delete(self.endpoint)
+        sut.delete(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -80,8 +77,7 @@ extension DeleteInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .delete(self.endpoint)
+        sut.delete(self.endpoint)
             .decode(SomeObject?.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -101,8 +97,7 @@ extension DeleteInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .delete(self.endpoint)
+        sut.delete(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -125,8 +120,7 @@ extension DeleteInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .delete(self.endpoint)
+        sut.delete(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -151,8 +145,7 @@ extension DeleteInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .delete(self.endpoint)
+        sut.delete(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -176,8 +169,7 @@ extension DeleteInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .delete(self.endpoint)
+        sut.delete(self.endpoint)
             .decode(SomeObject.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -197,8 +189,7 @@ extension DeleteInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .delete(self.endpoint)
+        sut.delete(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -224,8 +215,7 @@ extension DeleteInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .delete(self.endpoint)
+        sut.delete(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -253,8 +243,7 @@ extension DeleteInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .delete(self.endpoint)
+        sut.delete(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
