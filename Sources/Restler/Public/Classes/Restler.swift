@@ -17,9 +17,6 @@ open class Restler: RestlerType {
     }
     
     // MARK: - Properties
-    private let baseURL: URL
-    private let networking: NetworkingType
-    private let dispatchQueueManager: DispatchQueueManagerType
     
     open var encoder: RestlerJSONEncoderType
     
@@ -29,6 +26,12 @@ open class Restler: RestlerType {
     
     open var header: Restler.Header = .init()
     
+    private let baseURL: URL
+    private let networking: NetworkingType
+    private let dispatchQueueManager: DispatchQueueManagerType
+    
+    private var queryEncoder: QueryEncoder { .init(jsonEncoder: self.encoder) }
+    private var multipartEncoder: MultipartEncoder { .init() }
     // MARK: - Initialization
     
     /// Default initializer.
@@ -99,16 +102,20 @@ open class Restler: RestlerType {
 extension Restler {
     private func requestBuilder(for method: HTTPMethod, to endpoint: RestlerEndpointable) -> RequestBuilder {
         return RequestBuilder(
-            baseURL: self.baseURL,
-            networking: self.networking,
-            encoder: self.encoder,
-            decoder: self.decoder,
-            queryEncoder: Restler.QueryEncoder(jsonEncoder: self.encoder),
-            multipartEncoder: Restler.MultipartEncoder(),
-            dispatchQueueManager: self.dispatchQueueManager,
-            errorParser: self.errorParser.copy(),
-            method: method,
-            endpoint: endpoint,
+            dependencies: .init(
+                url: self.url(for: endpoint),
+                networking: self.networking,
+                encoder: self.encoder,
+                decoder: self.decoder,
+                queryEncoder: self.queryEncoder,
+                multipartEncoder: self.multipartEncoder,
+                dispatchQueueManager: self.dispatchQueueManager,
+                errorParser: self.errorParser,
+                method: method),
             header: self.header)
+    }
+    
+    private func url(for endpoint: RestlerEndpointable) -> URL {
+        self.baseURL.appendingPathComponent(endpoint.restlerEndpointValue)
     }
 }
