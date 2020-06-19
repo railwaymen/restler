@@ -54,7 +54,7 @@ extension Restler {
             self.encoder = dependencies.encoder
             self.decoder = dependencies.decoder
             self.dispatchQueueManager = dependencies.dispatchQueueManager
-            self.errorParser = dependencies.errorParser
+            self.errorParser = form.errorParser
             self.method = dependencies.method.combinedWith(query: form.query, body: form.body)
             self.errors = form.errors
             self.header = form.header

@@ -110,9 +110,9 @@ extension Restler {
                 queryEncoder: self.queryEncoder,
                 multipartEncoder: self.multipartEncoder,
                 dispatchQueueManager: self.dispatchQueueManager,
-                errorParser: self.errorParser,
                 method: method),
-            header: self.header)
+            header: self.header,
+            errorParser: self.errorParser)
     }
     
     private func url(for endpoint: RestlerEndpointable) -> URL {

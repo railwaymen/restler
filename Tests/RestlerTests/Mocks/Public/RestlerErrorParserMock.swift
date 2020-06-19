@@ -4,6 +4,9 @@ import Restler
 class RestlerErrorParserMock {
     
     // MARK: - RestlerErrorParserType
+    var decodingErrorsReturnValue: [RestlerErrorDecodable.Type] = []
+    private(set) var decodingErrorsSetValues: [[RestlerErrorDecodable.Type]] = []
+    
     private(set) var decodeParams: [DecodeParams] = []
     struct DecodeParams {
         let type: Any
@@ -25,6 +28,15 @@ class RestlerErrorParserMock {
 
 // MARK: - RestlerErrorParserType
 extension RestlerErrorParserMock: RestlerErrorParserType {
+    var decodingErrors: [RestlerErrorDecodable.Type] {
+        get {
+            self.decodingErrorsReturnValue
+        }
+        set {
+            self.decodingErrorsSetValues.append(newValue)
+        }
+    }
+    
     func decode<T>(_ type: T.Type) where T: RestlerErrorDecodable {
         self.decodeParams.append(DecodeParams(type: type))
     }

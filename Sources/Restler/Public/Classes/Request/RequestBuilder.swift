@@ -10,10 +10,13 @@ extension Restler {
         // MARK: - Initialization
         internal init(
             dependencies: Dependencies,
-            header: Restler.Header
+            header: Restler.Header,
+            errorParser: RestlerErrorParserType
         ) {
             self.dependencies = dependencies
-            self.form = Form(header: header)
+            self.form = Form(
+                header: header,
+                errorParser: errorParser)
         }
     }
 }
@@ -28,12 +31,12 @@ extension Restler.RequestBuilder {
         let queryEncoder: RestlerQueryEncoderType
         let multipartEncoder: RestlerMultipartEncoderType
         let dispatchQueueManager: DispatchQueueManagerType
-        let errorParser: RestlerErrorParserType
         let method: HTTPMethod
     }
     
     struct Form {
         var header: Restler.Header
+        var errorParser: RestlerErrorParserType
         var query: QueryParametersType?
         var body: Data?
         var errors: [Restler.Error] = []
@@ -49,7 +52,7 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
     }
     
     public func failureDecode<T>(_ type: T.Type) -> Self where T: RestlerErrorDecodable {
-        self.dependencies.errorParser.decode(type)
+        self.form.errorParser.decode(type)
         return self
     }
     
