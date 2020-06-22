@@ -17,8 +17,7 @@ extension PatchInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -37,8 +36,7 @@ extension PatchInterfaceIntegrationTests {
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .body(object)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
@@ -61,8 +59,7 @@ extension PatchInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .body(object)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
@@ -85,8 +82,7 @@ extension PatchInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -109,8 +105,7 @@ extension PatchInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -136,8 +131,7 @@ extension PatchInterfaceIntegrationTests {
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .body(object)
             .decode(SomeObject?.self)
             .onCompletion({ completionResult = $0 })
@@ -160,8 +154,7 @@ extension PatchInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .body(object)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
@@ -184,8 +177,7 @@ extension PatchInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -208,8 +200,7 @@ extension PatchInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -234,8 +225,7 @@ extension PatchInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -261,8 +251,7 @@ extension PatchInterfaceIntegrationTests {
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .body(object)
             .decode(SomeObject.self)
             .onCompletion({ completionResult = $0 })
@@ -285,8 +274,7 @@ extension PatchInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .body(object)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
@@ -309,8 +297,7 @@ extension PatchInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -336,8 +323,7 @@ extension PatchInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -365,8 +351,7 @@ extension PatchInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .patch(self.endpoint)
+        sut.patch(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })

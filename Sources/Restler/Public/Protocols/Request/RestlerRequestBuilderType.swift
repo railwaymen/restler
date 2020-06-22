@@ -58,6 +58,15 @@ public protocol RestlerBasicRequestBuilderType: class {
     ///
     func failureDecode<T>(_ type: T.Type) -> Self where T: RestlerErrorDecodable
     
+    /// Use for custom modifications of the URLRequest after setting it up with the builder's values.
+    ///
+    /// - Parameters:
+    ///   - modification: A mutating function called just before beginning a data task for the request.
+    ///
+    /// - Returns: `self` for chaining.
+    ///
+    func customRequestModification(_ modification: ((inout URLRequest) -> Void)?) -> Self
+    
     /// Builds a request with a decoding type.
     ///
     /// Ignores any data received on the successful request.

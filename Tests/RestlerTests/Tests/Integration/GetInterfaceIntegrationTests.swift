@@ -10,8 +10,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -29,8 +28,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .get("mock")
+        sut.get("mock")
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -48,8 +46,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .setInHeader("someValue", forKey: .accept)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
@@ -68,8 +65,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .query(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
@@ -93,8 +89,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .query(object)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
@@ -115,8 +110,7 @@ extension GetInterfaceIntegrationTests {
         let header = ["id": "1", "name": "name", "double": "1.23"]
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .query(header)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
@@ -141,8 +135,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -165,8 +158,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -189,8 +181,7 @@ extension GetInterfaceIntegrationTests {
         let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
         var returnedError: Error?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(UndecodableErrorMock.self)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
@@ -209,8 +200,7 @@ extension GetInterfaceIntegrationTests {
         let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
         var returnedError: Error?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(DecodableErrorMock.self)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
@@ -229,8 +219,7 @@ extension GetInterfaceIntegrationTests {
         let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
         var returnedError: Error?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(DecodableErrorMock.self)
             .failureDecode(UndecodableErrorMock.self)
             .failureDecode(DecodableErrorMock.self)
@@ -262,8 +251,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .setInHeader("someValue", forKey: .accept)
             .decode(SomeObject?.self)
             .onCompletion({ completionResult = $0 })
@@ -282,8 +270,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .query(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(SomeObject?.self)
             .onCompletion({ completionResult = $0 })
@@ -306,8 +293,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .query(object)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
@@ -330,8 +316,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -354,8 +339,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -380,8 +364,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -404,8 +387,7 @@ extension GetInterfaceIntegrationTests {
         let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
         var returnedError: Error?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(UndecodableErrorMock.self)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
@@ -424,8 +406,7 @@ extension GetInterfaceIntegrationTests {
         let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
         var returnedError: Error?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(DecodableErrorMock.self)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
@@ -444,8 +425,7 @@ extension GetInterfaceIntegrationTests {
         let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
         var returnedError: Error?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(DecodableErrorMock.self)
             .failureDecode(UndecodableErrorMock.self)
             .failureDecode(DecodableErrorMock.self)
@@ -477,8 +457,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .setInHeader("someValue", forKey: .accept)
             .decode(SomeObject.self)
             .onCompletion({ completionResult = $0 })
@@ -497,8 +476,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .query(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(SomeObject.self)
             .onCompletion({ completionResult = $0 })
@@ -521,8 +499,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .query(object)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
@@ -545,8 +522,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -572,8 +548,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -601,8 +576,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -625,8 +599,7 @@ extension GetInterfaceIntegrationTests {
         let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
         var returnedError: Error?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(UndecodableErrorMock.self)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
@@ -645,8 +618,7 @@ extension GetInterfaceIntegrationTests {
         let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
         var returnedError: Error?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(DecodableErrorMock.self)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
@@ -665,8 +637,7 @@ extension GetInterfaceIntegrationTests {
         let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
         var returnedError: Error?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(DecodableErrorMock.self)
             .failureDecode(UndecodableErrorMock.self)
             .failureDecode(DecodableErrorMock.self)
@@ -698,8 +669,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<Data>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Data.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -716,8 +686,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<Data>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .setInHeader("someValue", forKey: .accept)
             .decode(Data.self)
             .onCompletion({ completionResult = $0 })
@@ -736,8 +705,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<Data>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .query(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(Data.self)
             .onCompletion({ completionResult = $0 })
@@ -760,8 +728,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: Data?
         var completionResult: Restler.DecodableResult<Data>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .query(object)
             .decode(Data.self)
             .onFailure({ returnedError = $0 })
@@ -784,8 +751,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: Data?
         var completionResult: Restler.DecodableResult<Data>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Data.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -809,8 +775,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: Data?
         var completionResult: Restler.DecodableResult<Data>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Data.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -834,8 +799,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: Data?
         var completionResult: Restler.DecodableResult<Data>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Data.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -859,8 +823,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<Data?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Data?.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -877,8 +840,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<Data?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .setInHeader("someValue", forKey: .accept)
             .decode(Data?.self)
             .onCompletion({ completionResult = $0 })
@@ -897,8 +859,7 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<Data?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .query(SomeObject(id: 1, name: "name", double: 1.23))
             .decode(Data?.self)
             .onCompletion({ completionResult = $0 })
@@ -921,8 +882,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: Data?
         var completionResult: Restler.DecodableResult<Data?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .query(object)
             .decode(Data?.self)
             .onFailure({ returnedError = $0 })
@@ -945,8 +905,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: Data?
         var completionResult: Restler.DecodableResult<Data?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Data?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -970,8 +929,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: Data?
         var completionResult: Restler.DecodableResult<Data?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Data?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -995,8 +953,7 @@ extension GetInterfaceIntegrationTests {
         var decodedObject: Data?
         var completionResult: Restler.DecodableResult<Data?>?
         //Act
-        _ = sut
-            .get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Data?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })

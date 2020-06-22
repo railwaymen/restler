@@ -3,6 +3,9 @@ import Foundation
 /// An object parsing the given error to given types of the RestlerErrorDecodables.
 public protocol RestlerErrorParserType {
     
+    /// An array of all errors' types that will be tried to decode on request failure.
+    var decodingErrors: [RestlerErrorDecodable.Type] { get set }
+    
     /// Try to decode the error on failure of the data task.
     ///
     /// If the request will end with error, the given error would be decoded if init of the error doesn't return nil.
@@ -14,17 +17,14 @@ public protocol RestlerErrorParserType {
     /// - Parameters:
     ///   - type: A type for the error to be decoded. It will be added to an array of errors to decode on failed request.
     ///
-    func decode<T>(_ type: T.Type) where T: RestlerErrorDecodable
+    mutating func decode<T>(_ type: T.Type) where T: RestlerErrorDecodable
     
     /// Removed the given error type from the array of error types to decode.
     ///
     /// - Parameters:
     ///   - type: An error type to remove from decoding errors array.
     ///
-    func stopDecoding<T>(_ type: T.Type) where T: RestlerErrorDecodable
-    
-    /// Creates a copy of the ErrorParser.
-    func copy() -> RestlerErrorParserType
+    mutating func stopDecoding<T>(_ type: T.Type) where T: RestlerErrorDecodable
     
     /// Tries to parse the given error into the decodable errors.
     ///

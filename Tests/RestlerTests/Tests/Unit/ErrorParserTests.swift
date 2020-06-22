@@ -38,7 +38,7 @@ extension ErrorParserTests {
     
     func testParse_decodableError_addedByDecode() throws {
         //Arrange
-        let sut = Restler.ErrorParser()
+        var sut = Restler.ErrorParser()
         sut.decode(DecodableErrorMock.self)
         let response = Restler.Response(data: nil, response: nil, error: TestError())
         //Act
@@ -69,7 +69,7 @@ extension ErrorParserTests {
 extension ErrorParserTests {
     func testStopDecoding() {
         //Arrange
-        let sut = Restler.ErrorParser(decodingErrors: [DecodableErrorMock.self, DecodableErrorMock.self])
+        var sut = Restler.ErrorParser(decodingErrors: [DecodableErrorMock.self, DecodableErrorMock.self])
         sut.decode(DecodableErrorMock.self)
         let response = Restler.Response(data: nil, response: nil, error: TestError())
         let expectedError = Restler.Error.request(type: .unknownError, response: response)
@@ -78,20 +78,5 @@ extension ErrorParserTests {
         //Assert
         let error = sut.parse(expectedError)
         XCTAssertEqual(error as? Restler.Error, expectedError)
-    }
-}
-
-// MARK: - copy()
-extension ErrorParserTests {
-    func testCopy() {
-        //Arrange
-        let sut = Restler.ErrorParser(decodingErrors: [DecodableErrorMock.self])
-        let response = Restler.Response(data: nil, response: nil, error: TestError())
-        //Act
-        let copy = sut.copy()
-        copy.stopDecoding(DecodableErrorMock.self)
-        //Assert
-        let error = sut.parse(Restler.Error.request(type: .unknownError, response: response))
-        XCTAssert(error is DecodableErrorMock)
     }
 }

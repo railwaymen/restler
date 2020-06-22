@@ -10,8 +10,7 @@ extension PostInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -31,8 +30,7 @@ extension PostInterfaceIntegrationTests {
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .body(object)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
@@ -56,8 +54,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .body(object)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
@@ -101,8 +98,7 @@ extension PostInterfaceIntegrationTests {
             """.data(using: .utf8)!
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .multipart(object, boundary: "boundary")
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
@@ -126,8 +122,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .multipart(object)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
@@ -150,8 +145,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -174,8 +168,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -201,8 +194,7 @@ extension PostInterfaceIntegrationTests {
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .body(object)
             .decode(SomeObject?.self)
             .onCompletion({ completionResult = $0 })
@@ -225,8 +217,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .body(object)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
@@ -249,8 +240,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -273,8 +263,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -299,8 +288,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -326,8 +314,7 @@ extension PostInterfaceIntegrationTests {
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .body(object)
             .decode(SomeObject.self)
             .onCompletion({ completionResult = $0 })
@@ -350,8 +337,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .body(object)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
@@ -374,8 +360,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -401,8 +386,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -430,8 +414,7 @@ extension PostInterfaceIntegrationTests {
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
         //Act
-        _ = sut
-            .post(self.endpoint)
+        sut.post(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })

@@ -4,7 +4,12 @@ typealias DataResult = Result<Data?, Error>
 typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType: class {
-    func makeRequest(url: URL, method: HTTPMethod, header: Restler.Header, completion: @escaping DataCompletion) -> Restler.Task?
+    func makeRequest(
+        url: URL,
+        method: HTTPMethod,
+        header: Restler.Header,
+        customRequestModification: ((inout URLRequest) -> Void)?,
+        completion: @escaping DataCompletion) -> Restler.Task?
 }
 
 class Networking {
@@ -18,14 +23,21 @@ class Networking {
 
 // MARK: - NetworkingType
 extension Networking: NetworkingType {
-    func makeRequest(url: URL, method: HTTPMethod, header: Restler.Header, completion: @escaping DataCompletion) -> Restler.Task? {
-        guard let request = self.buildURLRequest(
+    func makeRequest(
+        url: URL,
+        method: HTTPMethod,
+        header: Restler.Header,
+        customRequestModification: ((inout URLRequest) -> Void)?,
+        completion: @escaping DataCompletion
+    ) -> Restler.Task? {
+        guard var request = self.buildURLRequest(
             url: url,
             httpMethod: method,
             header: header) else {
                 completion(.failure(Restler.internalError()))
                 return nil
         }
+        customRequestModification?(&request)
         return Restler.Task(task: self.runDataTask(request: request, completion: completion))
     }
 }

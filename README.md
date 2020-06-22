@@ -8,16 +8,45 @@ The Restler framework has been built to use features of the newest versions of S
 
 ## List of Content
 
-- [Instalation](#instalation)
-- [Usage](#usage)
-  - [Examples](#examples)
-    - [GET](#get)
-    - [POST](#post)
+1. [Documentation](#documentation)
+2. [Instalation](#instalation)
+3. [Usage](#usage)
   - [Error Parser](#error-parser)
   - [Header](#header)
-- [Contribution](#contribution)
-  - [Dependencies](#dependencies)
-    - [Gems](#gems)
+  - [Restler calls](#restler-calls)
+4. [Contribution](#contribution)
+
+## Documentation
+
+We think that README isn't a good place for complete documentation so that's why we decided to generate it to a folder inside the framework repository. Full documentation you can find in the [Documentation](Documentation/Reference) folder. If you're looking for a description of a specific protocol or class, we put here a list of the most important symbols.
+
+### Restler
+
+[RestlerType](Documentation/Reference/protocols/RestlerType) - it's the main protocol which should be used when it comes to mocking or using [Restler's](Documentation/Reference/classes/Restler.md) class' instance.
+
+### Request builder
+
+- [RestlerBasicRequestBuilderType](Documentation/Reference/protocols/RestlerBasicRequestBuilderType.md) - available for all HTTP methods.
+- [RestlerQueryRequestBuilderType](Documentation/Reference/protocols/RestlerQueryRequestBuilderType.md) - available only for GET.
+- [RestlerBodyRequestBuilderType](Documentation/Reference/protocols/RestlerBodyRequestBuilderType.md) - available for POST, PUT and PATCH.
+- [RestlerMultipartRequestBuilderType](Documentation/Reference/protocols/RestlerMultipartRequestBuilderType.md) - available only for POST.
+- [RestlerDecodableResponseRequestBuilderType](Documentation/Reference/protocols/RestlerDecodableResponseRequestBuilderType.md) - available for GET, POST, PUT, PATCH and DELETE (all without HEAD).
+
+All these protocols are defined in one file: [RestlerRequestBuilderType](Sources/Restler/Public/Protocols/Request/RestlerRequestBuilderType.swift)
+
+### Request
+
+[Restler.Request](Documentation/Reference/classes/Restler.Request.md) - generic class for all request types provided by Restler.
+
+### Errors
+
+- [Restler.Error](Documentation/Reference/enums/Restler.Error.md) - errors returned by Restler.
+- [Restler.ErrorType](Documentation/Reference/enums/Restler.ErrorType.md) - types which Restler can decode by himself. Every different type would be an `unknownError`.
+
+### Error parser
+
+- [RestlerErrorParserType](Documentation/Reference/protocols/RestlerErrorParserType.md) - a public protocol for the ErrorParser class.
+- [RestlerErrorDecodable](Documentation/Reference/protocols/RestlerErrorDecodable.md) - a protocol to implement if an object should be decoded by the ErrorParser.
 
 ## Instalation
 
@@ -37,8 +66,6 @@ and call in your console:
 pod install
 ```
 
-## Usage
-
 Import the framework to the project:
 
 ```swift
@@ -47,63 +74,7 @@ import Restler
 
 and call it!
 
-### Examples
-
-#### GET
-
-```swift
-Restler(baseURL: myBaseURL)
-  .get(Endpoint.myProfile)
-  // Makes GET request to the given endpoint.
-
-  .query(anEncodableQueryObject)
-  // Encodes object and puts it in query for GET request.
-
-  .failureDecode(ErrorToDecodeOnFailure.self)
-  // If error will occure, error parser would try to decode the given type.
-
-  .setInHeader("myNewTemporaryToken", forKey: "token")
-  // Sets the specified value for given key in the header only for this request.
-
-  .decode(Profile.self)
-  // Decodes Profile object on successful response. If it is not optional, still failure handler can be called.
-
-  .onSuccess({ profile in
-    updateProfile(with: profile)
-  })
-  // Handler called if Restler would successfully end request.
-
-  .onCompletion({ _ in
-    hideLoadingIndicator()
-  })
-  // Handler called on completion of the request whatever the result would be.
-
-  .start()
-  // Create and start data task.
-```
-
-#### POST
-
-```swift
-Restler(baseURL: myBaseURL)
-  .post(Endpoint.myProfile)
-  // Makes POST request to the given endpoint
-
-  .body(anEncodableQueryObject)
-  // Encodes object and puts it into body of the request. Ignored if request method doesn't support it.
-
-  .failureDecode(ErrorToDecodeOnFailure.self)   
-  .decode(Profile.self)
-  .onFailure({ profile in
-    updateProfile(with: profile)
-  })
-  // Handler called if request has failed.
-
-  .onCompletion({ _ in
-    hideLoadingIndicator()
-  })
-  .start()
-```
+## Usage Examples
 
 ### Error parser
 
@@ -138,17 +109,76 @@ If you're using basic authentication at "Authorization" key, simply provide user
 restler.header.setBasicAuthentication(username: "me", password: "password")
 ```
 
+### Restler calls
+
+#### GET
+
+```swift
+Restler(baseURL: myBaseURL)
+  .get(Endpoint.myProfile) // 1
+  .query(anEncodableQueryObject) // 2
+  .failureDecode(ErrorToDecodeOnFailure.self) // 3
+  .setInHeader("myNewTemporaryToken", forKey: "token") // 4
+  .decode(Profile.self) // 5
+  // 6
+
+  .onSuccess({ profile in // 7
+    updateProfile(with: profile)
+  })
+  .onCompletion({ _ in // 8
+    hideLoadingIndicator()
+  })
+  .start() // 9
+```
+
+1. Makes GET request to the given endpoint.
+2. Encodes the object and puts it in query for GET request.
+3. If an error will occur, an error parser would try to decode the given type.
+4. Sets the specified value for the given key in the header only for this request.
+5. Decodes Profile object on a successful response. If it is not optional, a failure handler can be called.
+6. Since this moment we're operating on a request, not a request builder.
+7. A handler called if Restler would successfully end request.
+8. A handler called on completion of the request whatever the result would be.
+9. Create and start data task.
+
+#### POST
+
+```swift
+Restler(baseURL: myBaseURL)
+  .post(Endpoint.myProfile) // 1
+  .body(anEncodableQueryObject) // 2
+  .failureDecode(ErrorToDecodeOnFailure.self)
+  .decode(Profile.self)
+
+  .onFailure({ error in // 3
+    print("\(error)")
+  })
+  .onCompletion({ _ in
+    hideLoadingIndicator()
+  })
+  .start()
+```
+
+1. Makes POST request to the given endpoint.
+2. Encodes the object and puts it into the body of the request. Ignored if the selected request method doesn't support it.
+3. A handler called if the request has failed.
+
+#### Other
+
+Any other method call is very similar to these two, but if you have questions simply create an issue.
+
 ## Contribution
 
 If you want to contribute in this framework, simply put your pull request here.
+
 If you have found any bug, file it in the issues.
+
 If you would like Restler to do something else, create an issue for feature request.
 
 ### Dependencies
 
 #### Gems
 
-- [cocoapods](https://rubygems.org/gems/cocoapods) 1.8.4
-- [fastlane](https://rubygems.org/gems/fastlane) 2.143.0
-- [slather](https://rubygems.org/gems/slather) 2.4.7
-- [xcpretty](https://rubygems.org/gems/xcpretty) 0.3.0
+- [cocoapods](https://rubygems.org/gems/cocoapods) 1.9.3
+- [fastlane](https://rubygems.org/gems/fastlane) 2.149.1
+- [slather](https://rubygems.org/gems/slather) 2.4.9

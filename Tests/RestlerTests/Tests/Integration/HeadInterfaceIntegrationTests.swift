@@ -10,8 +10,7 @@ extension HeadInterfaceIntegrationTests {
         let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .head(self.endpoint)
+        sut.head(self.endpoint)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
@@ -31,8 +30,7 @@ extension HeadInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .head(self.endpoint)
+        sut.head(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
@@ -55,8 +53,7 @@ extension HeadInterfaceIntegrationTests {
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
         //Act
-        _ = sut
-            .head(self.endpoint)
+        sut.head(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
             .onSuccess({ decodedObject = $0 })
