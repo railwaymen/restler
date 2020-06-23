@@ -1,5 +1,4 @@
 import Foundation
-import Combine
 
 typealias DataResult = Result<Data?, Error>
 typealias DataCompletion = (DataResult) -> Void
@@ -11,14 +10,6 @@ protocol NetworkingType: class {
         header: Restler.Header,
         customRequestModification: ((inout URLRequest) -> Void)?,
         completion: @escaping DataCompletion) -> Restler.Task?
-    
-    @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func getPublisher(
-        url: URL,
-        method: HTTPMethod,
-        header: Restler.Header,
-        customRequestModification: ((inout URLRequest) -> Void)?
-    ) -> URLSession.DataTaskPublisher?
 }
 
 class Networking {
@@ -48,23 +39,6 @@ extension Networking: NetworkingType {
         }
         customRequestModification?(&request)
         return Restler.Task(task: self.runDataTask(request: request, completion: completion))
-    }
-    
-    @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func getPublisher(
-        url: URL,
-        method: HTTPMethod,
-        header: Restler.Header,
-        customRequestModification: ((inout URLRequest) -> Void)?
-    ) -> URLSession.DataTaskPublisher? {
-        guard var request = self.buildURLRequest(
-            url: url,
-            httpMethod: method,
-            header: header) else {
-                return nil
-        }
-        customRequestModification?(&request)
-        return self.session.dataTaskPublisher(for: request)
     }
 }
 
