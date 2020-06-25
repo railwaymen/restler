@@ -4,12 +4,12 @@ on:
   push:
     branches:
       - master
-      - develop
+      - 'restler-*-branch'
       - 'release/*'
   pull_request:
     branches:
       - master
-      - develop
+      - 'restler-*-branch'
       - 'release/*'
 
 jobs:
