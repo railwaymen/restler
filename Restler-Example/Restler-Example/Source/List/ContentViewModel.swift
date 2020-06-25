@@ -13,7 +13,7 @@ import Restler
 class ContentViewModel: ObservableObject {
     private let restler = Restler(baseURL: URL(string: "https://jsonplaceholder.typicode.com")!)
     
-    private var subscriptions = [AnyCancellable]()
+    private var subscriptions: [AnyCancellable] = []
     let objectWillChange = PassthroughSubject<Void, Never>()
     
     var posts: [BlogPost] = [] {
@@ -28,7 +28,6 @@ class ContentViewModel: ObservableObject {
             .catch { _ in Empty() }
             .assign(to: \.posts, on: self)
             .store(in: &subscriptions)
-            
     }
     
     // MARK: - Internal
@@ -42,7 +41,7 @@ class ContentViewModel: ObservableObject {
             .get(Endpoint.posts)
             .publisher()?
             .receive(on: DispatchQueue.main)
-            .tryMap(\.data)
+            .map(\.data)
             .decode(type: [BlogPost].self, decoder: JSONDecoder())
             .eraseToAnyPublisher()
     }
