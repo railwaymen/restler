@@ -13,6 +13,7 @@ import Restler
 class ContentViewModel: ObservableObject {
     private let restler = Restler(baseURL: URL(string: "https://jsonplaceholder.typicode.com")!)
     
+    private var subscriptions: [AnyCancellable] = []
     let objectWillChange = PassthroughSubject<Void, Never>()
     
     var posts: [BlogPost] = [] {
@@ -23,7 +24,10 @@ class ContentViewModel: ObservableObject {
     
     // MARK: - Initialization
     init() {
-        self.fetchData()
+        self.fetchData()?
+            .catch { _ in Empty() }
+            .assign(to: \.posts, on: self)
+            .store(in: &subscriptions)
     }
     
     // MARK: - Internal
@@ -32,18 +36,13 @@ class ContentViewModel: ObservableObject {
     }
     
     // MARK: - Private
-    private func fetchData() {
-        _ = self.restler
+    private func fetchData() -> AnyPublisher<[BlogPost], Error>? {
+        self.restler
             .get(Endpoint.posts)
-            .decode([BlogPost].self)
-            .onCompletion({ result in
-                switch result {
-                case let .success(posts):
-                    self.posts = posts
-                case let .failure(error):
-                    print("Error:", error)
-                }
-            })
-            .start()
+            .publisher()?
+            .receive(on: DispatchQueue.main)
+            .map(\.data)
+            .decode(type: [BlogPost].self, decoder: JSONDecoder())
+            .eraseToAnyPublisher()
     }
 }
