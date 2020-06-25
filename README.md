@@ -163,6 +163,31 @@ Restler(baseURL: myBaseURL)
 2. Encodes the object and puts it into the body of the request. Ignored if the selected request method doesn't support it.
 3. A handler called if the request has failed.
 
+#### Combine + Restler 
+
+```swift
+Restler(baseURL: myBaseURL)
+  .get(Endpoint.myProfile) // 1
+  .query(anEncodableQueryObject) // 2
+  .publisher()? // 3
+  .receive(on: DispatchQueue.main) // 4
+  .map(\.data) // 5
+  .decode(type: Profile.self, decoder: JSONDecoder()) // 6
+  .catch { _ in Empty() } // 7
+  .assign(to: \.profile, on: self) // 8
+  .store(in: &subscriptions) // 9
+```
+
+1. Makes GET request to the given endpoint.
+2. Encodes the object and puts it in query for GET request.
+3. Builds a request and returns publisher for Combine support.
+4. Specifies the scheduler on which to receive elements from the publisher. In this case main queue.
+5. Get Data object from `DataTaskPublisher`.
+6. Decodes Profile object.
+7. Handle error 
+8. Assigns each element from a Publisher to a property on an object.
+9. Stores this type-erasing cancellable instance in the specified collection.
+
 #### Other
 
 Any other method call is very similar to these two, but if you have questions simply create an issue.
