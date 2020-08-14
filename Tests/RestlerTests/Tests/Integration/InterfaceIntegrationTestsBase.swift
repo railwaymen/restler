@@ -36,9 +36,13 @@ class InterfaceIntegrationTestsBase: XCTestCase {
         line: UInt = #line
     ) throws {
         let restlerError = try XCTUnwrap(returnedError as? Restler.Error, file: file, line: line)
-        guard case let .multiple(errors) = restlerError else { return XCTFail("Returned error is not multiple error", file: file, line: line) }
+        guard case let .multiple(errors) = restlerError else {
+            return XCTFail("Returned error is not multiple error", file: file, line: line)
+        }
         XCTAssertEqual(errors.count, 1, file: file, line: line)
-        guard case let .common(type, base) = errors.first else { return XCTFail("Error thrown is not common error", file: file, line: line) }
+        guard case let .common(type, base) = errors.first else {
+            return XCTFail("Error thrown is not common error", file: file, line: line)
+        }
         XCTAssertEqual(base as? TestError, expected, file: file, line: line)
         XCTAssertEqual(type, Restler.ErrorType.invalidParameters, file: file, line: line)
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: restlerError, file: file, line: line)

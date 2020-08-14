@@ -101,7 +101,10 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     func testGetVoid_buildingRequest_encodingDictionaryQuery() throws {
@@ -178,7 +181,8 @@ extension GetInterfaceIntegrationTests {
     func testGetVoid_failure_undecodableError() throws {
         //Arrange
         let sut = self.buildSUT()
-        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        let response = Restler.Response(.init(data: nil, response: nil, error: nil))
+        let error = Restler.Error.request(type: .validationError, response: response)
         var returnedError: Error?
         //Act
         sut.get(self.endpoint)
@@ -197,7 +201,8 @@ extension GetInterfaceIntegrationTests {
     func testGetVoid_failure_decodableError() throws {
         //Arrange
         let sut = self.buildSUT()
-        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        let response = Restler.Response(.init(data: nil, response: nil, error: nil))
+        let error = Restler.Error.request(type: .validationError, response: response)
         var returnedError: Error?
         //Act
         sut.get(self.endpoint)
@@ -216,7 +221,8 @@ extension GetInterfaceIntegrationTests {
     func testGetVoid_failure_multipleErrors() throws {
         //Arrange
         let sut = self.buildSUT()
-        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        let response = Restler.Response(.init(data: nil, response: nil, error: nil))
+        let error = Restler.Error.request(type: .validationError, response: response)
         var returnedError: Error?
         //Act
         sut.get(self.endpoint)
@@ -305,7 +311,10 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     // MARK: Success Decoding
@@ -384,7 +393,8 @@ extension GetInterfaceIntegrationTests {
     func testGetOptionalDecodable_failure_undecodableError() throws {
         //Arrange
         let sut = self.buildSUT()
-        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        let response = Restler.Response(.init(data: nil, response: nil, error: nil))
+        let error = Restler.Error.request(type: .validationError, response: response)
         var returnedError: Error?
         //Act
         sut.get(self.endpoint)
@@ -403,7 +413,8 @@ extension GetInterfaceIntegrationTests {
     func testGetOptionalDecodable_failure_decodableError() throws {
         //Arrange
         let sut = self.buildSUT()
-        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        let response = Restler.Response(.init(data: nil, response: nil, error: nil))
+        let error = Restler.Error.request(type: .validationError, response: response)
         var returnedError: Error?
         //Act
         sut.get(self.endpoint)
@@ -422,7 +433,8 @@ extension GetInterfaceIntegrationTests {
     func testGetOptionalDecodable_failure_multipleErrors() throws {
         //Arrange
         let sut = self.buildSUT()
-        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        let response = Restler.Response(.init(data: nil, response: nil, error: nil))
+        let error = Restler.Error.request(type: .validationError, response: response)
         var returnedError: Error?
         //Act
         sut.get(self.endpoint)
@@ -511,7 +523,10 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     // MARK: Success Decoding
@@ -596,7 +611,8 @@ extension GetInterfaceIntegrationTests {
     func testGetDecodable_failure_undecodableError() throws {
         //Arrange
         let sut = self.buildSUT()
-        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        let response = Restler.Response(.init(data: nil, response: nil, error: nil))
+        let error = Restler.Error.request(type: .validationError, response: response)
         var returnedError: Error?
         //Act
         sut.get(self.endpoint)
@@ -615,7 +631,8 @@ extension GetInterfaceIntegrationTests {
     func testGetDecodable_failure_decodableError() throws {
         //Arrange
         let sut = self.buildSUT()
-        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        let response = Restler.Response(.init(data: nil, response: nil, error: nil))
+        let error = Restler.Error.request(type: .validationError, response: response)
         var returnedError: Error?
         //Act
         sut.get(self.endpoint)
@@ -634,7 +651,8 @@ extension GetInterfaceIntegrationTests {
     func testGetDecodable_failure_multipleErrors() throws {
         //Arrange
         let sut = self.buildSUT()
-        let error = Restler.Error.request(type: .validationError, response: Restler.Response(.init(data: nil, response: nil, error: nil)))
+        let response = Restler.Response(.init(data: nil, response: nil, error: nil))
+        let error = Restler.Error.request(type: .validationError, response: response)
         var returnedError: Error?
         //Act
         sut.get(self.endpoint)
@@ -740,7 +758,10 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     // MARK: Success Decoding
@@ -894,7 +915,10 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     // MARK: Success Decoding

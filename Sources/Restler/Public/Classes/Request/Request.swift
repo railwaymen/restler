@@ -49,7 +49,8 @@ extension Restler {
         /// This function have to be called to start the request.
         ///
         /// - Warning:
-        ///   If the encoding of parameters is at 100% successful the returned nil means that Restler internal error have occured.
+        ///   If the encoding of parameters is at 100% successful the returned nil
+        ///    means that Restler internal error have occured.
         ///   Please contact the developers of the framework in this case.
         ///
         /// - Returns:

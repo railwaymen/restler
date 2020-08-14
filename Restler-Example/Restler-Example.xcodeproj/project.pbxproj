@@ -23,7 +23,7 @@
 		8A9D33AD241F8333002C99DF /* ImgurEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9D33AC241F8333002C99DF /* ImgurEndpoint.swift */; };
 		8AAAE2C5240FD7D3004C70BE /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAAE2C4240FD7D3004C70BE /* Endpoint.swift */; };
 		8AC1C89C2403D3E500FF329E /* PostComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC1C89B2403D3E500FF329E /* PostComment.swift */; };
-		8ADC306424E6975400FD49AD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 8ADC306324E6975400FD49AD /* SwiftPackageProductDependency */; };
+		8ADC306424E6975400FD49AD /* Restler in Frameworks */ = {isa = PBXBuildFile; productRef = 8ADC306324E6975400FD49AD /* Restler */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8ADC306424E6975400FD49AD /* BuildFile in Frameworks */,
+				8ADC306424E6975400FD49AD /* Restler in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,7 +195,7 @@
 			);
 			name = "Restler-Example";
 			packageProductDependencies = (
-				8ADC306324E6975400FD49AD /* SwiftPackageProductDependency */,
+				8ADC306324E6975400FD49AD /* Restler */,
 			);
 			productName = "Restler-Example";
 			productReference = 8A87AEEF2400084F007FA662 /* Restler-Example.app */;
@@ -499,7 +499,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		8ADC306324E6975400FD49AD /* SwiftPackageProductDependency */ = {
+		8ADC306324E6975400FD49AD /* Restler */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Restler;
 		};

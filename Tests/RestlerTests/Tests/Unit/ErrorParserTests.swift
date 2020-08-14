@@ -49,7 +49,11 @@ extension ErrorParserTests {
     
     func testParse_multipleDecodableErrors() throws {
         //Arrange
-        let sut = Restler.ErrorParser(decodingErrors: [DecodableErrorMock.self, UndecodableErrorMock.self, DecodableErrorMock.self])
+        let sut = Restler.ErrorParser(decodingErrors: [
+            DecodableErrorMock.self,
+            UndecodableErrorMock.self,
+            DecodableErrorMock.self
+        ])
         let response = Restler.Response(data: nil, response: nil, error: TestError())
         //Act
         let error = sut.parse(Restler.Error.request(type: .unknownError, response: response))

@@ -34,9 +34,10 @@ extension NetworkingTests {
         }
         //Assert
         XCTAssertEqual(self.session.dataTaskParams.count, 1)
-        XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.query?.contains("some=key")))
-        XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.query?.contains("another=key1")))
-        XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.absoluteString.starts(with: "https://www.example.com")))
+        let requestURL = self.session.dataTaskParams.last?.request.url
+        XCTAssertTrue(try XCTUnwrap(requestURL?.query?.contains("some=key")))
+        XCTAssertTrue(try XCTUnwrap(requestURL?.query?.contains("another=key1")))
+        XCTAssertTrue(try XCTUnwrap(requestURL?.absoluteString.starts(with: "https://www.example.com")))
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "GET")
         XCTAssertNil(self.session.dataTaskParams.last?.request.httpBody)
         XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
@@ -63,8 +64,9 @@ extension NetworkingTests {
         }
         //Assert
         XCTAssertEqual(self.session.dataTaskParams.count, 1)
-        XCTAssertNil(try XCTUnwrap(self.session.dataTaskParams.last?.request.url).query)
-        XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.absoluteString.starts(with: "https://www.example.com")))
+        let requestURL = try XCTUnwrap(self.session.dataTaskParams.last?.request.url)
+        XCTAssertNil(requestURL.query)
+        XCTAssertTrue(requestURL.absoluteString.starts(with: "https://www.example.com"))
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "POST")
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpBody, content)
         XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
@@ -91,8 +93,9 @@ extension NetworkingTests {
         }
         //Assert
         XCTAssertEqual(self.session.dataTaskParams.count, 1)
-        XCTAssertNil(try XCTUnwrap(self.session.dataTaskParams.last?.request.url).query)
-        XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.absoluteString.starts(with: "https://www.example.com")))
+        let requestURL = try XCTUnwrap(self.session.dataTaskParams.last?.request.url)
+        XCTAssertNil(requestURL.query)
+        XCTAssertTrue(requestURL.absoluteString.starts(with: "https://www.example.com"))
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "PUT")
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpBody, content)
         XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
@@ -118,8 +121,9 @@ extension NetworkingTests {
         }
         //Assert
         XCTAssertEqual(self.session.dataTaskParams.count, 1)
-        XCTAssertNil(try XCTUnwrap(self.session.dataTaskParams.last?.request.url).query)
-        XCTAssertTrue(try XCTUnwrap(self.session.dataTaskParams.last?.request.url?.absoluteString.starts(with: "https://www.example.com")))
+        let requestURL = try XCTUnwrap(self.session.dataTaskParams.last?.request.url)
+        XCTAssertNil(requestURL.query)
+        XCTAssertTrue(requestURL.absoluteString.starts(with: "https://www.example.com"))
         XCTAssertEqual(self.session.dataTaskParams.last?.request.httpMethod, "DELETE")
         XCTAssertNil(self.session.dataTaskParams.last?.request.httpBody)
         XCTAssertEqual(self.session.dataTaskParams.last?.request.allHTTPHeaderFields, header)
@@ -136,6 +140,7 @@ extension NetworkingTests {
         let mockResponse = HTTPURLResponseMock()
         mockResponse.isSuccessfulReturnValue = true
         let responseData = Data()
+        let response = HTTPRequestResponse(data: responseData, response: mockResponse, error: nil)
         var completionResult: DataResult?
         //Act
         _ = sut.makeRequest(
@@ -145,7 +150,7 @@ extension NetworkingTests {
             customRequestModification: nil) { result in
                 completionResult = result
         }
-        try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: responseData, response: mockResponse, error: nil))
+        try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), responseData)
     }
@@ -166,7 +171,8 @@ extension NetworkingTests {
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.Error.request(type: .unknownError, response: Restler.Response(response)))
+        let expectedError = Restler.Error.request(type: .unknownError, response: Restler.Response(response))
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: expectedError)
     }
     
     func testMakeRequest_notFoundResponse() throws {
@@ -188,7 +194,8 @@ extension NetworkingTests {
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.Error.request(type: .notFound, response: Restler.Response(response)))
+        let expectedError =  Restler.Error.request(type: .notFound, response: Restler.Response(response))
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: expectedError)
     }
     
     func testMakeRequest_responseNotNil() throws {
@@ -210,7 +217,8 @@ extension NetworkingTests {
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.Error.request(type: .unauthorized, response: Restler.Response(response)))
+        let expectedError = Restler.Error.request(type: .unauthorized, response: Restler.Response(response))
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: expectedError)
     }
     
     func testMakeRequest_noDataInResponse() throws {
@@ -219,6 +227,7 @@ extension NetworkingTests {
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let mockResponse = HTTPURLResponseMock()
         mockResponse.isSuccessfulReturnValue = true
+        let response = HTTPRequestResponse(data: nil, response: mockResponse, error: nil)
         var completionResult: DataResult?
         //Act
         _ = sut.makeRequest(
@@ -228,7 +237,7 @@ extension NetworkingTests {
             customRequestModification: nil) { result in
                 completionResult = result
         }
-        try XCTUnwrap(self.session.dataTaskParams.last).completion(HTTPRequestResponse(data: nil, response: mockResponse, error: nil))
+        try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
         XCTAssertNil(try XCTUnwrap(completionResult).get())
     }
@@ -252,7 +261,8 @@ extension NetworkingTests {
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.Error.request(type: .unknownError, response: Restler.Response(response)))
+        let expectedError = Restler.Error.request(type: .unknownError, response: Restler.Response(response))
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: expectedError)
     }
     
     func testMakeRequest_NSURLErrorCancelled() throws {
@@ -272,7 +282,8 @@ extension NetworkingTests {
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         //Assert
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: Restler.Error.request(type: .requestCancelled, response: Restler.Response(response)))
+        let expectedError = Restler.Error.request(type: .requestCancelled, response: Restler.Response(response))
+        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: expectedError)
     }
 }
 

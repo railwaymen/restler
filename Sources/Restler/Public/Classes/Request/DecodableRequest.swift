@@ -58,7 +58,9 @@ extension Restler {
 
 // MARK: - Private
 extension Restler.DecodableRequest {
-    private func responseHandlerClosure<D>(completion: @escaping Restler.DecodableCompletion<D>) -> (DataResult) -> Void where D: Decodable {
+    private func responseHandlerClosure<D>(
+        completion: @escaping Restler.DecodableCompletion<D>
+    ) -> (DataResult) -> Void where D: Decodable {
         let decodeHandler: (Data?) throws -> D = self.hardDecodeHandler()
         return { [errorParser] result in
             switch result {
@@ -76,9 +78,10 @@ extension Restler.DecodableRequest {
     }
     
     private func hardDecodeHandler<D>() -> (Data?) throws -> D where D: Decodable {
-        return { [decoder] optionalData in
+        { [decoder] optionalData in
             guard let data = optionalData else {
-                throw DecodingError.valueNotFound(Data.self, DecodingError.Context(codingPath: [], debugDescription: "Response"))
+                let context = DecodingError.Context(codingPath: [], debugDescription: "Response")
+                throw DecodingError.valueNotFound(Data.self, context)
             }
             if let data = optionalData as? D {
                 return data

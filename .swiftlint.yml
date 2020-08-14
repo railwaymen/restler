@@ -2,9 +2,10 @@ disabled_rules:
   - trailing_whitespace
   - xctfail_message
   - trailing_comma
+  - closure_parameter_position
 
 line_length:
-  warning: 160
+  warning: 128
   error: 160
 
 function_body_length:
