@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 import Restler
 
-class CommentViewModel: ObservableObject {
+final class CommentViewModel: ObservableObject {
     private let restler = Restler(baseURL: URL(string: "https://jsonplaceholder.typicode.com")!)
     private let comment: PostComment
     private var tasks: Set<Restler.Task> = []

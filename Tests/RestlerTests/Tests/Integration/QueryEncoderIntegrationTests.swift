@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class QueryEncoderIntegrationTests: XCTestCase {}
+final class QueryEncoderIntegrationTests: XCTestCase {}
 
 extension QueryEncoderIntegrationTests {
     func testEncoding_stringDictionary() throws {

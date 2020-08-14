@@ -1,7 +1,7 @@
 import Foundation
 import Restler
 
-class RestlerMock {
+final class RestlerMock {
     var encoder: RestlerJSONEncoderType = JSONEncoder()
     
     var decoder: RestlerJSONDecoderType = JSONDecoder()

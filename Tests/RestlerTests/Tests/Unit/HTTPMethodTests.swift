@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class HTTPMethodTests: XCTestCase {}
+final class HTTPMethodTests: XCTestCase {}
 
 // MARK: - name
 extension HTTPMethodTests {

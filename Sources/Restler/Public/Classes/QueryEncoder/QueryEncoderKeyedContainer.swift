@@ -1,7 +1,7 @@
 import Foundation
 
 extension Restler.QueryEncoder {
-    public class KeyedContainer<Key: CodingKey>: RestlerQueryEncoderContainerType {
+    public final class KeyedContainer<Key: CodingKey>: RestlerQueryEncoderContainerType {
         private let jsonEncoder: RestlerJSONEncoderType
         
         internal var tuples: [(key: String, value: String)] = []

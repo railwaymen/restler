@@ -1,7 +1,7 @@
 import Foundation
 @testable import Restler
 
-class HTTPURLResponseMock {
+final class HTTPURLResponseMock {
     
     // MARK: - HTTPURLResponseType
     var isSuccessfulReturnValue: Bool = true

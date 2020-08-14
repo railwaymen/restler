@@ -1,7 +1,7 @@
 import Foundation
 import Restler
 
-class RestlerRequestMock<T>: Restler.Request<T> {
+final class RestlerRequestMock<T>: Restler.Request<T> {
     
     private(set) var onSuccessParams: [OnSuccessParams] = []
     struct OnSuccessParams {

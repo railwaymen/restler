@@ -1,7 +1,7 @@
 import XCTest
 import Restler
 
-class RestlerInterfaceMocksTests: XCTestCase {
+final class RestlerInterfaceMocksTests: XCTestCase {
     private var restler: RestlerMock!
     
     override func setUp() {

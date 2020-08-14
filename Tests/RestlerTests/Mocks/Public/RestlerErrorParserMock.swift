@@ -1,7 +1,7 @@
 import Foundation
 import Restler
 
-class RestlerErrorParserMock {
+final class RestlerErrorParserMock {
     
     // MARK: - RestlerErrorParserType
     var decodingErrorsReturnValue: [RestlerErrorDecodable.Type] = []

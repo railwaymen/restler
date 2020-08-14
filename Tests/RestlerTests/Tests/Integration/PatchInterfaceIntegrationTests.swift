@@ -8,7 +8,7 @@
 import XCTest
 @testable import Restler
 
-class PatchInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
+final class PatchInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
 
 // MARK: - Void response
 extension PatchInterfaceIntegrationTests {

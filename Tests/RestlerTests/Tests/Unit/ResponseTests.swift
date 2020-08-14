@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class ResponseTests: XCTestCase {}
+final class ResponseTests: XCTestCase {}
 
 // MARK: - Public init
 extension ResponseTests {

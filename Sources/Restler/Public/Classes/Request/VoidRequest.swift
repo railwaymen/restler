@@ -1,7 +1,7 @@
 import Foundation
 
 extension Restler {
-    public class VoidRequest: Request<Void>, RestlerRequestInternal {
+    public final class VoidRequest: Request<Void>, RestlerRequestInternal {
         internal let dependencies: Restler.RequestDependencies
         
         private var successCompletionHandler: ((SuccessfulResponseObject) -> Void)?

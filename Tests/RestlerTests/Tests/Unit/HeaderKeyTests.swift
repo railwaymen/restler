@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class HeaderKeyTests: XCTestCase {}
+final class HeaderKeyTests: XCTestCase {}
 
 // MARK: - rawValue
 extension HeaderKeyTests {

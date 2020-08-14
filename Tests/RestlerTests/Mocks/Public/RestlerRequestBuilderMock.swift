@@ -1,7 +1,7 @@
 import XCTest
 import Restler
 
-class RestlerRequestBuilderMock {
+final class RestlerRequestBuilderMock {
     
     // MARK: - RestlerBasicRequestBuilderType
     private(set) var setInHeaderParams: [SetInHeaderParams] = []
