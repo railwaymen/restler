@@ -1,7 +1,7 @@
 import XCTest
 import Restler
 
-class RestlerStringEncodableTests: XCTestCase {}
+final class RestlerStringEncodableTests: XCTestCase {}
 
 // MARK: - restlerStringValue
 extension RestlerStringEncodableTests {

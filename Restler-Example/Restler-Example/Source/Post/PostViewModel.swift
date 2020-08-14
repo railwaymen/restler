@@ -10,7 +10,7 @@ import Foundation
 import Combine
 import Restler
 
-class PostViewModel: ObservableObject {
+final class PostViewModel: ObservableObject {
     private let restler = Restler(baseURL: URL(string: "https://jsonplaceholder.typicode.com")!)
     
     let objectWillChange = PassthroughSubject<Void, Never>()

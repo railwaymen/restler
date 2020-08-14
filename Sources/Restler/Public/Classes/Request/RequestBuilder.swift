@@ -3,7 +3,7 @@ import Foundation
 typealias QueryParametersType = [URLQueryItem]
 
 extension Restler {
-    public class RequestBuilder {
+    public final class RequestBuilder {
         private let dependencies: Dependencies
         private var form: Form
         

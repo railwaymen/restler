@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class HeadInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
+final class HeadInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
 
 // MARK: - Void response
 extension HeadInterfaceIntegrationTests {

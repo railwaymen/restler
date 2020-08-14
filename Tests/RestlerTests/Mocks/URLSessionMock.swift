@@ -1,7 +1,7 @@
 import Foundation
 @testable import Restler
 
-class URLSessionMock {
+final class URLSessionMock {
     
     // MARK: - URLSessionType
     var dataTaskReturnValue: URLSessionDataTaskMock = URLSessionDataTaskMock()
@@ -24,6 +24,7 @@ extension URLSessionMock: URLSessionType {
         return self.dataTaskReturnValue
     }
     
+    @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func dataTaskPublisher(for request: URLRequest) -> URLSession.DataTaskPublisher {
         self.dataTaskPublisherParams.append(DataTaskPublisherParams(request: request))
         return URLSession.shared.dataTaskPublisher(for: request)

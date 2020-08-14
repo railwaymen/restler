@@ -21,7 +21,7 @@ protocol NetworkingType: class {
     ) -> URLSession.DataTaskPublisher?
 }
 
-class Networking {
+final class Networking {
     private let session: URLSessionType
         
     // MARK: - Initialization

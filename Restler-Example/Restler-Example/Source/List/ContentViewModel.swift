@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 import Restler
 
-class ContentViewModel: ObservableObject {
+final class ContentViewModel: ObservableObject {
     private let restler = Restler(baseURL: URL(string: "https://jsonplaceholder.typicode.com")!)
     
     private var subscriptions: [AnyCancellable] = []

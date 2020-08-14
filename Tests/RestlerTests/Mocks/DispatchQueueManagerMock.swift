@@ -1,7 +1,7 @@
 import Foundation
 @testable import Restler
 
-class DispatchQueueManagerMock {
+final class DispatchQueueManagerMock {
     
     // MARK: - DispatchQueueManagerType
     private(set) var performParams: [PerformParams] = []

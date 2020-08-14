@@ -1,7 +1,7 @@
 import Foundation
 
 extension Restler {
-    public class DecodableRequest<D: Decodable>: Request<D>, RestlerRequestInternal {
+    public final class DecodableRequest<D: Decodable>: Request<D>, RestlerRequestInternal {
         internal let dependencies: Restler.RequestDependencies
         
         private var successCompletionHandler: ((D) -> Void)?

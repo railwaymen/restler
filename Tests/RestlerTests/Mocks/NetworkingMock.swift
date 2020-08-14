@@ -1,7 +1,7 @@
 import Foundation
 @testable import Restler
 
-class NetworkingMock {
+final class NetworkingMock {
     
     // MARK: - NetworkingType
     var makeRequestReturnValue: Restler.Task?

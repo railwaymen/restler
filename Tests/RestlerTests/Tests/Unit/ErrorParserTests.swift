@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class ErrorParserTests: XCTestCase {}
+final class ErrorParserTests: XCTestCase {}
 
 // MARK: - parse(_:)
 extension ErrorParserTests {

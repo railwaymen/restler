@@ -1,6 +1,6 @@
 import Foundation
 
-class TestError: Error {}
+final class TestError: Error {}
 
 // MARK: - Equatable
 extension TestError: Equatable {

@@ -1,7 +1,7 @@
 import Foundation
 
 extension Restler {
-    public class MultipartEncoder: RestlerMultipartEncoderType {
+    public final class MultipartEncoder: RestlerMultipartEncoderType {
         internal static let lineBreak = "\r\n"
         
         private var containers: [RestlerMultipartSectionsType] = []

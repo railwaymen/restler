@@ -1,7 +1,7 @@
 import Foundation
 
 extension Restler.MultipartEncoder {
-    public class Container<Key: CodingKey>: RestlerMultipartContainerType {
+    public final class Container<Key: CodingKey>: RestlerMultipartContainerType {
         internal var sections: [Restler.MultipartSection] = []
         
         // MARK: - Public

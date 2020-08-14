@@ -1,7 +1,7 @@
 import Foundation
 import Restler
 
-class ThrowingObject: Codable, RestlerQueryEncodable, RestlerMultipartEncodable {
+final class ThrowingObject: Codable, RestlerQueryEncodable, RestlerMultipartEncodable {
     var thrownError: Error = TestError()
     
     init() {}

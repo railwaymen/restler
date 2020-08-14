@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class ErrorTests: XCTestCase {}
+final class ErrorTests: XCTestCase {}
 
 // MARK: - Equatable
 extension ErrorTests {

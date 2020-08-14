@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class ErrorsTypeTests: XCTestCase {
+final class ErrorsTypeTests: XCTestCase {
     private var response: HTTPURLResponseMock!
     
     override func setUp() {

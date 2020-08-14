@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class CustomJSONSerializationMock {
+final class CustomJSONSerializationMock {
     
     // MARK: - JSONSerializationType
     var jsonObjectThrownError: Error?

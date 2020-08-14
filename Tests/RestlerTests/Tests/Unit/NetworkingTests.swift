@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class NetworkingTests: XCTestCase {
+final class NetworkingTests: XCTestCase {
     private var session: URLSessionMock!
     
     private var cacheModification: (inout URLRequest) -> Void = { request in

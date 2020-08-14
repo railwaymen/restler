@@ -1,7 +1,7 @@
 import Foundation
 @testable import Restler
 
-class URLSessionDataTaskMock {
+final class URLSessionDataTaskMock {
     
     // MARK: - URLSessionDataTaskType
     var taskIdentifierReturnValue: Int = 0

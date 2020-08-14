@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class TaskTests: XCTestCase {
+final class TaskTests: XCTestCase {
     private var task: URLSessionDataTaskMock!
     
     override func setUp() {
