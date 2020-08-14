@@ -30,13 +30,16 @@ jobs:
           brew install gettext
           brew link --force gettext
 
+      - name: Install mint
+        run: brew install mint
+
       - name: Set up config files
         run: envsubst < Restler-Example/Configuration/env_debug.xcconfig.tpl > Restler-Example/Configuration/Debug.xcconfig
         working-directory: ${{ env.working-directory }}
         shell: bash
 
-      - name: Install dependencies
-        run: pod install || pod install --repo-update
+      - name: Install mint dependencies
+        run: mint bootstrap
         working-directory: ${{ env.working-directory }}
 
       - name: Clean
