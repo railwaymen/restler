@@ -40,7 +40,6 @@ jobs:
 
       - name: Install mint dependencies
         run: mint bootstrap
-        working-directory: ${{ env.working-directory }}
 
       - name: Clean
         run: xcodebuild clean | xcpretty
@@ -48,6 +47,6 @@ jobs:
         shell: bash
 
       - name: Build
-        run: xcodebuild build -scheme Restler-Example -workspace Restler-Example.xcworkspace | xcpretty --color
+        run: xcodebuild build -scheme Restler-Example -project Restler-Example.xcodeproj | xcpretty --color
         working-directory: ${{ env.working-directory }}
         shell: bash
