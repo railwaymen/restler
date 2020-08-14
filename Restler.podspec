@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.license = { :type => 'MIT', :file => 'LICENSE'}
   s.author = { 'Bartłomiej Świerad' => 'bartlomiej.swierad@railwaymen.org' }
   s.source = { :git => 'https://github.com/railwaymen/restler.git', :tag => s.version.to_s }
-  s.ios.deployment_target = '11.4'
+  s.ios.deployment_target = '9.0'
   s.source_files = 'Sources/**/*'
   s.swift_versions = '5.2'
 end
