@@ -30,14 +30,16 @@ jobs:
           brew install gettext
           brew link --force gettext
 
+      - name: Install mint
+        run: brew install mint
+
       - name: Set up config files
         run: envsubst < Restler-Example/Configuration/env_debug.xcconfig.tpl > Restler-Example/Configuration/Debug.xcconfig
         working-directory: ${{ env.working-directory }}
         shell: bash
 
-      - name: Install dependencies
-        run: pod install || pod install --repo-update
-        working-directory: ${{ env.working-directory }}
+      - name: Install mint dependencies
+        run: mint bootstrap
 
       - name: Clean
         run: xcodebuild clean | xcpretty
@@ -45,6 +47,6 @@ jobs:
         shell: bash
 
       - name: Build
-        run: xcodebuild build -scheme Restler-Example -workspace Restler-Example.xcworkspace | xcpretty --color
+        run: xcodebuild build -scheme Restler-Example -project Restler-Example.xcodeproj | xcpretty --color
         working-directory: ${{ env.working-directory }}
         shell: bash

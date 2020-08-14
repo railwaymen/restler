@@ -163,7 +163,7 @@ Restler(baseURL: myBaseURL)
 2. Encodes the object and puts it into the body of the request. Ignored if the selected request method doesn't support it.
 3. A handler called if the request has failed.
 
-#### Combine + Restler 
+#### Combine + Restler
 
 ```swift
 Restler(baseURL: myBaseURL)
@@ -184,7 +184,7 @@ Restler(baseURL: myBaseURL)
 4. Specifies the scheduler on which to receive elements from the publisher. In this case main queue.
 5. Get Data object from `DataTaskPublisher`.
 6. Decodes Profile object.
-7. Handle error 
+7. Handle error
 8. Assigns each element from a Publisher to a property on an object.
 9. Stores this type-erasing cancellable instance in the specified collection.
 
@@ -199,6 +199,14 @@ If you want to contribute in this framework, simply put your pull request here.
 If you have found any bug, file it in the issues.
 
 If you would like Restler to do something else, create an issue for feature request.
+
+### Configuration
+
+1. Clone the project and open the project's folder in terminal.
+2. Run a configuration script: `./Scripts/configure.sh`
+3. Fill configuration file in folder `Restler-Example/Restler-Example/Configuration` named `Debug.xcconfig` with needed information.
+4. Open the project in the folder `Restler-Example`. You can do it from terminal: `open Restler-Example/Restler-Example.xcodeproj`
+5. Run tests to be sure everything works properly.
 
 ### Dependencies
 
