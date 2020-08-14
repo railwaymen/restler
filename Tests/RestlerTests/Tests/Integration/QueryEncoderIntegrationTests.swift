@@ -68,7 +68,11 @@ extension QueryEncoderIntegrationTests {
     func testEncoding_dateObject_iso8601Format() throws {
         //Arrange
         let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
+        if #available(OSX 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {
+            encoder.dateEncodingStrategy = .iso8601
+        } else {
+            try XCTSkipIf(true, "Test on newer OS!")
+        }
         let sut = Restler.QueryEncoder(jsonEncoder: encoder)
         let date = try self.buildDate(year: 2019, month: 02, day: 27, hour: 18, minute: 07, second: 34)
         let expectedDate = "2019-02-27T18:07:34Z"

@@ -78,12 +78,14 @@ public protocol RestlerBasicRequestBuilderType: class {
     ///
     func decode(_ type: Void.Type) -> Restler.Request<Void>
     
+    #if canImport(Combine)
     /// Builds a request and returns publisher for Combine support.
     ///
     /// - Returns: DataTaskPublisher for support of Combine using. Nil if framework's internal error has occured.
     ///
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func publisher() -> URLSession.DataTaskPublisher?
+    #endif
 }
 
 // MARK: - RestlerQueryRequestBuilderType

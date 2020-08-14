@@ -1,5 +1,7 @@
 import Foundation
+#if canImport(Combine)
 import Combine
+#endif
 
 typealias DataResult = Result<Data?, Error>
 typealias DataCompletion = (DataResult) -> Void
@@ -12,6 +14,7 @@ protocol NetworkingType: class {
         customRequestModification: ((inout URLRequest) -> Void)?,
         completion: @escaping DataCompletion) -> Restler.Task?
     
+    #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func getPublisher(
         url: URL,
@@ -19,6 +22,7 @@ protocol NetworkingType: class {
         header: Restler.Header,
         customRequestModification: ((inout URLRequest) -> Void)?
     ) -> URLSession.DataTaskPublisher?
+    #endif
 }
 
 final class Networking {
@@ -50,6 +54,7 @@ extension Networking: NetworkingType {
         return Restler.Task(task: self.runDataTask(request: request, completion: completion))
     }
     
+    #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func getPublisher(
         url: URL,
@@ -66,6 +71,7 @@ extension Networking: NetworkingType {
         customRequestModification?(&request)
         return self.session.dataTaskPublisher(for: request)
     }
+    #endif
 }
 
 // MARK: - Private

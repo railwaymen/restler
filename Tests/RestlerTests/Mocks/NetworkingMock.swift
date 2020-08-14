@@ -41,6 +41,7 @@ extension NetworkingMock: NetworkingType {
         return self.makeRequestReturnValue
     }
     
+    #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     public func getPublisher(
         url: URL,
@@ -55,4 +56,5 @@ extension NetworkingMock: NetworkingType {
             customRequestModification: customRequestModification))
         return nil
     }
+    #endif
 }
