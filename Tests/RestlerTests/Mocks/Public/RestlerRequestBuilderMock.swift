@@ -51,7 +51,9 @@ final class RestlerRequestBuilderMock {
     
     // MARK: - Internal
     func callCompletion<T>(type: T.Type, result: Result<T, Error>) throws {
-        guard let request = self.decodeReturnedMocks.last as? RestlerRequestMock<T> else { throw "Decode hasn't return value with a specified type." }
+        guard let request = self.decodeReturnedMocks.last as? RestlerRequestMock<T> else {
+            throw "Decode hasn't return value with a specified type."
+        }
         var isCalledAnything = false
         switch result {
         case let .success(object):

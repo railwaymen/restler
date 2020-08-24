@@ -58,8 +58,10 @@ extension Restler {
 
 // MARK: - Private
 extension Restler.OptionalDecodableRequest {
-    private func responseHandlerClosure<D>(completion: @escaping Restler.DecodableCompletion<D?>) -> (DataResult) -> Void where D: Decodable {
-        return { [decoder, errorParser] result in
+    private func responseHandlerClosure<D>(
+        completion: @escaping Restler.DecodableCompletion<D?>
+    ) -> (DataResult) -> Void where D: Decodable {
+        { [decoder, errorParser] result in
             switch result {
             case let .success(optionalData):
                 var object: D?

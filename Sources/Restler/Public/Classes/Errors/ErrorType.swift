@@ -25,7 +25,8 @@ extension Restler {
             case .forbidden:
                 return "\(Self.prefix) The request is has been forbidden. You have no access to the accessed."
             case .internalFrameworkError:
-                return "\(Self.prefix) Some unexpected error in the framework have occured. Please let know to the creators about the case."
+                return "\(Self.prefix) Some unexpected error in the framework have occured. "
+                + "Please let know to the creators about the case."
             case .invalidParameters:
                 return "\(Self.prefix) Parameters cannot be parsed."
             case .invalidResponse:

@@ -31,7 +31,9 @@ extension Restler.QueryEncoder {
         
         public func encode(_ value: [String: RestlerStringEncodable]?, forKey key: Key) throws {
             if let dictionary = value {
-                let queries: [(String, String)] = dictionary.map { (key.stringValue + "[\($0.key)]", $0.value.restlerStringValue) }
+                let queries: [(String, String)] = dictionary.map {
+                    (key.stringValue + "[\($0.key)]", $0.value.restlerStringValue)
+                }
                 self.tuples.append(contentsOf: queries)
             } else {
                 self.removeAll(for: key)

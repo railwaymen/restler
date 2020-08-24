@@ -66,7 +66,10 @@ extension PostInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     func testPostVoid_buildingRequest_encodingMultipart() throws {
@@ -134,7 +137,10 @@ extension PostInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     // MARK: Decoding success
@@ -229,7 +235,10 @@ extension PostInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     // MARK: Decoding success
@@ -349,7 +358,10 @@ extension PostInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     // MARK: Decoding success

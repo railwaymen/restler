@@ -64,7 +64,10 @@ extension PutInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     // MARK: Decoding success
@@ -159,7 +162,10 @@ extension PutInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     // MARK: Decoding success
@@ -279,7 +285,10 @@ extension PutInterfaceIntegrationTests {
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(expected: expectedError, returnedError: returnedError, completionResult: completionResult)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError,
+            completionResult: completionResult)
     }
     
     // MARK: Decoding success
