@@ -9,6 +9,7 @@ typealias DataCompletion = (DataResult) -> Void
 protocol NetworkingType: class {
     func makeRequest(
         urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging,
         completion: @escaping DataCompletion) -> Restler.Task
     
     func buildRequest(
@@ -36,9 +37,13 @@ final class Networking {
 extension Networking: NetworkingType {
     func makeRequest(
         urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging,
         completion: @escaping DataCompletion
     ) -> Restler.Task {
-        Restler.Task(task: self.runDataTask(request: urlRequest, completion: completion))
+        Restler.Task(task: self.runDataTask(
+            request: urlRequest,
+            eventLogger: eventLogger,
+            completion: completion))
     }
     
     func buildRequest(
@@ -78,8 +83,23 @@ extension Networking {
         return request
     }
     
-    private func runDataTask(request: URLRequest, completion: @escaping DataCompletion) -> URLSessionDataTaskType {
+    private func runDataTask(
+        request: URLRequest,
+        eventLogger: EventLoggerLogging,
+        completion: @escaping DataCompletion
+    ) -> URLSessionDataTaskType {
+        let startTime: DispatchTime = .now()
         let task = self.session.dataTask(with: request) { response in
+            let elapsedTime: DispatchTimeInterval
+            if #available(OSX 10.15, *) {
+                elapsedTime = startTime.distance(to: .now())
+            } else {
+                elapsedTime = .nanoseconds(Int(DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds))
+            }
+            eventLogger.log(.requestCompleted(
+                request: request,
+                response: response,
+                elapsedTime: elapsedTime.toMilliseconds()))
             self.handleResponse(response: response, completion: completion)
         }
         task.resume()

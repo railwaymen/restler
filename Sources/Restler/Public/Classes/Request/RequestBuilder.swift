@@ -31,6 +31,7 @@ extension Restler.RequestBuilder {
         let queryEncoder: RestlerQueryEncoderType
         let multipartEncoder: RestlerMultipartEncoderType
         let dispatchQueueManager: DispatchQueueManagerType
+        let eventLogger: EventLoggerLogging
         let method: HTTPMethod
     }
     
