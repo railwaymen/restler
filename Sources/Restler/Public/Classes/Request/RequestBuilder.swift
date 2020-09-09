@@ -62,7 +62,10 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
     }
     
     public func decode(_ type: Void.Type) -> Restler.Request<Void> {
-        Restler.VoidRequest(dependencies: .init(dependencies: self.dependencies, form: self.form))
+        Restler.VoidRequest(dependencies: .init(
+            dependencies: self.dependencies,
+            form: self.form,
+            urlRequest: self.urlRequest()))
     }
     
     public func urlRequest() -> URLRequest? {
@@ -76,11 +79,7 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     public func publisher() -> URLSession.DataTaskPublisher? {
-        self.dependencies.networking.getPublisher(
-            url: self.dependencies.url,
-            method: self.dependencies.method.combinedWith(query: self.form.query, body: self.form.body),
-            header: self.form.header,
-            customRequestModification: self.form.customRequestModification)
+        self.dependencies.networking.getPublisher(urlRequest: self.urlRequest())
     }
     #endif
 }
@@ -131,10 +130,16 @@ extension Restler.RequestBuilder: RestlerMultipartRequestBuilderType {
 // MARK: - RestlerDecodableResponseRequestBuilderType
 extension Restler.RequestBuilder: RestlerDecodableResponseRequestBuilderType {
     public func decode<T>(_ type: T?.Type) -> Restler.Request<T?> where T: Decodable {
-        Restler.OptionalDecodableRequest<T>(dependencies: .init(dependencies: self.dependencies, form: self.form))
+        Restler.OptionalDecodableRequest<T>(dependencies: .init(
+            dependencies: self.dependencies,
+            form: self.form,
+            urlRequest: self.urlRequest()))
     }
     
     public func decode<T>(_ type: T.Type) -> Restler.Request<T> where T: Decodable {
-        Restler.DecodableRequest<T>(dependencies: .init(dependencies: self.dependencies, form: self.form))
+        Restler.DecodableRequest<T>(dependencies: .init(
+            dependencies: self.dependencies,
+            form: self.form,
+            urlRequest: self.urlRequest()))
     }
 }

@@ -85,9 +85,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .patch(content: nil))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -105,9 +103,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .patch(content: data))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -203,9 +199,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .patch(content: data))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -326,9 +320,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .patch(content: data))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     

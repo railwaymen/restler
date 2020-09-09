@@ -60,6 +60,30 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
         XCTAssertEqual(requestParams.header[.contentType], "application/x-www-form-urlencoded")
     }
+    
+    func testURLRequestBuilding_encodingDictionaryQuery() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let header = ["id": "1", "name": "name", "double": "1.23"]
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut.get(self.endpoint)
+            .query(header)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        guard case let .get(query) = requestParams.method else { return XCTFail() }
+        XCTAssertEqual(query.count, header.count)
+        [("id", "1"), ("name", "name"), ("double", "1.23")]
+            .toQueryItems()
+            .forEach {
+                XCTAssert(query.contains($0), "Query doesn't contain: $0")
+        }
+    }
 }
 
 // MARK: - Void response
@@ -75,10 +99,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertNil(requestParams.header[.contentType])
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -93,10 +114,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertNil(requestParams.header[.contentType])
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -112,10 +130,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -131,10 +146,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
-        XCTAssertEqual(requestParams.header[.contentType], "application/x-www-form-urlencoded")
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -179,13 +191,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        guard case let .get(query) = requestParams.method else { return XCTFail() }
-        XCTAssertEqual(query.count, header.count)
-        [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems().forEach {
-            XCTAssert(query.contains($0), "Query doesn't contain: $0")
-        }
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -323,10 +329,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -342,9 +345,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -535,10 +536,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -554,9 +552,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -752,9 +748,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -770,10 +764,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -789,9 +780,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -909,9 +898,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -927,10 +914,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -946,9 +930,7 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     

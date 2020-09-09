@@ -55,10 +55,8 @@ extension DeleteInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         // Assert
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .delete)
         XCTAssertNil(completionResult)
     }
     
@@ -122,10 +120,8 @@ extension DeleteInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         // Assert
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .delete)
         XCTAssertNil(completionResult)
     }
     
@@ -214,10 +210,8 @@ extension DeleteInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         // Assert
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .delete)
         XCTAssertNil(completionResult)
     }
     

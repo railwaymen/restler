@@ -120,10 +120,7 @@ extension PostInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .post(content: nil))
-        XCTAssertNil(requestParams.header[.contentType])
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -141,10 +138,7 @@ extension PostInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .post(content: data))
-        XCTAssertEqual(requestParams.header[.contentType], "application/json")
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -212,10 +206,7 @@ extension PostInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .post(content: data))
-        XCTAssertEqual(requestParams.header[.contentType], "multipart/form-data; charset=utf-8; boundary=boundary")
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -311,9 +302,7 @@ extension PostInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .post(content: data))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
@@ -434,9 +423,7 @@ extension PostInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .post(content: data))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
