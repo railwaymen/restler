@@ -78,6 +78,13 @@ public protocol RestlerBasicRequestBuilderType: class {
     ///
     func decode(_ type: Void.Type) -> Restler.Request<Void>
     
+    /// Builds a URLRequest instance and returns it.
+    ///
+    /// - Returns: A URLRequest instance basing on provided data.
+    /// Returns nil if internal framework have occured - this is to don't crash your app because of our issue
+    ///
+    func urlRequest() -> URLRequest?
+    
     #if canImport(Combine)
     /// Builds a request and returns publisher for Combine support.
     ///

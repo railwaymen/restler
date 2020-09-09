@@ -1,7 +1,69 @@
 import XCTest
 @testable import Restler
 
+// swiftlint:disable file_length
 final class PutInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
+
+// MARK: - URLRequest building
+extension PutInterfaceIntegrationTests {
+    func testURLRequestBuilding_withoutBody() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .put(self.endpoint)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .put(content: nil))
+        XCTAssertNil(requestParams.header[.contentType])
+    }
+    
+    func testURLRequestBuilding_withoutBody_customHeader() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .put(self.endpoint)
+            .setInHeader("hello darkness", forKey: .contentType)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .put(content: nil))
+        XCTAssertEqual(requestParams.header[.contentType], "hello darkness")
+    }
+    
+    func testURLRequestBuilding_encodingBody() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let object = SomeObject(id: 1, name: "name", double: 1.23)
+        let data = try JSONEncoder().encode(object)
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .put(self.endpoint)
+            .body(object)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .put(content: data))
+        XCTAssertEqual(requestParams.header[.contentType], "application/json")
+    }
+}
 
 // MARK: - Void response
 extension PutInterfaceIntegrationTests {

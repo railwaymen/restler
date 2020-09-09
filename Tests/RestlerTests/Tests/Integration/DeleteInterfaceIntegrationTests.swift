@@ -3,6 +3,46 @@ import XCTest
 
 final class DeleteInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
 
+// MARK: - URLRequest building
+extension DeleteInterfaceIntegrationTests {
+    func testURLRequestBuilding() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .delete(self.endpoint)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .delete)
+        XCTAssertNil(requestParams.header[.contentType])
+    }
+    
+    func testURLRequestBuilding_customHeader() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .delete(self.endpoint)
+            .setInHeader("hello darkness", forKey: .contentType)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .delete)
+        XCTAssertEqual(requestParams.header[.contentType], "hello darkness")
+    }
+}
+
 // MARK: - Void response
 extension DeleteInterfaceIntegrationTests {
     func testDeleteVoid_buildingRequest() throws {

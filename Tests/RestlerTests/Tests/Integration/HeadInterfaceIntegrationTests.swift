@@ -3,6 +3,26 @@ import XCTest
 
 final class HeadInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
 
+// MARK: - URLRequest building
+extension HeadInterfaceIntegrationTests {
+    func testURLRequestBuilding() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .head(self.endpoint)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .head)
+    }
+}
+
 // MARK: - Void response
 extension HeadInterfaceIntegrationTests {
     func testHead_buildingRequest() throws {

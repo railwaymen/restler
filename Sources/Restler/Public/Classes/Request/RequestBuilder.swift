@@ -65,6 +65,14 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
         Restler.VoidRequest(dependencies: .init(dependencies: self.dependencies, form: self.form))
     }
     
+    public func urlRequest() -> URLRequest? {
+        self.dependencies.networking.buildRequest(
+            url: self.dependencies.url,
+            method: self.dependencies.method.combinedWith(query: self.form.query, body: self.form.body),
+            header: self.form.header,
+            customRequestModification: self.form.customRequestModification)
+    }
+    
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     public func publisher() -> URLSession.DataTaskPublisher? {

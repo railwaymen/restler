@@ -1,6 +1,7 @@
 import XCTest
 @testable import Restler
 
+// swiftlint:disable file_length
 final class NetworkingTests: XCTestCase {
     private var session: URLSessionMock!
     
@@ -15,7 +16,7 @@ final class NetworkingTests: XCTestCase {
     }
 }
 
-// MARK: - makeRequest(url:method:completion:)
+// MARK: - makeRequest(url:method:customRequestModification:completion:)
 extension NetworkingTests {
     func testMakeRequest_get_makesProperRequest() throws {
         //Arrange
@@ -287,9 +288,126 @@ extension NetworkingTests {
     }
 }
 
+// MARK: - buildRequest(url:method:customRequestModification:)
+extension NetworkingTests {
+    func testBuildRequest_get_makesProperRequest() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let queryParameters = ["some": "key", "another": "key1"].map { URLQueryItem(name: $0, value: $1) }
+        let header = ["key1": "value1", "key2": "value2"]
+        // Act
+        let request = sut.buildRequest(
+            url: url,
+            method: .get(query: queryParameters),
+            header: Restler.Header(raw: header),
+            customRequestModification: self.cacheModification)
+        // Assert
+        let unwrappedRequest = try XCTUnwrap(request)
+        let requestURL = unwrappedRequest.url
+        XCTAssertTrue(try XCTUnwrap(requestURL?.query?.contains("some=key")))
+        XCTAssertTrue(try XCTUnwrap(requestURL?.query?.contains("another=key1")))
+        XCTAssertTrue(try XCTUnwrap(requestURL?.absoluteString.starts(with: "https://www.example.com")))
+        XCTAssertEqual(unwrappedRequest.httpMethod, "GET")
+        XCTAssertNil(unwrappedRequest.httpBody)
+        XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
+        XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
+    }
+    
+    func testBuildRequest_post_makesProperRequest() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = Data()
+        let header = ["key1": "value1", "key2": "value2"]
+        // Act
+        let request = sut.buildRequest(
+            url: url,
+            method: .post(content: content),
+            header: Restler.Header(raw: header),
+            customRequestModification: self.cacheModification)
+        // Assert
+        let unwrappedRequest = try XCTUnwrap(request)
+        let requestURL = try XCTUnwrap(unwrappedRequest.url)
+        XCTAssertNil(requestURL.query)
+        XCTAssertTrue(requestURL.absoluteString.starts(with: "https://www.example.com"))
+        XCTAssertEqual(unwrappedRequest.httpMethod, "POST")
+        XCTAssertEqual(unwrappedRequest.httpBody, content)
+        XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
+        XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
+    }
+
+    func testBuildRequest_put_makesProperRequest() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let content = Data()
+        let header = ["key1": "value1", "key2": "value2"]
+        // Act
+        let request = sut.buildRequest(
+            url: url,
+            method: .put(content: content),
+            header: Restler.Header(raw: header),
+            customRequestModification: self.cacheModification)
+        // Assert
+        let unwrappedRequest = try XCTUnwrap(request)
+        let requestURL = try XCTUnwrap(unwrappedRequest.url)
+        XCTAssertNil(requestURL.query)
+        XCTAssertTrue(requestURL.absoluteString.starts(with: "https://www.example.com"))
+        XCTAssertEqual(unwrappedRequest.httpMethod, "PUT")
+        XCTAssertEqual(unwrappedRequest.httpBody, content)
+        XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
+        XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
+    }
+
+    func testBuildRequest_delete_makesProperRequest() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let header = ["key1": "value1", "key2": "value2"]
+        // Act
+        let request = sut.buildRequest(
+            url: url,
+            method: .delete,
+            header: Restler.Header(raw: header),
+            customRequestModification: self.cacheModification)
+        // Assert
+        let unwrappedRequest = try XCTUnwrap(request)
+        let requestURL = try XCTUnwrap(unwrappedRequest.url)
+        XCTAssertNil(requestURL.query)
+        XCTAssertTrue(requestURL.absoluteString.starts(with: "https://www.example.com"))
+        XCTAssertEqual(unwrappedRequest.httpMethod, "DELETE")
+        XCTAssertNil(unwrappedRequest.httpBody)
+        XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
+        XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
+    }
+
+    func testBuildRequest_head_makesProperRequest() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let header = ["key1": "value1", "key2": "value2"]
+        // Act
+        let request = sut.buildRequest(
+            url: url,
+            method: .head,
+            header: Restler.Header(raw: header),
+            customRequestModification: self.cacheModification)
+        // Assert
+        let unwrappedRequest = try XCTUnwrap(request)
+        let requestURL = try XCTUnwrap(unwrappedRequest.url)
+        XCTAssertNil(requestURL.query)
+        XCTAssertTrue(requestURL.absoluteString.starts(with: "https://www.example.com"))
+        XCTAssertEqual(unwrappedRequest.httpMethod, "HEAD")
+        XCTAssertNil(unwrappedRequest.httpBody)
+        XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
+        XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
+    }
+}
+
 // MARK: - Private
 extension NetworkingTests {
     private func buildSUT() -> Networking {
-        return Networking(session: self.session)
+        Networking(session: self.session)
     }
 }

@@ -20,6 +20,10 @@ final class RestlerRequestBuilderMock {
         let modification: ((inout URLRequest) -> Void)?
     }
     
+    var urlRequestReturnValue: URLRequest?
+    private(set) var urlRequestParams: [URLRequestParams] = []
+    struct URLRequestParams {}
+    
     private(set) var publisherParams: [PublisherParams] = []
     struct PublisherParams {}
     
@@ -95,6 +99,11 @@ extension RestlerRequestBuilderMock: RestlerBasicRequestBuilderType {
         let mock = RestlerRequestMock<Void>()
         self.decodeReturnedMocks.append(mock)
         return mock
+    }
+    
+    func urlRequest() -> URLRequest? {
+        self.urlRequestParams.append(URLRequestParams())
+        return self.urlRequestReturnValue
     }
     
     #if canImport(Combine)
