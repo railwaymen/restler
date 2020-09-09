@@ -8,82 +8,82 @@ extension ErrorTests {
     
     // MARK: common
     func testEquatable_common_differentEquatableErrors() {
-        //Arrange
+        // Arrange
         let sut1 = Restler.Error.common(type: .unknownError, base: TestError())
         let sut2 = Restler.Error.common(type: .unknownError, base: TestError())
-        //Assert
+        // Assert
         XCTAssertEqual(sut1, sut2)
     }
     
     func testEquatable_common_differentTypes() {
-        //Arrange
+        // Arrange
         let base = TestError()
         let sut1 = Restler.Error.common(type: .unknownError, base: base)
         let sut2 = Restler.Error.common(type: .internalFrameworkError, base: base)
-        //Assert
+        // Assert
         XCTAssertNotEqual(sut1, sut2)
     }
     
     // MARK: request
     func testEquatable_request_same() {
-        //Arrange
+        // Arrange
         let response = Restler.Response(data: Data(), response: nil, error: TestError())
         let sut1 = Restler.Error.request(type: .unknownError, response: response)
         let sut2 = Restler.Error.request(type: .unknownError, response: response)
-        //Assert
+        // Assert
         XCTAssertEqual(sut1, sut2)
     }
     
     func testEquatable_request_differentResponse() {
-        //Arrange
+        // Arrange
         let sut1 = Restler.Error.request(
             type: .unknownError,
             response: Restler.Response(data: Data(), response: nil, error: TestError()))
         let sut2 = Restler.Error.request(
             type: .unknownError,
             response: Restler.Response(data: nil, response: nil, error: TestError()))
-        //Assert
+        // Assert
         XCTAssertNotEqual(sut1, sut2)
     }
     
     func testEquatable_request_differentType() {
-        //Arrange
+        // Arrange
         let response = Restler.Response(data: Data(), response: nil, error: TestError())
         let sut1 = Restler.Error.request(type: .internalFrameworkError, response: response)
         let sut2 = Restler.Error.request(type: .unknownError, response: response)
-        //Assert
+        // Assert
         XCTAssertNotEqual(sut1, sut2)
     }
     
     // MARK: multiple
     func testEquatable_multiple_same() {
-        //Arrange
+        // Arrange
         let response = Restler.Response(data: Data(), response: nil, error: TestError())
         let error1 = Restler.Error.request(type: .unknownError, response: response)
         let error2 = Restler.Error.common(type: .unknownError, base: TestError())
         let sut1 = Restler.Error.multiple([error1, error2])
         let sut2 = Restler.Error.multiple([error1, error2])
-        //Assert
+        // Assert
         XCTAssertEqual(sut1, sut2)
     }
     
     func testEquatable_multiple_different() {
-        //Arrange
+        // Arrange
         let response = Restler.Response(data: Data(), response: nil, error: TestError())
         let error1 = Restler.Error.request(type: .unknownError, response: response)
         let error2 = Restler.Error.common(type: .unknownError, base: TestError())
         let sut1 = Restler.Error.multiple([error1, error2])
         let sut2 = Restler.Error.multiple([error1])
-        //Assert
+        // Assert
         XCTAssertNotEqual(sut1, sut2)
     }
     
     // MARK: Different cases
     func testEquatable_different_requestAndCommon() {
-        //Arrange
+        // Arrange
         let sut1 = Restler.Error.request(type: .unknownError, response: .init(data: nil, response: nil, error: nil))
         let sut2 = Restler.Error.common(type: .unknownError, base: TestError())
-        //Assert
+        // Assert
         XCTAssertNotEqual(sut1, sut2)
     }
 }

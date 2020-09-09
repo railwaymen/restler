@@ -75,15 +75,15 @@ extension PatchInterfaceIntegrationTests {
 // MARK: - Void response
 extension PatchInterfaceIntegrationTests {
     func testPatchVoid_buildingRequest() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
@@ -92,18 +92,18 @@ extension PatchInterfaceIntegrationTests {
     }
     
     func testPatchVoid_buildingRequest_encodingBody() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         let object = SomeObject(id: 1, name: "name", double: 1.23)
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.VoidResult?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .body(object)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
@@ -112,7 +112,7 @@ extension PatchInterfaceIntegrationTests {
     }
     
     func testPatchVoid_buildingRequest_encodingBodyFails() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         let object = ThrowingObject()
         let expectedError = TestError()
@@ -120,7 +120,7 @@ extension PatchInterfaceIntegrationTests {
         var returnedError: Error?
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .body(object)
             .decode(Void.self)
@@ -129,7 +129,7 @@ extension PatchInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
@@ -141,12 +141,12 @@ extension PatchInterfaceIntegrationTests {
     
     // MARK: Decoding success
     func testPatchVoid_success_nil() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         var returnedError: Error?
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
@@ -155,7 +155,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertNil(returnedError)
@@ -164,12 +164,12 @@ extension PatchInterfaceIntegrationTests {
     }
     
     func testPatchVoid_success_emptyData() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         var returnedError: Error?
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
@@ -178,7 +178,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertNil(returnedError)
@@ -190,18 +190,18 @@ extension PatchInterfaceIntegrationTests {
 // MARK: - Optional decodable response
 extension PatchInterfaceIntegrationTests {
     func testPatchOptionalDecodable_buildingRequest_encodingBody() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         let object = SomeObject(id: 1, name: "name", double: 1.23)
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject?>?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .body(object)
             .decode(SomeObject?.self)
             .onCompletion({ completionResult = $0 })
             .start()
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
@@ -210,7 +210,7 @@ extension PatchInterfaceIntegrationTests {
     }
     
     func testPatchOptionalDecodable_buildingRequest_encodingBodyFails() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         let object = ThrowingObject()
         let expectedError = TestError()
@@ -218,7 +218,7 @@ extension PatchInterfaceIntegrationTests {
         var returnedError: Error?
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .body(object)
             .decode(SomeObject?.self)
@@ -227,7 +227,7 @@ extension PatchInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
@@ -239,12 +239,12 @@ extension PatchInterfaceIntegrationTests {
     
     // MARK: Decoding success
     func testPatchOptionalDecodable_success_nil() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         var returnedError: Error?
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
@@ -253,7 +253,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertNil(returnedError)
@@ -262,12 +262,12 @@ extension PatchInterfaceIntegrationTests {
     }
     
     func testPatchOptionalDecodable_success_emptyData() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         var returnedError: Error?
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
@@ -276,7 +276,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertNil(returnedError)
@@ -285,14 +285,14 @@ extension PatchInterfaceIntegrationTests {
     }
     
     func testPatchOptionalDecodable_success_properData() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
         let data = try JSONEncoder().encode(expectedObject)
         var returnedError: Error?
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject?>?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .decode(SomeObject?.self)
             .onFailure({ returnedError = $0 })
@@ -301,7 +301,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertNil(returnedError)
@@ -313,18 +313,18 @@ extension PatchInterfaceIntegrationTests {
 // MARK: - Decodable response
 extension PatchInterfaceIntegrationTests {
     func testPatchDecodable_buildingRequest_encodingBody() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         let object = SomeObject(id: 1, name: "name", double: 1.23)
         let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject>?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .body(object)
             .decode(SomeObject.self)
             .onCompletion({ completionResult = $0 })
             .start()
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
@@ -333,7 +333,7 @@ extension PatchInterfaceIntegrationTests {
     }
     
     func testPatchDecodable_buildingRequest_encodingBodyFails() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         let object = ThrowingObject()
         let expectedError = TestError()
@@ -341,7 +341,7 @@ extension PatchInterfaceIntegrationTests {
         var returnedError: Error?
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .body(object)
             .decode(SomeObject.self)
@@ -350,7 +350,7 @@ extension PatchInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 0)
         XCTAssertNil(decodedObject)
@@ -362,12 +362,12 @@ extension PatchInterfaceIntegrationTests {
     
     // MARK: Decoding success
     func testPatchDecodable_success_nil() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         var returnedError: Error?
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
@@ -376,7 +376,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertNil(decodedObject)
@@ -388,12 +388,12 @@ extension PatchInterfaceIntegrationTests {
     }
     
     func testPatchDecodable_success_emptyData() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         var returnedError: Error?
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
@@ -402,7 +402,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertNil(decodedObject)
@@ -414,14 +414,14 @@ extension PatchInterfaceIntegrationTests {
     }
     
     func testPatchDecodable_success_properData() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
         let data = try JSONEncoder().encode(expectedObject)
         var returnedError: Error?
         var decodedObject: SomeObject?
         var completionResult: Restler.DecodableResult<SomeObject>?
-        //Act
+        // Act
         sut.patch(self.endpoint)
             .decode(SomeObject.self)
             .onFailure({ returnedError = $0 })
@@ -430,7 +430,7 @@ extension PatchInterfaceIntegrationTests {
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertNil(returnedError)

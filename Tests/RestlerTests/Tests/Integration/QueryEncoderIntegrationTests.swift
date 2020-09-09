@@ -5,34 +5,34 @@ final class QueryEncoderIntegrationTests: XCTestCase {}
 
 extension QueryEncoderIntegrationTests {
     func testEncoding_stringDictionary() throws {
-        //Arrange
+        // Arrange
         let sut = Restler.QueryEncoder(jsonEncoder: JSONEncoder())
-        //Act
+        // Act
         let result = try sut.encode(["value": "name"])
-        //Assert
+        // Assert
         XCTAssertEqual(result, [URLQueryItem(name: "value", value: "name")])
     }
     
     func testEncoding_intDictionary() throws {
-        //Arrange
+        // Arrange
         let sut = Restler.QueryEncoder(jsonEncoder: JSONEncoder())
-        //Act
+        // Act
         let result = try sut.encode(["value": 1])
-        //Assert
+        // Assert
         XCTAssertEqual(result, [URLQueryItem(name: "value", value: "1")])
     }
     
     func testEncoding_boolDictionary() throws {
-        //Arrange
+        // Arrange
         let sut = Restler.QueryEncoder(jsonEncoder: JSONEncoder())
-        //Act
+        // Act
         let result = try sut.encode(["value": true])
-        //Assert
+        // Assert
         XCTAssertEqual(result, [URLQueryItem(name: "value", value: "true")])
     }
     
     func testEncoding_intArrayObject() throws {
-        //Arrange
+        // Arrange
         let sut = Restler.QueryEncoder(jsonEncoder: JSONEncoder())
         let object = IntArrayObject(id: 1, intArray: [1, 5, 2])
         let expectedResult = [
@@ -41,14 +41,14 @@ extension QueryEncoderIntegrationTests {
             URLQueryItem(name: "intArray[]", value: "5"),
             URLQueryItem(name: "intArray[]", value: "2"),
         ]
-        //Act
+        // Act
         let result = try sut.encode(object)
-        //Assert
+        // Assert
         XCTAssertEqual(result, expectedResult)
     }
     
     func testEncoding_dictionaryObject() throws {
-        //Arrange
+        // Arrange
         let sut = Restler.QueryEncoder(jsonEncoder: JSONEncoder())
         let object = DictionaryObject(id: 1, dictionary: ["string": 1, "another": 443])
         let expectedResult = [
@@ -56,9 +56,9 @@ extension QueryEncoderIntegrationTests {
             URLQueryItem(name: "dictionary[string]", value: "1"),
             URLQueryItem(name: "dictionary[another]", value: "443"),
         ]
-        //Act
+        // Act
         let result = try sut.encode(object)
-        //Assert
+        // Assert
         XCTAssertEqual(result.count, expectedResult.count)
         expectedResult.forEach {
             XCTAssert(result.contains($0))
@@ -66,7 +66,7 @@ extension QueryEncoderIntegrationTests {
     }
     
     func testEncoding_dateObject_iso8601Format() throws {
-        //Arrange
+        // Arrange
         let encoder = JSONEncoder()
         if #available(OSX 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {
             encoder.dateEncodingStrategy = .iso8601
@@ -81,14 +81,14 @@ extension QueryEncoderIntegrationTests {
             URLQueryItem(name: "id", value: "3"),
             URLQueryItem(name: "date", value: expectedDate)
         ]
-        //Act
+        // Act
         let result = try sut.encode(object)
-        //Assert
+        // Assert
         XCTAssertEqual(result, expectedResult)
     }
     
     func testEncoding_dateObject_secondsFormat() throws {
-        //Arrange
+        // Arrange
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970
         let sut = Restler.QueryEncoder(jsonEncoder: encoder)
@@ -99,9 +99,9 @@ extension QueryEncoderIntegrationTests {
             URLQueryItem(name: "id", value: "3"),
             URLQueryItem(name: "date", value: expectedDate)
         ]
-        //Act
+        // Act
         let result = try sut.encode(object)
-        //Assert
+        // Assert
         XCTAssertEqual(result, expectedResult)
     }
 }

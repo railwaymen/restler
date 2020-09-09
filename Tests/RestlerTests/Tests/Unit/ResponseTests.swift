@@ -6,13 +6,13 @@ final class ResponseTests: XCTestCase {}
 // MARK: - Public init
 extension ResponseTests {
     func testPublicInit() {
-        //Arrange
+        // Arrange
         let data = Data()
         let response = HTTPURLResponse()
         let error = TestError()
-        //Act
+        // Act
         let sut = Restler.Response(data: data, response: response, error: error)
-        //Assert
+        // Assert
         XCTAssertEqual(sut.data, data)
         XCTAssertEqual(sut.response, response)
         XCTAssertEqual(sut.error as? TestError, error)
@@ -22,13 +22,13 @@ extension ResponseTests {
 // MARK: - Internal init
 extension ResponseTests {
     func testInternalInit() {
-        //Arrange
+        // Arrange
         let data = Data()
         let response = HTTPURLResponse()
         let error = TestError()
-        //Act
+        // Act
         let sut = Restler.Response(.init(data: data, response: response, error: error))
-        //Assert
+        // Assert
         XCTAssertEqual(sut.data, data)
         XCTAssertEqual(sut.response, response)
         XCTAssertEqual(sut.error as? TestError, error)

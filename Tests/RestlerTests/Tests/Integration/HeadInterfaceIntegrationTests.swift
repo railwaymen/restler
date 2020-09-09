@@ -26,15 +26,15 @@ extension HeadInterfaceIntegrationTests {
 // MARK: - Void response
 extension HeadInterfaceIntegrationTests {
     func testHead_buildingRequest() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
-        //Act
+        // Act
         sut.head(self.endpoint)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
         XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
@@ -44,12 +44,12 @@ extension HeadInterfaceIntegrationTests {
     
     // MARK: Decoding success
     func testHead_success_nil() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         var returnedError: Error?
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
-        //Act
+        // Act
         sut.head(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
@@ -58,7 +58,7 @@ extension HeadInterfaceIntegrationTests {
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertNil(returnedError)
@@ -67,12 +67,12 @@ extension HeadInterfaceIntegrationTests {
     }
 
     func testHead_success_emptyData() throws {
-        //Arrange
+        // Arrange
         let sut = self.buildSUT()
         var returnedError: Error?
         var decodedObject: Void?
         var completionResult: Restler.VoidResult?
-        //Act
+        // Act
         sut.head(self.endpoint)
             .decode(Void.self)
             .onFailure({ returnedError = $0 })
@@ -81,7 +81,7 @@ extension HeadInterfaceIntegrationTests {
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
         self.dispatchQueueManager.performParams.forEach { $0.action() }
-        //Assert
+        // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
         XCTAssertNil(returnedError)

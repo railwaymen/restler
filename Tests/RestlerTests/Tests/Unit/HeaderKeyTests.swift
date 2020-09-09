@@ -6,372 +6,372 @@ final class HeaderKeyTests: XCTestCase {}
 // MARK: - rawValue
 extension HeaderKeyTests {
     func testRawValue_a_im() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .a_im
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "A-IM")
     }
     
     func testRawValue_accept() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .accept
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Accept")
     }
     
     func testRawValue_acceptCharset() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .acceptCharset
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Accept-Charset")
     }
     
     func testRawValue_acceptDatetime() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .acceptDatetime
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Accept-Datetime")
     }
     
     func testRawValue_acceptEncoding() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .acceptEncoding
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Accept-Encoding")
     }
     
     func testRawValue_acceptLanguage() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .acceptLanguage
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Accept-Language")
     }
     
     func testRawValue_accessControlRequestMethod() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .accessControlRequestMethod
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Access-Control-Request-Method")
     }
     
     func testRawValue_accessControlRequestHeaders() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .accessControlRequestHeaders
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Access-Control-Request-Headers")
     }
     
     func testRawValue_authorization() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .authorization
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Authorization")
     }
     
     func testRawValue_cacheControl() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .cacheControl
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Cache-Control")
     }
     
     func testRawValue_connection() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .connection
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Connection")
     }
     
     func testRawValue_contentEncoding() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .contentEncoding
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Content-Encoding")
     }
     
     func testRawValue_contentLength() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .contentLength
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Content-Length")
     }
     
     func testRawValue_contentMD5() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .contentMD5
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Content-MD5")
     }
     
     func testRawValue_contentType() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .contentType
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Content-Type")
     }
     
     func testRawValue_cookie() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .cookie
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Cookie")
     }
     
     func testRawValue_date() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .date
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Date")
     }
     
     func testRawValue_expect() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .expect
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Expect")
     }
     
     func testRawValue_forwarded() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .forwarded
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Forwarded")
     }
     
     func testRawValue_from() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .from
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "From")
     }
     
     func testRawValue_host() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .host
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Host")
     }
     
     func testRawValue_http2Settings() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .http2Settings
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "HTTP2-Settings")
     }
     
     func testRawValue_ifMatch() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .ifMatch
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "If-Match")
     }
     
     func testRawValue_ifModifiedSince() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .ifModifiedSince
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "If-Modified-Since")
     }
     
     func testRawValue_ifNoneMatch() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .ifNoneMatch
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "If-None-Match")
     }
     
     func testRawValue_ifRange() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .ifRange
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "If-Range")
     }
     
     func testRawValue_ifUnmodifiedSince() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .ifUnmodifiedSince
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "If-Unmodified-Since")
     }
     
     func testRawValue_maxForwards() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .maxForwards
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Max-Forwards")
     }
     
     func testRawValue_origin() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .origin
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Origin")
     }
     
     func testRawValue_pragma() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .pragma
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Pragma")
     }
     
     func testRawValue_proxyAuthorization() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .proxyAuthorization
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Proxy-Authorization")
     }
     
     func testRawValue_range() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .range
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Range")
     }
     
     func testRawValue_referer() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .referer
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Referer")
     }
     
     func testRawValue_te() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .te
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "TE")
     }
     
     func testRawValue_trailer() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .trailer
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Trailer")
     }
     
     func testRawValue_transferEncoding() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .transferEncoding
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Transfer-Encoding")
     }
     
     func testRawValue_userAgent() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .userAgent
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "User-Agent")
     }
     
     func testRawValue_upgrade() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .upgrade
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Upgrade")
     }
     
     func testRawValue_via() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .via
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Via")
     }
     
     func testRawValue_warning() {
-        //Arrange
+        // Arrange
         let sut: Restler.Header.Key = .warning
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, "Warning")
     }
     
     func testRawValue_custom() {
-        //Arrange
+        // Arrange
         let key = "some random key"
         let sut: Restler.Header.Key = .custom(key)
-        //Act
+        // Act
         let rawValue = sut.rawValue
-        //Assert
+        // Assert
         XCTAssertEqual(rawValue, key)
     }
 }
@@ -379,371 +379,371 @@ extension HeaderKeyTests {
 // MARK: - init(stringLiteral:)
 extension HeaderKeyTests {
     func testInitFromStringLiteral_a_im() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .a_im
-        //Act
+        // Act
         let sut: Restler.Header.Key = "A-IM"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_accept() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .accept
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Accept"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_acceptCharset() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .acceptCharset
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Accept-Charset"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_acceptDatetime() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .acceptDatetime
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Accept-Datetime"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_acceptEncoding() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .acceptEncoding
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Accept-Encoding"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_acceptLanguage() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .acceptLanguage
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Accept-Language"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_accessControlRequestMethod() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .accessControlRequestMethod
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Access-Control-Request-Method"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_accessControlRequestHeaders() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .accessControlRequestHeaders
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Access-Control-Request-Headers"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_authorization() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .authorization
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Authorization"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_cacheControl() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .cacheControl
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Cache-Control"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_connection() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .connection
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Connection"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_contentEncoding() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .contentEncoding
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Content-Encoding"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_contentLength() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .contentLength
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Content-Length"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_contentMD5() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .contentMD5
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Content-MD5"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_contentType() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .contentType
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Content-Type"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_cookie() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .cookie
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Cookie"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_date() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .date
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Date"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_expect() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .expect
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Expect"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_forwarded() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .forwarded
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Forwarded"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_from() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .from
-        //Act
+        // Act
         let sut: Restler.Header.Key = "From"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_host() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .host
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Host"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_http2Settings() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .http2Settings
-        //Act
+        // Act
         let sut: Restler.Header.Key = "HTTP2-Settings"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_ifMatch() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .ifMatch
-        //Act
+        // Act
         let sut: Restler.Header.Key = "If-Match"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_ifModifiedSince() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .ifModifiedSince
-        //Act
+        // Act
         let sut: Restler.Header.Key = "If-Modified-Since"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_ifNoneMatch() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .ifNoneMatch
-        //Act
+        // Act
         let sut: Restler.Header.Key = "If-None-Match"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_ifRange() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .ifRange
-        //Act
+        // Act
         let sut: Restler.Header.Key = "If-Range"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_ifUnmodifiedSince() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .ifUnmodifiedSince
-        //Act
+        // Act
         let sut: Restler.Header.Key = "If-Unmodified-Since"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_maxForwards() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .maxForwards
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Max-Forwards"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_origin() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .origin
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Origin"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_pragma() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .pragma
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Pragma"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_proxyAuthorization() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .proxyAuthorization
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Proxy-Authorization"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_range() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .range
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Range"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_referer() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .referer
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Referer"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_te() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .te
-        //Act
+        // Act
         let sut: Restler.Header.Key = "TE"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_trailer() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .trailer
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Trailer"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_transferEncoding() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .transferEncoding
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Transfer-Encoding"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_userAgent() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .userAgent
-        //Act
+        // Act
         let sut: Restler.Header.Key = "User-Agent"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_upgrade() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .upgrade
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Upgrade"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_via() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .via
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Via"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_warning() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .warning
-        //Act
+        // Act
         let sut: Restler.Header.Key = "Warning"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromStringLiteral_custom() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .custom("some random key")
-        //Act
+        // Act
         let sut: Restler.Header.Key = "some random key"
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
 }
@@ -751,371 +751,371 @@ extension HeaderKeyTests {
 // MARK: - init(rawValue:)
 extension HeaderKeyTests {
     func testInitFromRawValue_a_im() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .a_im
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_accept() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .accept
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_acceptCharset() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .acceptCharset
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_acceptDatetime() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .acceptDatetime
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_acceptEncoding() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .acceptEncoding
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_acceptLanguage() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .acceptLanguage
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_accessControlRequestMethod() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .accessControlRequestMethod
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_accessControlRequestHeaders() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .accessControlRequestHeaders
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_authorization() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .authorization
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_cacheControl() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .cacheControl
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_connection() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .connection
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_contentEncoding() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .contentEncoding
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_contentLength() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .contentLength
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_contentMD5() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .contentMD5
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_contentType() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .contentType
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_cookie() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .cookie
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_date() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .date
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_expect() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .expect
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_forwarded() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .forwarded
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_from() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .from
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_host() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .host
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_http2Settings() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .http2Settings
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_ifMatch() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .ifMatch
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_ifModifiedSince() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .ifModifiedSince
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_ifNoneMatch() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .ifNoneMatch
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_ifRange() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .ifRange
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_ifUnmodifiedSince() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .ifUnmodifiedSince
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_maxForwards() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .maxForwards
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_origin() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .origin
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_pragma() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .pragma
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_proxyAuthorization() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .proxyAuthorization
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_range() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .range
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_referer() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .referer
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_te() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .te
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_trailer() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .trailer
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_transferEncoding() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .transferEncoding
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_userAgent() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .userAgent
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_upgrade() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .upgrade
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_via() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .via
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_warning() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .warning
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
     
     func testInitFromRawValue_custom() {
-        //Arrange
+        // Arrange
         let expectedValue: Restler.Header.Key = .custom("some random key")
-        //Act
+        // Act
         let sut = Restler.Header.Key(rawValue: expectedValue.rawValue)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, expectedValue)
     }
 }
