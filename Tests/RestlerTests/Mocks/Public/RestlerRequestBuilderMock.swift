@@ -69,15 +69,15 @@ final class RestlerRequestBuilderMock {
         var isCalledAnything = false
         switch result {
         case let .success(object):
-            guard let successHandler = request.onSuccessParams.last?.handler else { break }
+            guard let successHandler = request.lastSuccessHandler else { break }
             successHandler(object)
             isCalledAnything = true
         case let .failure(error):
-            guard let failureHandler = request.onFailureParams.last?.handler else { break }
+            guard let failureHandler = request.lastFailureHandler else { break }
             failureHandler(error)
             isCalledAnything = true
         }
-        if let completionHandler = request.onCompletionParams.last?.handler {
+        if let completionHandler = request.lastCompletionHandler {
             completionHandler(result)
             isCalledAnything = true
         }
