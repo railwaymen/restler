@@ -8,8 +8,6 @@ extension DeleteInterfaceIntegrationTests {
     func testURLRequestBuilding() throws {
         // Arrange
         let sut = self.buildSUT()
-        let expectedRequest = URLRequest(url: self.baseURL)
-        self.networking.buildRequestReturnValue = expectedRequest
         // Act
         let request = sut
             .delete(self.endpoint)
@@ -26,8 +24,6 @@ extension DeleteInterfaceIntegrationTests {
     func testURLRequestBuilding_customHeader() throws {
         // Arrange
         let sut = self.buildSUT()
-        let expectedRequest = URLRequest(url: self.baseURL)
-        self.networking.buildRequestReturnValue = expectedRequest
         // Act
         let request = sut
             .delete(self.endpoint)
@@ -55,14 +51,12 @@ extension DeleteInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         // Assert
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .delete)
         XCTAssertNil(completionResult)
     }
     
-    // MARK: Decoding success
+    // MARK: Decoding Success
     func testDeleteVoid_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -122,14 +116,12 @@ extension DeleteInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         // Assert
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .delete)
         XCTAssertNil(completionResult)
     }
     
-    // MARK: Decoding success
+    // MARK: Decoding Success
     func testDeleteOptionalDecodable_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -214,14 +206,12 @@ extension DeleteInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         // Assert
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .delete)
         XCTAssertNil(completionResult)
     }
     
-    // MARK: Decoding success
+    // MARK: Decoding Success
     func testDeleteDecodable_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()

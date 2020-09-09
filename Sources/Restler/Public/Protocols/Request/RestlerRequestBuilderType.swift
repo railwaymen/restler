@@ -78,17 +78,27 @@ public protocol RestlerBasicRequestBuilderType: class {
     ///
     func decode(_ type: Void.Type) -> Restler.Request<Void>
     
+    /// Calls handler if any error have occured during the request building proccess.
+    ///
+    /// - Parameters:
+    ///   - handler: A closure called only if any error have occured while building the request.
+    ///
+    /// - Returns: `self` for chaining.
+    ///
+    func catching(_ handler: ((Restler.Error) -> Void)?) -> Self
+    
     /// Builds a URLRequest instance and returns it.
     ///
     /// - Returns: A URLRequest instance basing on provided data.
-    /// Returns nil if internal framework have occured - this is to don't crash your app because of our issue
+    /// Returns nil if building error have occured. Handle the error using the `catching(_:)` function.
     ///
     func urlRequest() -> URLRequest?
     
     #if canImport(Combine)
     /// Builds a request and returns publisher for Combine support.
     ///
-    /// - Returns: DataTaskPublisher for support of Combine using. Nil if framework's internal error has occured.
+    /// - Returns: DataTaskPublisher for support of Combine using.
+    /// Nil if building error have occured. Handle the error using the `catching(_:)` function.
     ///
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func publisher() -> URLSession.DataTaskPublisher?

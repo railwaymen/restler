@@ -20,6 +20,11 @@ final class RestlerRequestBuilderMock {
         let modification: ((inout URLRequest) -> Void)?
     }
     
+    private(set) var catchingParams: [CatchingParams] = []
+    struct CatchingParams {
+        let handler: ((Restler.Error) -> Void)?
+    }
+    
     var urlRequestReturnValue: URLRequest?
     private(set) var urlRequestParams: [URLRequestParams] = []
     struct URLRequestParams {}
@@ -99,6 +104,11 @@ extension RestlerRequestBuilderMock: RestlerBasicRequestBuilderType {
         let mock = RestlerRequestMock<Void>()
         self.decodeReturnedMocks.append(mock)
         return mock
+    }
+    
+    func catching(_ handler: ((Restler.Error) -> Void)?) -> Self {
+        self.catchingParams.append(CatchingParams(handler: handler))
+        return self
     }
     
     func urlRequest() -> URLRequest? {

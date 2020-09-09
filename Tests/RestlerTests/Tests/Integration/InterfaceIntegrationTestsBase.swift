@@ -8,13 +8,17 @@ class InterfaceIntegrationTestsBase: XCTestCase {
     var dispatchQueueManager: DispatchQueueManagerMock!
     
     var mockURLString: String {
-        return self.baseURL.absoluteString + "/mock"
+        self.baseURL.absoluteString + "/mock"
     }
+    
+    var expectedRequest: URLRequest { URLRequest(url: self.baseURL) }
     
     override func setUp() {
         super.setUp()
         self.networking = NetworkingMock()
         self.dispatchQueueManager = DispatchQueueManagerMock()
+        
+        self.networking.buildRequestReturnValue = self.expectedRequest
     }
     
     // MARK: - Internal
@@ -28,23 +32,17 @@ class InterfaceIntegrationTestsBase: XCTestCase {
             errorParser: Restler.ErrorParser())
     }
     
-    func assertThrowsEncodingError<T>(
+    func assertThrowsEncodingError(
         expected: TestError,
         returnedError: Error?,
-        completionResult: Result<T, Error>?,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
         let restlerError = try XCTUnwrap(returnedError as? Restler.Error, file: file, line: line)
-        guard case let .multiple(errors) = restlerError else {
-            return XCTFail("Returned error is not multiple error", file: file, line: line)
-        }
-        XCTAssertEqual(errors.count, 1, file: file, line: line)
-        guard case let .common(type, base) = errors.first else {
+        guard case let .common(type, base) = restlerError else {
             return XCTFail("Error thrown is not common error", file: file, line: line)
         }
         XCTAssertEqual(base as? TestError, expected, file: file, line: line)
         XCTAssertEqual(type, Restler.ErrorType.invalidParameters, file: file, line: line)
-        AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: restlerError, file: file, line: line)
     }
 }

@@ -8,8 +8,6 @@ extension GetInterfaceIntegrationTests {
     func testURLRequestBuilding() throws {
         // Arrange
         let sut = self.buildSUT()
-        let expectedRequest = URLRequest(url: self.baseURL)
-        self.networking.buildRequestReturnValue = expectedRequest
         // Act
         let request = sut
             .get(self.endpoint)
@@ -23,11 +21,25 @@ extension GetInterfaceIntegrationTests {
         XCTAssertNil(requestParams.header[.contentType])
     }
     
+    func testURLRequestBuilding_stringEndpoint() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        // Act
+        let request = sut
+            .get("mock")
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .get(query: []))
+        XCTAssertNil(requestParams.header[.contentType])
+    }
+    
     func testURLRequestBuilding_customHeader() throws {
         // Arrange
         let sut = self.buildSUT()
-        let expectedRequest = URLRequest(url: self.baseURL)
-        self.networking.buildRequestReturnValue = expectedRequest
         // Act
         let request = sut
             .get(self.endpoint)
@@ -45,8 +57,6 @@ extension GetInterfaceIntegrationTests {
     func testURLRequestBuilding_encodingQuery() throws {
         // Arrange
         let sut = self.buildSUT()
-        let expectedRequest = URLRequest(url: self.baseURL)
-        self.networking.buildRequestReturnValue = expectedRequest
         // Act
         let request = sut
             .get(self.endpoint)
@@ -60,83 +70,6 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
         XCTAssertEqual(requestParams.header[.contentType], "application/x-www-form-urlencoded")
     }
-}
-
-// MARK: - Void response
-extension GetInterfaceIntegrationTests {
-    func testGetVoid_buildingRequest() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.VoidResult?
-        // Act
-        sut.get(self.endpoint)
-            .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertNil(requestParams.header[.contentType])
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetVoid_stringEndpoint_buildingRequest() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.VoidResult?
-        // Act
-        sut.get("mock")
-            .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertNil(requestParams.header[.contentType])
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetVoid_buildingRequest_customHeaderFields() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.VoidResult?
-        // Act
-        sut.get(self.endpoint)
-            .setInHeader("someValue", forKey: .accept)
-            .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetVoid_buildingRequest_encodingQuery() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.VoidResult?
-        // Act
-        sut.get(self.endpoint)
-            .query(SomeObject(id: 1, name: "name", double: 1.23))
-            .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
-        XCTAssertEqual(requestParams.header[.contentType], "application/x-www-form-urlencoded")
-        XCTAssertNil(completionResult)
-    }
     
     func testGetVoid_buildingRequest_encodingQueryFails() throws {
         // Arrange
@@ -145,51 +78,61 @@ extension GetInterfaceIntegrationTests {
         let expectedError = TestError()
         object.thrownError = expectedError
         var returnedError: Error?
-        var decodedObject: Void?
-        var completionResult: Restler.VoidResult?
         // Act
-        sut.get(self.endpoint)
+        let request = sut
+            .get(self.endpoint)
+            .catching { returnedError = $0 }
             .query(object)
-            .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
+            .urlRequest()
         // Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 0)
-        XCTAssertNil(decodedObject)
+        XCTAssertNil(request)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 0)
         try self.assertThrowsEncodingError(
             expected: expectedError,
-            returnedError: returnedError,
-            completionResult: completionResult)
+            returnedError: returnedError)
     }
     
-    func testGetVoid_buildingRequest_encodingDictionaryQuery() throws {
+    func testURLRequestBuilding_encodingDictionaryQuery() throws {
         // Arrange
         let sut = self.buildSUT()
         let header = ["id": "1", "name": "name", "double": "1.23"]
+        // Act
+        let request = sut.get(self.endpoint)
+            .query(header)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        guard case let .get(query) = requestParams.method else { return XCTFail() }
+        XCTAssertEqual(query.count, header.count)
+        [("id", "1"), ("name", "name"), ("double", "1.23")]
+            .toQueryItems()
+            .forEach {
+                XCTAssert(query.contains($0), "Query doesn't contain: $0")
+        }
+    }
+}
+
+// MARK: - Void response
+extension GetInterfaceIntegrationTests {
+    func testGetVoid_buildsRequest() throws {
+        // Arrange
+        let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
         // Act
         sut.get(self.endpoint)
-            .query(header)
             .decode(Void.self)
             .onCompletion({ completionResult = $0 })
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        guard case let .get(query) = requestParams.method else { return XCTFail() }
-        XCTAssertEqual(query.count, header.count)
-        [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems().forEach {
-            XCTAssert(query.contains($0), "Query doesn't contain: $0")
-        }
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
-    // MARK: Success Decoding
+    // MARK: Decoding Success
     func testGetVoid_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -236,7 +179,7 @@ extension GetInterfaceIntegrationTests {
         XCTAssertNotNil(try XCTUnwrap(completionResult).get())
     }
     
-    // MARK: Decoding failure
+    // MARK: Decoding Failure
     func testGetVoid_failure_undecodableError() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -311,72 +254,22 @@ extension GetInterfaceIntegrationTests {
 
 // MARK: - Optional decodable response
 extension GetInterfaceIntegrationTests {
-    func testGetOptionalDecodable_buildingRequest_customHeaderFields() throws {
+    func testGetOptionalDecodable_buildsRequest() throws {
         // Arrange
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<SomeObject?>?
         // Act
         sut.get(self.endpoint)
-            .setInHeader("someValue", forKey: .accept)
             .decode(SomeObject?.self)
             .onCompletion({ completionResult = $0 })
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
-    func testGetOptionalDecodable_buildingRequest_encodingQuery() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.DecodableResult<SomeObject?>?
-        // Act
-        sut.get(self.endpoint)
-            .query(SomeObject(id: 1, name: "name", double: 1.23))
-            .decode(SomeObject?.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetOptionalDecodable_buildingRequest_encodingQueryFails() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        let object = ThrowingObject()
-        let expectedError = TestError()
-        object.thrownError = expectedError
-        var returnedError: Error?
-        var decodedObject: SomeObject?
-        var completionResult: Restler.DecodableResult<SomeObject?>?
-        // Act
-        sut.get(self.endpoint)
-            .query(object)
-            .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
-        // Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 0)
-        XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(
-            expected: expectedError,
-            returnedError: returnedError,
-            completionResult: completionResult)
-    }
-    
-    // MARK: Success Decoding
+    // MARK: Decoding Success
     func testGetOptionalDecodable_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -448,7 +341,7 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
     }
     
-    // MARK: Decoding failure
+    // MARK: Decoding Failure
     func testGetOptionalDecodable_failure_undecodableError() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -523,72 +416,22 @@ extension GetInterfaceIntegrationTests {
 
 // MARK: - Decodable resposne
 extension GetInterfaceIntegrationTests {
-    func testGetDecodable_buildingRequest_customHeaderFields() throws {
+    func testGetDecodable_buildsRequest() throws {
         // Arrange
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<SomeObject>?
         // Act
         sut.get(self.endpoint)
-            .setInHeader("someValue", forKey: .accept)
             .decode(SomeObject.self)
             .onCompletion({ completionResult = $0 })
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
-    func testGetDecodable_buildingRequest_encodingQuery() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.DecodableResult<SomeObject>?
-        // Act
-        sut.get(self.endpoint)
-            .query(SomeObject(id: 1, name: "name", double: 1.23))
-            .decode(SomeObject.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetDecodable_buildingRequest_encodingQueryFails() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        let object = ThrowingObject()
-        let expectedError = TestError()
-        object.thrownError = expectedError
-        var returnedError: Error?
-        var decodedObject: SomeObject?
-        var completionResult: Restler.DecodableResult<SomeObject>?
-        // Act
-        sut.get(self.endpoint)
-            .query(object)
-            .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
-        // Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 0)
-        XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(
-            expected: expectedError,
-            returnedError: returnedError,
-            completionResult: completionResult)
-    }
-    
-    // MARK: Success Decoding
+    // MARK: Decoding Success
     func testGetDecodable_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -666,7 +509,7 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
     }
     
-    // MARK: Decoding failure
+    // MARK: Decoding Failure
     func testGetDecodable_failure_undecodableError() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -741,7 +584,7 @@ extension GetInterfaceIntegrationTests {
 
 // MARK: - Data response
 extension GetInterfaceIntegrationTests {
-    func testGetData_buildingRequest() throws {
+    func testGetData_buildsRequest() throws {
         // Arrange
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<Data>?
@@ -752,78 +595,11 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
-    func testGetData_buildingRequest_customHeaderFields() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.DecodableResult<Data>?
-        // Act
-        sut.get(self.endpoint)
-            .setInHeader("someValue", forKey: .accept)
-            .decode(Data.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetData_buildingRequest_encodingQuery() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.DecodableResult<Data>?
-        // Act
-        sut.get(self.endpoint)
-            .query(SomeObject(id: 1, name: "name", double: 1.23))
-            .decode(Data.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetData_buildingRequest_encodingQueryFails() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        let object = ThrowingObject()
-        let expectedError = TestError()
-        object.thrownError = expectedError
-        var returnedError: Error?
-        var decodedObject: Data?
-        var completionResult: Restler.DecodableResult<Data>?
-        // Act
-        sut.get(self.endpoint)
-            .query(object)
-            .decode(Data.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
-        // Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 0)
-        XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(
-            expected: expectedError,
-            returnedError: returnedError,
-            completionResult: completionResult)
-    }
-    
-    // MARK: Success Decoding
+    // MARK: Decoding Success
     func testGetData_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -898,7 +674,7 @@ extension GetInterfaceIntegrationTests {
 
 // MARK: - Optional data response
 extension GetInterfaceIntegrationTests {
-    func testGetOptionalData_buildingRequest() throws {
+    func testGetOptionalData_buildsRequest() throws {
         // Arrange
         let sut = self.buildSUT()
         var completionResult: Restler.DecodableResult<Data?>?
@@ -909,78 +685,11 @@ extension GetInterfaceIntegrationTests {
             .start()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
     
-    func testGetOptionalData_buildingRequest_customHeaderFields() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.DecodableResult<Data?>?
-        // Act
-        sut.get(self.endpoint)
-            .setInHeader("someValue", forKey: .accept)
-            .decode(Data?.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertEqual(requestParams.header.raw, ["Accept": "someValue"])
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetOptionalData_buildingRequest_encodingQuery() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.DecodableResult<Data?>?
-        // Act
-        sut.get(self.endpoint)
-            .query(SomeObject(id: 1, name: "name", double: 1.23))
-            .decode(Data?.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        let requestParams = try XCTUnwrap(self.networking.makeRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
-        XCTAssertNil(completionResult)
-    }
-    
-    func testGetOptionalData_buildingRequest_encodingQueryFails() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        let object = ThrowingObject()
-        let expectedError = TestError()
-        object.thrownError = expectedError
-        var returnedError: Error?
-        var decodedObject: Data?
-        var completionResult: Restler.DecodableResult<Data?>?
-        // Act
-        sut.get(self.endpoint)
-            .query(object)
-            .decode(Data?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
-        // Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 0)
-        XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(
-            expected: expectedError,
-            returnedError: returnedError,
-            completionResult: completionResult)
-    }
-    
-    // MARK: Success Decoding
+    // MARK: Decoding Success
     func testGetOptionalData_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()

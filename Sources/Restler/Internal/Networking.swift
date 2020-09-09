@@ -8,11 +8,8 @@ typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType: class {
     func makeRequest(
-        url: URL,
-        method: HTTPMethod,
-        header: Restler.Header,
-        customRequestModification: ((inout URLRequest) -> Void)?,
-        completion: @escaping DataCompletion) -> Restler.Task?
+        urlRequest: URLRequest,
+        completion: @escaping DataCompletion) -> Restler.Task
     
     func buildRequest(
         url: URL,
@@ -22,12 +19,7 @@ protocol NetworkingType: class {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func getPublisher(
-        url: URL,
-        method: HTTPMethod,
-        header: Restler.Header,
-        customRequestModification: ((inout URLRequest) -> Void)?
-    ) -> URLSession.DataTaskPublisher?
+    func getPublisher(urlRequest: URLRequest) -> URLSession.DataTaskPublisher
     #endif
 }
 
@@ -43,21 +35,10 @@ final class Networking {
 // MARK: - NetworkingType
 extension Networking: NetworkingType {
     func makeRequest(
-        url: URL,
-        method: HTTPMethod,
-        header: Restler.Header,
-        customRequestModification: ((inout URLRequest) -> Void)?,
+        urlRequest: URLRequest,
         completion: @escaping DataCompletion
-    ) -> Restler.Task? {
-        guard var request = self.buildURLRequest(
-            url: url,
-            httpMethod: method,
-            header: header) else {
-                completion(.failure(Restler.internalError()))
-                return nil
-        }
-        customRequestModification?(&request)
-        return Restler.Task(task: self.runDataTask(request: request, completion: completion))
+    ) -> Restler.Task {
+        Restler.Task(task: self.runDataTask(request: urlRequest, completion: completion))
     }
     
     func buildRequest(
@@ -78,20 +59,8 @@ extension Networking: NetworkingType {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func getPublisher(
-        url: URL,
-        method: HTTPMethod,
-        header: Restler.Header,
-        customRequestModification: ((inout URLRequest) -> Void)?
-    ) -> URLSession.DataTaskPublisher? {
-        guard var request = self.buildURLRequest(
-            url: url,
-            httpMethod: method,
-            header: header) else {
-                return nil
-        }
-        customRequestModification?(&request)
-        return self.session.dataTaskPublisher(for: request)
+    func getPublisher(urlRequest: URLRequest) -> URLSession.DataTaskPublisher {
+        self.session.dataTaskPublisher(for: urlRequest)
     }
     #endif
 }
