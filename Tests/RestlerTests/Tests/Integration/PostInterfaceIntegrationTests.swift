@@ -3,6 +3,110 @@ import XCTest
 
 final class PostInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
 
+// MARK: - URLRequest building
+extension PostInterfaceIntegrationTests {
+    func testURLRequestBuilding_withoutBody() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .post(self.endpoint)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .post(content: nil))
+        XCTAssertNil(requestParams.header[.contentType])
+    }
+    
+    func testURLRequestBuilding_withoutBody_customHeader() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .post(self.endpoint)
+            .setInHeader("hello darkness", forKey: .contentType)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .post(content: nil))
+        XCTAssertEqual(requestParams.header[.contentType], "hello darkness")
+    }
+    
+    func testURLRequestBuilding_encodingBody() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let object = SomeObject(id: 1, name: "name", double: 1.23)
+        let data = try JSONEncoder().encode(object)
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .post(self.endpoint)
+            .body(object)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .post(content: data))
+        XCTAssertEqual(requestParams.header[.contentType], "application/json")
+    }
+    
+    func testURLRequestBuilding_encodingMultipart() throws {
+        //Arrange
+        let sut = self.buildSUT()
+        let imageString = "some image data"
+        let object = ImageEncoder(
+            id: 1,
+            title: "My Image",
+            image: Restler.MultipartObject(
+                filename: "image.png",
+                contentType: "image/png",
+                body: imageString.data(using: .utf8)!))
+        let data = """
+            --boundary\r\n\
+            Content-Disposition: form-data; name="id"\r\n\
+            \r\n\
+            1\r\n\
+            --boundary\r\n\
+            Content-Disposition: form-data; name="title"\r\n\
+            \r\n\
+            My Image\r\n\
+            --boundary\r\n\
+            Content-Disposition: form-data; name="image"; filename="image.png"\r\n\
+            Content-Type: image/png\r\n\
+            \r\n\
+            \(imageString)\r\n\
+            --boundary--\r\n
+            """.data(using: .utf8)!
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .post(self.endpoint)
+            .multipart(object, boundary: "boundary")
+            .urlRequest()
+        //Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .post(content: data))
+        XCTAssertEqual(requestParams.header[.contentType], "multipart/form-data; charset=utf-8; boundary=boundary")
+    }
+}
+
 // MARK: - Void response
 extension PostInterfaceIntegrationTests {
     func testPostVoid_buildingRequest() throws {

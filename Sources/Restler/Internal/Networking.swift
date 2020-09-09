@@ -14,6 +14,12 @@ protocol NetworkingType: class {
         customRequestModification: ((inout URLRequest) -> Void)?,
         completion: @escaping DataCompletion) -> Restler.Task?
     
+    func buildRequest(
+        url: URL,
+        method: HTTPMethod,
+        header: Restler.Header,
+        customRequestModification: ((inout URLRequest) -> Void)?) -> URLRequest?
+    
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func getPublisher(
@@ -52,6 +58,22 @@ extension Networking: NetworkingType {
         }
         customRequestModification?(&request)
         return Restler.Task(task: self.runDataTask(request: request, completion: completion))
+    }
+    
+    func buildRequest(
+        url: URL,
+        method: HTTPMethod,
+        header: Restler.Header,
+        customRequestModification: ((inout URLRequest) -> Void)?
+    ) -> URLRequest? {
+        guard var request = self.buildURLRequest(
+            url: url,
+            httpMethod: method,
+            header: header) else {
+                return nil
+        }
+        customRequestModification?(&request)
+        return request
     }
     
     #if canImport(Combine)

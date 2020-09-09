@@ -14,6 +14,15 @@ final class NetworkingMock {
         let completion: DataCompletion
     }
     
+    var buildRequestReturnValue: URLRequest?
+    private(set) var buildRequestParams: [BuildRequestParams] = []
+    struct BuildRequestParams {
+        let url: URL
+        let method: HTTPMethod
+        let header: Restler.Header
+        let customRequestModification: ((inout URLRequest) -> Void)?
+    }
+    
     private(set) var getPublisherParams: [GetPublisherParams] = []
     struct GetPublisherParams {
         let url: URL
@@ -39,6 +48,20 @@ extension NetworkingMock: NetworkingType {
             customRequestModification: customRequestModification,
             completion: completion))
         return self.makeRequestReturnValue
+    }
+    
+    func buildRequest(
+        url: URL,
+        method: HTTPMethod,
+        header: Restler.Header,
+        customRequestModification: ((inout URLRequest) -> Void)?
+    ) -> URLRequest? {
+        self.buildRequestParams.append(BuildRequestParams(
+            url: url,
+            method: method,
+            header: header,
+            customRequestModification: customRequestModification))
+        return self.buildRequestReturnValue
     }
     
     #if canImport(Combine)

@@ -3,6 +3,65 @@ import XCTest
 
 final class GetInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
 
+// MARK: - URLRequest building
+extension GetInterfaceIntegrationTests {
+    func testURLRequestBuilding() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .get(self.endpoint)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .get(query: []))
+        XCTAssertNil(requestParams.header[.contentType])
+    }
+    
+    func testURLRequestBuilding_customHeader() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .get(self.endpoint)
+            .setInHeader("hello darkness", forKey: .contentType)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .get(query: []))
+        XCTAssertEqual(requestParams.header[.contentType], "hello darkness")
+    }
+    
+    func testURLRequestBuilding_encodingQuery() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedRequest = URLRequest(url: self.baseURL)
+        self.networking.buildRequestReturnValue = expectedRequest
+        // Act
+        let request = sut
+            .get(self.endpoint)
+            .query(SomeObject(id: 1, name: "name", double: 1.23))
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
+        XCTAssertEqual(requestParams.header[.contentType], "application/x-www-form-urlencoded")
+    }
+}
+
 // MARK: - Void response
 extension GetInterfaceIntegrationTests {
     func testGetVoid_buildingRequest() throws {
