@@ -8,8 +8,6 @@ extension HeadInterfaceIntegrationTests {
     func testURLRequestBuilding() throws {
         // Arrange
         let sut = self.buildSUT()
-        let expectedRequest = URLRequest(url: self.baseURL)
-        self.networking.buildRequestReturnValue = expectedRequest
         // Act
         let request = sut
             .head(self.endpoint)
@@ -40,7 +38,7 @@ extension HeadInterfaceIntegrationTests {
         XCTAssertNil(completionResult)
     }
     
-    // MARK: Decoding success
+    // MARK: Decoding Success
     func testHead_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()

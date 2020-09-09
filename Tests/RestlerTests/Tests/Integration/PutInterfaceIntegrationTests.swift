@@ -1,7 +1,6 @@
 import XCTest
 @testable import Restler
 
-// swiftlint:disable file_length
 final class PutInterfaceIntegrationTests: InterfaceIntegrationTestsBase {}
 
 // MARK: - URLRequest building
@@ -9,8 +8,6 @@ extension PutInterfaceIntegrationTests {
     func testURLRequestBuilding_withoutBody() throws {
         // Arrange
         let sut = self.buildSUT()
-        let expectedRequest = URLRequest(url: self.baseURL)
-        self.networking.buildRequestReturnValue = expectedRequest
         // Act
         let request = sut
             .put(self.endpoint)
@@ -27,8 +24,6 @@ extension PutInterfaceIntegrationTests {
     func testURLRequestBuilding_withoutBody_customHeader() throws {
         // Arrange
         let sut = self.buildSUT()
-        let expectedRequest = URLRequest(url: self.baseURL)
-        self.networking.buildRequestReturnValue = expectedRequest
         // Act
         let request = sut
             .put(self.endpoint)
@@ -48,8 +43,6 @@ extension PutInterfaceIntegrationTests {
         let sut = self.buildSUT()
         let object = SomeObject(id: 1, name: "name", double: 1.23)
         let data = try JSONEncoder().encode(object)
-        let expectedRequest = URLRequest(url: self.baseURL)
-        self.networking.buildRequestReturnValue = expectedRequest
         // Act
         let request = sut
             .put(self.endpoint)
@@ -63,72 +56,47 @@ extension PutInterfaceIntegrationTests {
         XCTAssertEqual(requestParams.method, .put(content: data))
         XCTAssertEqual(requestParams.header[.contentType], "application/json")
     }
-}
-
-// MARK: - Void response
-extension PutInterfaceIntegrationTests {
-    func testPutVoid_buildingRequest() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        var completionResult: Restler.VoidResult?
-        // Act
-        sut.put(self.endpoint)
-            .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
-        XCTAssertNil(completionResult)
-    }
     
-    func testPutVoid_buildingRequest_encodingBody() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        let object = SomeObject(id: 1, name: "name", double: 1.23)
-        let data = try JSONEncoder().encode(object)
-        var completionResult: Restler.VoidResult?
-        // Act
-        sut.put(self.endpoint)
-            .body(object)
-            .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
-        // Assert
-        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
-        XCTAssertNil(completionResult)
-    }
-    
-    func testPutVoid_buildingRequest_encodingBodyFails() throws {
+    func testURLRequestBuilding_encodingBodyFails() throws {
         // Arrange
         let sut = self.buildSUT()
         let object = ThrowingObject()
         let expectedError = TestError()
         object.thrownError = expectedError
-        var returnedError: Error?
-        var decodedObject: Void?
+        var returnedError: Restler.Error?
+        // Act
+        let request = sut
+            .put(self.endpoint)
+            .catching { returnedError = $0 }
+            .body(object)
+            .urlRequest()
+        // Assert
+        XCTAssertNil(request)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 0)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError)
+    }
+}
+
+// MARK: - Void response
+extension PutInterfaceIntegrationTests {
+    func testPutVoid_buildsRequest() throws {
+        // Arrange
+        let sut = self.buildSUT()
         var completionResult: Restler.VoidResult?
         // Act
         sut.put(self.endpoint)
-            .body(object)
             .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
             .onCompletion({ completionResult = $0 })
             .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 0)
-        XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(
-            expected: expectedError,
-            returnedError: returnedError,
-            completionResult: completionResult)
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        XCTAssertNil(completionResult)
     }
     
-    // MARK: Decoding success
+    // MARK: Decoding Success
     func testPutVoid_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -178,11 +146,10 @@ extension PutInterfaceIntegrationTests {
 
 // MARK: - Optional decodable response
 extension PutInterfaceIntegrationTests {
-    func testPutOptionalDecodable_buildingRequest_encodingBody() throws {
+    func testPutOptionalDecodable_buildsRequest() throws {
         // Arrange
         let sut = self.buildSUT()
         let object = SomeObject(id: 1, name: "name", double: 1.23)
-        let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject?>?
         // Act
         sut.put(self.endpoint)
@@ -196,35 +163,7 @@ extension PutInterfaceIntegrationTests {
         XCTAssertNil(completionResult)
     }
     
-    func testPutOptionalDecodable_buildingRequest_encodingBodyFails() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        let object = ThrowingObject()
-        let expectedError = TestError()
-        object.thrownError = expectedError
-        var returnedError: Error?
-        var decodedObject: SomeObject?
-        var completionResult: Restler.DecodableResult<SomeObject?>?
-        // Act
-        sut.put(self.endpoint)
-            .body(object)
-            .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
-        // Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 0)
-        XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(
-            expected: expectedError,
-            returnedError: returnedError,
-            completionResult: completionResult)
-    }
-    
-    // MARK: Decoding success
+    // MARK: Decoding Success
     func testPutOptionalDecodable_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -299,11 +238,10 @@ extension PutInterfaceIntegrationTests {
 
 // MARK: - Decodable response
 extension PutInterfaceIntegrationTests {
-    func testPutDecodable_buildingRequest_encodingBody() throws {
+    func testPutDecodable_buildsRequest() throws {
         // Arrange
         let sut = self.buildSUT()
         let object = SomeObject(id: 1, name: "name", double: 1.23)
-        let data = try JSONEncoder().encode(object)
         var completionResult: Restler.DecodableResult<SomeObject>?
         // Act
         sut.put(self.endpoint)
@@ -317,35 +255,7 @@ extension PutInterfaceIntegrationTests {
         XCTAssertNil(completionResult)
     }
     
-    func testPutDecodable_buildingRequest_encodingBodyFails() throws {
-        // Arrange
-        let sut = self.buildSUT()
-        let object = ThrowingObject()
-        let expectedError = TestError()
-        object.thrownError = expectedError
-        var returnedError: Error?
-        var decodedObject: SomeObject?
-        var completionResult: Restler.DecodableResult<SomeObject>?
-        // Act
-        sut.put(self.endpoint)
-            .body(object)
-            .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
-        // Assert
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
-        XCTAssertEqual(self.networking.makeRequestParams.count, 0)
-        XCTAssertNil(decodedObject)
-        try self.assertThrowsEncodingError(
-            expected: expectedError,
-            returnedError: returnedError,
-            completionResult: completionResult)
-    }
-    
-    // MARK: Decoding success
+    // MARK: Decoding Success
     func testPutDecodable_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()

@@ -41,6 +41,7 @@ extension Restler.RequestBuilder {
         var body: Data?
         var errors: [Restler.Error] = []
         var customRequestModification: ((inout URLRequest) -> Void)?
+        var builderErrorsHandler: ((Restler.Error) -> Void)?
     }
 }
 
@@ -68,8 +69,17 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
             urlRequest: self.urlRequest()))
     }
     
+    public func catching(_ handler: ((Restler.Error) -> Void)?) -> Self {
+        self.form.builderErrorsHandler = handler
+        return self
+    }
+    
     public func urlRequest() -> URLRequest? {
-        self.dependencies.networking.buildRequest(
+        if let error = self.form.errors.single() {
+            self.form.builderErrorsHandler?(error)
+            return nil
+        }
+        return self.dependencies.networking.buildRequest(
             url: self.dependencies.url,
             method: self.dependencies.method.combinedWith(query: self.form.query, body: self.form.body),
             header: self.form.header,
@@ -79,7 +89,8 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     public func publisher() -> URLSession.DataTaskPublisher? {
-        self.dependencies.networking.getPublisher(urlRequest: self.urlRequest())
+        guard let request = self.urlRequest() else { return nil }
+        return self.dependencies.networking.getPublisher(urlRequest: request)
     }
     #endif
 }

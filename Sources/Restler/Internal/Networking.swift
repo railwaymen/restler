@@ -8,8 +8,8 @@ typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType: class {
     func makeRequest(
-        urlRequest: URLRequest?,
-        completion: @escaping DataCompletion) -> Restler.Task?
+        urlRequest: URLRequest,
+        completion: @escaping DataCompletion) -> Restler.Task
     
     func buildRequest(
         url: URL,
@@ -19,7 +19,7 @@ protocol NetworkingType: class {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func getPublisher(urlRequest: URLRequest?) -> URLSession.DataTaskPublisher?
+    func getPublisher(urlRequest: URLRequest) -> URLSession.DataTaskPublisher
     #endif
 }
 
@@ -35,14 +35,10 @@ final class Networking {
 // MARK: - NetworkingType
 extension Networking: NetworkingType {
     func makeRequest(
-        urlRequest: URLRequest?,
+        urlRequest: URLRequest,
         completion: @escaping DataCompletion
-    ) -> Restler.Task? {
-        guard let request = urlRequest else {
-            completion(.failure(Restler.internalError()))
-            return nil
-        }
-        return Restler.Task(task: self.runDataTask(request: request, completion: completion))
+    ) -> Restler.Task {
+        Restler.Task(task: self.runDataTask(request: urlRequest, completion: completion))
     }
     
     func buildRequest(
@@ -63,9 +59,8 @@ extension Networking: NetworkingType {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func getPublisher(urlRequest: URLRequest?) -> URLSession.DataTaskPublisher? {
-        guard let request = urlRequest else { return nil }
-        return self.session.dataTaskPublisher(for: request)
+    func getPublisher(urlRequest: URLRequest) -> URLSession.DataTaskPublisher {
+        self.session.dataTaskPublisher(for: urlRequest)
     }
     #endif
 }

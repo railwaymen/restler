@@ -1,7 +1,6 @@
 import XCTest
 @testable import Restler
 
-// swiftlint:disable file_length
 final class NetworkingTests: XCTestCase {
     private var session: URLSessionMock!
     
@@ -49,13 +48,13 @@ extension NetworkingTests {
         var completionResult: DataResult?
         // Act
         _ = sut.makeRequest(urlRequest: urlRequest) { result in
-                completionResult = result
+            completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         // Assert
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), responseData)
     }
-
+    
     func testMakeRequest_noResponse() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -65,14 +64,14 @@ extension NetworkingTests {
         var completionResult: DataResult?
         // Act
         _ = sut.makeRequest(urlRequest: urlRequest) { result in
-                completionResult = result
+            completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         // Assert
         let expectedError = Restler.Error.request(type: .unknownError, response: Restler.Response(response))
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: expectedError)
     }
-
+    
     func testMakeRequest_notFoundResponse() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -85,14 +84,14 @@ extension NetworkingTests {
         var completionResult: DataResult?
         // Act
         _ = sut.makeRequest(urlRequest: urlRequest) { result in
-                completionResult = result
+            completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         // Assert
         let expectedError =  Restler.Error.request(type: .notFound, response: Restler.Response(response))
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: expectedError)
     }
-
+    
     func testMakeRequest_responseNotNil() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -105,14 +104,14 @@ extension NetworkingTests {
         var completionResult: DataResult?
         // Act
         _ = sut.makeRequest(urlRequest: urlRequest) { result in
-                completionResult = result
+            completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         // Assert
         let expectedError = Restler.Error.request(type: .unauthorized, response: Restler.Response(response))
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: expectedError)
     }
-
+    
     func testMakeRequest_noDataInResponse() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -124,13 +123,13 @@ extension NetworkingTests {
         var completionResult: DataResult?
         // Act
         _ = sut.makeRequest(urlRequest: urlRequest) { result in
-                completionResult = result
+            completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         // Assert
         XCTAssertNil(try XCTUnwrap(completionResult).get())
     }
-
+    
     func testMakeRequest_error() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -143,14 +142,14 @@ extension NetworkingTests {
         var completionResult: DataResult?
         // Act
         _ = sut.makeRequest(urlRequest: urlRequest) { result in
-                completionResult = result
+            completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         // Assert
         let expectedError = Restler.Error.request(type: .unknownError, response: Restler.Response(response))
         AssertResult(try XCTUnwrap(completionResult), errorIsEqualTo: expectedError)
     }
-
+    
     func testMakeRequest_NSURLErrorCancelled() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -161,7 +160,7 @@ extension NetworkingTests {
         var completionResult: DataResult?
         // Act
         _ = sut.makeRequest(urlRequest: urlRequest) { result in
-                completionResult = result
+            completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
         // Assert
@@ -218,7 +217,7 @@ extension NetworkingTests {
         XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
         XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
     }
-
+    
     func testBuildRequest_put_makesProperRequest() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -241,7 +240,7 @@ extension NetworkingTests {
         XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
         XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
     }
-
+    
     func testBuildRequest_delete_makesProperRequest() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -263,7 +262,7 @@ extension NetworkingTests {
         XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
         XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
     }
-
+    
     func testBuildRequest_head_makesProperRequest() throws {
         // Arrange
         let sut = self.buildSUT()

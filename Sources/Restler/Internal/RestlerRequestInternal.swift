@@ -9,13 +9,10 @@ extension RestlerRequestInternal {
     var dispatchQueueManager: DispatchQueueManagerType { self.dependencies.dispatchQueueManager }
     
     func buildNetworkingRequest() -> RestlerTaskType? {
+        guard let urlRequest = self.dependencies.urlRequest else { return nil }
         let completion = self.getCompletion()
-        guard self.dependencies.errors.isEmpty else {
-            completion(.failure(Restler.Error.multiple(self.dependencies.errors)))
-            return nil
-        }
         return self.dependencies.networking.makeRequest(
-            urlRequest: self.dependencies.urlRequest,
+            urlRequest: urlRequest,
             completion: completion)
     }
     

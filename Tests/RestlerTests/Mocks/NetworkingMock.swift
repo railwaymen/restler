@@ -4,10 +4,10 @@ import Foundation
 final class NetworkingMock {
     
     // MARK: - NetworkingType
-    var makeRequestReturnValue: Restler.Task?
+    var makeRequestReturnValue: Restler.Task = .init(task: URLSessionDataTaskMock())
     private(set) var makeRequestParams: [MakeRequestParams] = []
     struct MakeRequestParams {
-        let urlRequest: URLRequest?
+        let urlRequest: URLRequest
         let completion: DataCompletion
     }
     
@@ -22,16 +22,16 @@ final class NetworkingMock {
     
     private(set) var getPublisherParams: [GetPublisherParams] = []
     struct GetPublisherParams {
-        let urlRequest: URLRequest?
+        let urlRequest: URLRequest
     }
 }
 
 // MARK: - NetworkingType
 extension NetworkingMock: NetworkingType {
     func makeRequest(
-        urlRequest: URLRequest?,
+        urlRequest: URLRequest,
         completion: @escaping DataCompletion
-    ) -> Restler.Task? {
+    ) -> Restler.Task {
         self.makeRequestParams.append(MakeRequestParams(
             urlRequest: urlRequest,
             completion: completion))
@@ -54,9 +54,11 @@ extension NetworkingMock: NetworkingType {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    public func getPublisher(urlRequest: URLRequest?) -> URLSession.DataTaskPublisher? {
+    public func getPublisher(urlRequest: URLRequest) -> URLSession.DataTaskPublisher {
         self.getPublisherParams.append(GetPublisherParams(urlRequest: urlRequest))
-        return nil
+        return .init(
+            request: urlRequest,
+            session: .shared)
     }
     #endif
 }

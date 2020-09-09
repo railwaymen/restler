@@ -8,8 +8,6 @@ extension DeleteInterfaceIntegrationTests {
     func testURLRequestBuilding() throws {
         // Arrange
         let sut = self.buildSUT()
-        let expectedRequest = URLRequest(url: self.baseURL)
-        self.networking.buildRequestReturnValue = expectedRequest
         // Act
         let request = sut
             .delete(self.endpoint)
@@ -26,8 +24,6 @@ extension DeleteInterfaceIntegrationTests {
     func testURLRequestBuilding_customHeader() throws {
         // Arrange
         let sut = self.buildSUT()
-        let expectedRequest = URLRequest(url: self.baseURL)
-        self.networking.buildRequestReturnValue = expectedRequest
         // Act
         let request = sut
             .delete(self.endpoint)
@@ -60,7 +56,7 @@ extension DeleteInterfaceIntegrationTests {
         XCTAssertNil(completionResult)
     }
     
-    // MARK: Decoding success
+    // MARK: Decoding Success
     func testDeleteVoid_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -125,7 +121,7 @@ extension DeleteInterfaceIntegrationTests {
         XCTAssertNil(completionResult)
     }
     
-    // MARK: Decoding success
+    // MARK: Decoding Success
     func testDeleteOptionalDecodable_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -215,7 +211,7 @@ extension DeleteInterfaceIntegrationTests {
         XCTAssertNil(completionResult)
     }
     
-    // MARK: Decoding success
+    // MARK: Decoding Success
     func testDeleteDecodable_success_nil() throws {
         // Arrange
         let sut = self.buildSUT()
