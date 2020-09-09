@@ -6,21 +6,21 @@ final class HeaderTests: XCTestCase {}
 // MARK: - init(_:)
 extension HeaderTests {
     func testInit_defaultValue() {
-        //Act
+        // Act
         let sut = Restler.Header()
-        //Assert
+        // Assert
         XCTAssertTrue(sut.raw.isEmpty)
     }
     
     func testInit_setsRaw() {
-        //Arrange
+        // Arrange
         let header: [Restler.Header.Key: String] = [
             .custom("Accept"): "accept content",
             .custom("Content-Type"): "content type"
         ]
-        //Act
+        // Act
         let sut = Restler.Header(header)
-        //Assert
+        // Assert
         XCTAssertEqual(sut.raw.count, header.count)
         XCTAssertEqual(sut.raw["Accept"], header[.custom("Accept")])
         XCTAssertEqual(sut.raw["Content-Type"], header[.custom("Content-Type")])
@@ -30,16 +30,16 @@ extension HeaderTests {
 // MARK: - dict get
 extension HeaderTests {
     func testDict() {
-        //Arrange
+        // Arrange
         let headers: [Restler.Header.Key: String] = [
             .accept: "accept content",
             .contentType: "content",
             .custom("Language"): "en"
         ]
         let sut = Restler.Header(headers)
-        //Act
+        // Act
         let getDict = sut.dict
-        //Assert
+        // Assert
         XCTAssertEqual(getDict, headers)
     }
 }
@@ -47,20 +47,20 @@ extension HeaderTests {
 // MARK: - subscript(_:) get
 extension HeaderTests {
     func testSubscriptGet_existingKeyValue() {
-        //Arrange
+        // Arrange
         let sut = Restler.Header([.accept: "accept"])
-        //Act
+        // Act
         let accept = sut[.accept]
-        //Assert
+        // Assert
         XCTAssertEqual(accept, "accept")
     }
     
     func testSubscriptGet_notExistingKeyValue() {
-        //Arrange
+        // Arrange
         let sut = Restler.Header()
-        //Act
+        // Act
         let accept = sut[.accept]
-        //Assert
+        // Assert
         XCTAssertNil(accept)
     }
 }
@@ -68,22 +68,22 @@ extension HeaderTests {
 // MARK: - subscript(_:) set
 extension HeaderTests {
     func testSubscriptSet_existingKeyValue() {
-        //Arrange
+        // Arrange
         var sut = Restler.Header([.accept: "accept"])
         let newValue = "new Value"
-        //Act
+        // Act
         sut[.accept] = newValue
-        //Assert
+        // Assert
         XCTAssertEqual(sut[.accept], newValue)
     }
     
     func testSubscriptSet_notExistingKeyValue() {
-        //Arrange
+        // Arrange
         var sut = Restler.Header()
         let newValue = "new Value"
-        //Act
+        // Act
         sut[.accept] = newValue
-        //Assert
+        // Assert
         XCTAssertEqual(sut[.accept], newValue)
     }
 }
@@ -91,21 +91,21 @@ extension HeaderTests {
 // MARK: - removeValue(forKey:)
 extension HeaderTests {
     func testRemoveValues_existingValue() {
-        //Arrange
+        // Arrange
         var sut = Restler.Header([.accept: "accept"])
-        //Act
+        // Act
         let existed = sut.removeValue(forKey: .accept)
-        //Assert
+        // Assert
         XCTAssertTrue(existed)
         XCTAssertNil(sut[.accept])
     }
     
     func testRemoveValues_notExistingValue() {
-        //Arrange
+        // Arrange
         var sut = Restler.Header()
-        //Act
+        // Act
         let existed = sut.removeValue(forKey: .accept)
-        //Assert
+        // Assert
         XCTAssertFalse(existed)
         XCTAssertNil(sut[.accept])
     }
@@ -114,15 +114,15 @@ extension HeaderTests {
 // MARK: - setBasicAuthorization(username:password:)
 extension HeaderTests {
     func testSetBasicAuthorization() throws {
-        //Arrange
+        // Arrange
         var sut = Restler.Header()
         let username = "Some user hello"
         let password = "myPassword1!"
         let credentials = "\(username):\(password)"
         let expectedValue = "Basic \(try XCTUnwrap(credentials.data(using: .utf8)).base64EncodedString())"
-        //Act
+        // Act
         sut.setBasicAuthorization(username: username, password: password)
-        //Assert
+        // Assert
         XCTAssertEqual(sut[.authorization], expectedValue)
     }
 }

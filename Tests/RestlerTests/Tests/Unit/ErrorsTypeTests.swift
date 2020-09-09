@@ -13,128 +13,128 @@ final class ErrorsTypeTests: XCTestCase {
 // MARK: - init(result:)
 extension ErrorsTypeTests {
     func testInit_code15() {
-        //Arrange
+        // Arrange
         let statusCode = 15
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.noInternetConnection)
     }
     
     func testInit_code23() {
-        //Arrange
+        // Arrange
         let statusCode = 23
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.timeout)
     }
     
     func testInit_code401() {
-        //Arrange
+        // Arrange
         let statusCode = 401
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.unauthorized)
     }
     
     func testInit_code403() {
-        //Arrange
+        // Arrange
         let statusCode = 403
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.forbidden)
     }
     
     func testInit_code404() {
-        //Arrange
+        // Arrange
         let statusCode = 404
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.notFound)
     }
     
     func testInit_code422() {
-        //Arrange
+        // Arrange
         let statusCode = 422
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.validationError)
     }
     
     func testInit_code500() {
-        //Arrange
+        // Arrange
         let statusCode = 500
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.serverError)
     }
     
     func testInit_codeNSURLErrorBadServerResponse() {
-        //Arrange
+        // Arrange
         let statusCode = NSURLErrorBadServerResponse
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.invalidResponse)
     }
     
     func testInit_codeNSURLErrorBadURL() {
-        //Arrange
+        // Arrange
         let statusCode = NSURLErrorBadURL
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.invalidURL)
     }
     
     func testInit_codeNSURLErrorNetworkConnectionLost() {
-        //Arrange
+        // Arrange
         let statusCode = NSURLErrorNetworkConnectionLost
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.noInternetConnection)
     }
     
     func testInit_codeNSURLErrorTimedOut() {
-        //Arrange
+        // Arrange
         let statusCode = NSURLErrorTimedOut
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.timeout)
     }
     
     func testInit_codeNSURLErrorUnknown() {
-        //Arrange
+        // Arrange
         let statusCode = NSURLErrorUnknown
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.unknownError)
     }
     
     func testInit_codeNSURLErrorCancelled() {
-        //Arrange
+        // Arrange
         let statusCode = NSURLErrorCancelled
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertEqual(sut, Restler.ErrorType.requestCancelled)
     }
     
     func testInit_codeUnknownValue() {
-        //Arrange
+        // Arrange
         let statusCode = 111111111
-        //Act
+        // Act
         let sut = Restler.ErrorType(statusCode: statusCode)
-        //Assert
+        // Assert
         XCTAssertNil(sut)
     }
 }

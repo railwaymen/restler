@@ -12,10 +12,10 @@ final class RestlerInterfaceMocksTests: XCTestCase {
 
 extension RestlerInterfaceMocksTests {
     func test() throws {
-        //Arrange
+        // Arrange
         let object = SomeObject(id: 12, name: "some", double: 1.23)
         var completionResult: Result<SomeObject, Error>?
-        //Act
+        // Act
         _ = self.restler
             .post(EndpointMock.mock)
             .body(object)
@@ -24,7 +24,7 @@ extension RestlerInterfaceMocksTests {
             .onCompletion { completionResult = $0 }
             .start()
         XCTAssertNoThrow(try self.restler.postReturnValue.callCompletion(type: SomeObject.self, result: .success(object)))
-        //Assert
+        // Assert
         let bodyObject = try XCTUnwrap(self.restler.postReturnValue.bodyParams.last?.object as? SomeObject)
         XCTAssertEqual(bodyObject, object)
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), object)
