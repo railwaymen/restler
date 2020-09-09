@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(Combine)
+import Combine
+#endif
 
 public typealias RestlerGetRequestBuilderType =
     RestlerQueryRequestBuilderType
@@ -101,7 +104,7 @@ public protocol RestlerBasicRequestBuilderType: class {
     /// Nil if building error have occured. Handle the error using the `catching(_:)` function.
     ///
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func publisher() -> URLSession.DataTaskPublisher?
+    func publisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure>?
     #endif
 }
 

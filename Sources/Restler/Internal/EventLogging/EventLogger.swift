@@ -25,9 +25,9 @@ extension EventLogger: EventLoggerLogging {
         case .nothing:
             break
         case .concise:
-            debugPrint(conciseDescription(for: event))
+            print(conciseDescription(for: event))
         case .debug:
-            debugPrint(detailedDescription(for: event))
+            print(detailedDescription(for: event))
         }
         #endif
     }
@@ -56,6 +56,7 @@ extension EventLogger {
             Headers: \(response.response?.allHeaderFields ?? [:])
             
             Elapsed Time: \(elapsedTime) ms
+            Finished: [\(Date())]
             
             """
         }
@@ -85,6 +86,7 @@ extension EventLogger {
             Body: \(String(data: response.data ?? nilStringData ?? Data(), encoding: .utf8) ?? "nil")
             
             Elapsed Time: \(elapsedTime) ms
+            Finished: [\(Date())]
             
             """
         }

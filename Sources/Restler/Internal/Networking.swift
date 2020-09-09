@@ -20,7 +20,10 @@ protocol NetworkingType: class {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func getPublisher(urlRequest: URLRequest) -> URLSession.DataTaskPublisher
+    func getPublisher(
+        urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging
+    ) -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure>
     #endif
 }
 
@@ -64,8 +67,26 @@ extension Networking: NetworkingType {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func getPublisher(urlRequest: URLRequest) -> URLSession.DataTaskPublisher {
-        self.session.dataTaskPublisher(for: urlRequest)
+    func getPublisher(
+        urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging
+    ) -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure> {
+        var startTime: DispatchTime?
+        return self.session.dataTaskPublisher(for: urlRequest)
+            .handleEvents(
+                receiveSubscription: { _ in startTime = .now() },
+                receiveOutput: { data, response in
+                    let elapsedTime: Milliseconds = DispatchTime.now().since(startTime ?? .now()).toMilliseconds()
+                    let httpResponse = HTTPRequestResponse(data: data, response: response as? HTTPURLResponseType, error: nil)
+                    eventLogger.log(.requestCompleted(request: urlRequest, response: httpResponse, elapsedTime: elapsedTime))
+            },
+                receiveCompletion: { completion in
+                    guard case let .failure(error) = completion else { return }
+                    let elapsedTime: Milliseconds = DispatchTime.now().since(startTime ?? .now()).toMilliseconds()
+                    let httpResponse = HTTPRequestResponse(data: nil, response: nil, error: error)
+                    eventLogger.log(.requestCompleted(request: urlRequest, response: httpResponse, elapsedTime: elapsedTime))
+            })
+            .eraseToAnyPublisher()
     }
     #endif
 }
@@ -90,16 +111,11 @@ extension Networking {
     ) -> URLSessionDataTaskType {
         let startTime: DispatchTime = .now()
         let task = self.session.dataTask(with: request) { response in
-            let elapsedTime: DispatchTimeInterval
-            if #available(OSX 10.15, *) {
-                elapsedTime = startTime.distance(to: .now())
-            } else {
-                elapsedTime = .nanoseconds(Int(DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds))
-            }
+            let elapsedTime: Milliseconds = DispatchTime.now().since(startTime).toMilliseconds()
             eventLogger.log(.requestCompleted(
                 request: request,
                 response: response,
-                elapsedTime: elapsedTime.toMilliseconds()))
+                elapsedTime: elapsedTime))
             self.handleResponse(response: response, completion: completion)
         }
         task.resume()

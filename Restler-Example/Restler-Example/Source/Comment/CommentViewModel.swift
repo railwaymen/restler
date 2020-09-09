@@ -30,6 +30,7 @@ final class CommentViewModel: ObservableObject {
     // MARK: - Initialization
     init(comment: PostComment) {
         self.comment = comment
+        self.restler.levelOfLogDetails = .debug
     }
     
     // MARK: - Internal

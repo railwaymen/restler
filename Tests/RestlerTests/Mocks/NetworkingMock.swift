@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(Combine)
+import Combine
+#endif
 @testable import Restler
 
 final class NetworkingMock {
@@ -30,6 +33,7 @@ final class NetworkingMock {
 extension NetworkingMock: NetworkingType {
     func makeRequest(
         urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging,
         completion: @escaping DataCompletion
     ) -> Restler.Task {
         self.makeRequestParams.append(MakeRequestParams(
@@ -54,11 +58,15 @@ extension NetworkingMock: NetworkingType {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    public func getPublisher(urlRequest: URLRequest) -> URLSession.DataTaskPublisher {
+    public func getPublisher(
+        urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging
+    ) -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure> {
         self.getPublisherParams.append(GetPublisherParams(urlRequest: urlRequest))
-        return .init(
+        return URLSession.DataTaskPublisher(
             request: urlRequest,
             session: .shared)
+        .eraseToAnyPublisher()
     }
     #endif
 }

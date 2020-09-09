@@ -1,22 +1,22 @@
 import Foundation
 
-typealias Milliseconds = Int
+typealias Milliseconds = Double
 
 extension DispatchTimeInterval {
     func toMilliseconds() -> Milliseconds {
         switch self {
         case let .seconds(time):
-            return time * 1000
+            return Double(time) * 1_000
         case let .milliseconds(time):
-            return time
+            return Double(time)
         case let .microseconds(time):
-            return Int((Double(time) / 1000).rounded())
+            return Double(time) / 1_000
         case let .nanoseconds(time):
-            return Int((Double(time) / 1_000_000).rounded())
+            return Double(time) / 1_000_000
         case .never:
             return 0
         @unknown default:
-            return -1
+            return 0
         }
     }
 }

@@ -8,6 +8,8 @@ final class RestlerMock {
     
     var errorParser: RestlerErrorParserType = RestlerErrorParserMock()
     
+    var levelOfLogDetails: Restler.LevelOfLogDetails = .concise
+    
     var header: Restler.Header = .init()
     
     var getReturnValue: RestlerRequestBuilderMock = RestlerRequestBuilderMock()
