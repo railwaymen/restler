@@ -53,10 +53,9 @@ extension HeadInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
         XCTAssertNil(returnedError)
         XCTAssertNotNil(decodedObject)
         XCTAssertNotNil(try XCTUnwrap(completionResult).get())
@@ -76,10 +75,9 @@ extension HeadInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
         XCTAssertNil(returnedError)
         XCTAssertNotNil(decodedObject)
         XCTAssertNotNil(try XCTUnwrap(completionResult).get())

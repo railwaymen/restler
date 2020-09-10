@@ -17,9 +17,9 @@ extension RestlerRequestInternal {
             completion: completion)
     }
     
-    func mainThreadClosure<T>(of closure: @escaping (T) -> Void) -> (T) -> Void {
+    func customQueueClosure<T>(of closure: @escaping (T) -> Void) -> (T) -> Void {
         return { [dispatchQueueManager] result in
-            dispatchQueueManager.perform(on: .main, .async) {
+            dispatchQueueManager.async(on: self.dependencies.customDispatchQueue) {
                 closure(result)
             }
         }
@@ -36,6 +36,7 @@ extension Restler {
         let errorParser: RestlerErrorParserType
         let eventLogger: EventLoggerLogging
         let errors: [Restler.Error]
+        let customDispatchQueue: DispatchQueue?
         let urlRequest: URLRequest?
         
         init(
@@ -50,6 +51,7 @@ extension Restler {
             self.eventLogger = dependencies.eventLogger
             self.errorParser = form.errorParser
             self.errors = form.errors
+            self.customDispatchQueue = form.customDispatchQueue
             self.urlRequest = urlRequest
         }
     }

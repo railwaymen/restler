@@ -48,7 +48,7 @@ extension Restler {
                 }
                 completionHandler?(result)
             }
-            let responseHandler = self.responseHandlerClosure(completion: self.mainThreadClosure(of: completion))
+            let responseHandler = self.responseHandlerClosure(completion: self.customQueueClosure(of: completion))
             return { result in
                 responseHandler(result)
             }

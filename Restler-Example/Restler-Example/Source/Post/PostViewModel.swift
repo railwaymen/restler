@@ -41,6 +41,7 @@ final class PostViewModel: ObservableObject {
         _ = self.restler
             .get(Endpoint.comments)
             .query(["postId": 1])
+            .receive(on: .main)
             .decode([PostComment].self)
             .onCompletion({ result in
                 switch result {

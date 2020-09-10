@@ -4,17 +4,17 @@ import Foundation
 final class DispatchQueueManagerMock {
     
     // MARK: - DispatchQueueManagerType
-    private(set) var performParams: [PerformParams] = []
-    struct PerformParams {
-        let thread: DispatchQueueThread
-        let syncType: DispatchQueueSynchronizationType
+    private(set) var asyncParams: [AsyncParams] = []
+    struct AsyncParams {
+        let queue: DispatchQueue?
         let action: () -> Void
     }
 }
 
 // MARK: - DispatchQueueManagerType
 extension DispatchQueueManagerMock: DispatchQueueManagerType {
-    func perform(on thread: DispatchQueueThread, _ syncType: DispatchQueueSynchronizationType, action: @escaping () -> Void) {
-        self.performParams.append(PerformParams(thread: thread, syncType: syncType, action: action))
+    func async(on queue: DispatchQueue?, execute action: @escaping @convention(block) () -> Void) {
+        self.asyncParams.append(AsyncParams(queue: queue, action: action))
+        action()
     }
 }
