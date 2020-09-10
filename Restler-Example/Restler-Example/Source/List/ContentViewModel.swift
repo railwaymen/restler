@@ -40,9 +40,9 @@ final class ContentViewModel: ObservableObject {
         self.restler
             .get(Endpoint.posts)
             .publisher()?
-            .receive(on: DispatchQueue.main)
             .map(\.data)
             .decode(type: [BlogPost].self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 }

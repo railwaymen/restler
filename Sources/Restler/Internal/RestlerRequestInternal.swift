@@ -13,6 +13,7 @@ extension RestlerRequestInternal {
         let completion = self.getCompletion()
         return self.dependencies.networking.makeRequest(
             urlRequest: urlRequest,
+            eventLogger: self.dependencies.eventLogger,
             completion: completion)
     }
     
@@ -33,6 +34,7 @@ extension Restler {
         let decoder: RestlerJSONDecoderType
         let dispatchQueueManager: DispatchQueueManagerType
         let errorParser: RestlerErrorParserType
+        let eventLogger: EventLoggerLogging
         let errors: [Restler.Error]
         let urlRequest: URLRequest?
         
@@ -45,6 +47,7 @@ extension Restler {
             self.encoder = dependencies.encoder
             self.decoder = dependencies.decoder
             self.dispatchQueueManager = dependencies.dispatchQueueManager
+            self.eventLogger = dependencies.eventLogger
             self.errorParser = form.errorParser
             self.errors = form.errors
             self.urlRequest = urlRequest

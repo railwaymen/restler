@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(Combine)
+import Combine
+#endif
 
 typealias QueryParametersType = [URLQueryItem]
 
@@ -31,6 +34,7 @@ extension Restler.RequestBuilder {
         let queryEncoder: RestlerQueryEncoderType
         let multipartEncoder: RestlerMultipartEncoderType
         let dispatchQueueManager: DispatchQueueManagerType
+        let eventLogger: EventLoggerLogging
         let method: HTTPMethod
     }
     
@@ -88,9 +92,11 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    public func publisher() -> URLSession.DataTaskPublisher? {
+    public func publisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure>? {
         guard let request = self.urlRequest() else { return nil }
-        return self.dependencies.networking.getPublisher(urlRequest: request)
+        return self.dependencies.networking.getPublisher(
+            urlRequest: request,
+            eventLogger: self.dependencies.eventLogger)
     }
     #endif
 }

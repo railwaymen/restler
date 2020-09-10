@@ -6,6 +6,7 @@ class InterfaceIntegrationTestsBase: XCTestCase {
     let endpoint = EndpointMock.mock
     var networking: NetworkingMock!
     var dispatchQueueManager: DispatchQueueManagerMock!
+    var eventLogger: EventLoggerMock!
     
     var mockURLString: String {
         self.baseURL.absoluteString + "/mock"
@@ -17,6 +18,7 @@ class InterfaceIntegrationTestsBase: XCTestCase {
         super.setUp()
         self.networking = NetworkingMock()
         self.dispatchQueueManager = DispatchQueueManagerMock()
+        self.eventLogger = EventLoggerMock()
         
         self.networking.buildRequestReturnValue = self.expectedRequest
     }
@@ -29,7 +31,8 @@ class InterfaceIntegrationTestsBase: XCTestCase {
             dispatchQueueManager: self.dispatchQueueManager,
             encoder: JSONEncoder(),
             decoder: JSONDecoder(),
-            errorParser: Restler.ErrorParser())
+            errorParser: Restler.ErrorParser(),
+            eventLogger: self.eventLogger)
     }
     
     func assertThrowsEncodingError(

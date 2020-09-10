@@ -1,4 +1,7 @@
 import XCTest
+#if canImport(Combine)
+import Combine
+#endif
 import Restler
 
 final class RestlerRequestBuilderMock {
@@ -118,7 +121,7 @@ extension RestlerRequestBuilderMock: RestlerBasicRequestBuilderType {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func publisher() -> URLSession.DataTaskPublisher? {
+    func publisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure>? {
         self.publisherParams.append(PublisherParams())
         return nil
     }

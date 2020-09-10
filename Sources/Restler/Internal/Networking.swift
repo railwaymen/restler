@@ -9,6 +9,7 @@ typealias DataCompletion = (DataResult) -> Void
 protocol NetworkingType: class {
     func makeRequest(
         urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging,
         completion: @escaping DataCompletion) -> Restler.Task
     
     func buildRequest(
@@ -19,7 +20,10 @@ protocol NetworkingType: class {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func getPublisher(urlRequest: URLRequest) -> URLSession.DataTaskPublisher
+    func getPublisher(
+        urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging
+    ) -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure>
     #endif
 }
 
@@ -36,9 +40,13 @@ final class Networking {
 extension Networking: NetworkingType {
     func makeRequest(
         urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging,
         completion: @escaping DataCompletion
     ) -> Restler.Task {
-        Restler.Task(task: self.runDataTask(request: urlRequest, completion: completion))
+        Restler.Task(task: self.runDataTask(
+            request: urlRequest,
+            eventLogger: eventLogger,
+            completion: completion))
     }
     
     func buildRequest(
@@ -59,8 +67,26 @@ extension Networking: NetworkingType {
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func getPublisher(urlRequest: URLRequest) -> URLSession.DataTaskPublisher {
-        self.session.dataTaskPublisher(for: urlRequest)
+    func getPublisher(
+        urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging
+    ) -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure> {
+        var startTime: DispatchTime?
+        return self.session.dataTaskPublisher(for: urlRequest)
+            .handleEvents(
+                receiveSubscription: { _ in startTime = .now() },
+                receiveOutput: { data, response in
+                    let elapsedTime: Milliseconds = DispatchTime.now().since(startTime ?? .now()).toMilliseconds()
+                    let httpResponse = HTTPRequestResponse(data: data, response: response as? HTTPURLResponseType, error: nil)
+                    eventLogger.log(.requestCompleted(request: urlRequest, response: httpResponse, elapsedTime: elapsedTime))
+            },
+                receiveCompletion: { completion in
+                    guard case let .failure(error) = completion else { return }
+                    let elapsedTime: Milliseconds = DispatchTime.now().since(startTime ?? .now()).toMilliseconds()
+                    let httpResponse = HTTPRequestResponse(data: nil, response: nil, error: error)
+                    eventLogger.log(.requestCompleted(request: urlRequest, response: httpResponse, elapsedTime: elapsedTime))
+            })
+            .eraseToAnyPublisher()
     }
     #endif
 }
@@ -78,8 +104,18 @@ extension Networking {
         return request
     }
     
-    private func runDataTask(request: URLRequest, completion: @escaping DataCompletion) -> URLSessionDataTaskType {
+    private func runDataTask(
+        request: URLRequest,
+        eventLogger: EventLoggerLogging,
+        completion: @escaping DataCompletion
+    ) -> URLSessionDataTaskType {
+        let startTime: DispatchTime = .now()
         let task = self.session.dataTask(with: request) { response in
+            let elapsedTime: Milliseconds = DispatchTime.now().since(startTime).toMilliseconds()
+            eventLogger.log(.requestCompleted(
+                request: request,
+                response: response,
+                elapsedTime: elapsedTime))
             self.handleResponse(response: response, completion: completion)
         }
         task.resume()
