@@ -123,13 +123,13 @@ Restler(baseURL: myBaseURL)
   .decode(Profile.self) // 6
   // 7
 
-  .onSuccess({ profile in // 8
-    updateProfile(with: profile)
+  .subscribe(
+    onSuccess: { profile in // 8
+      updateProfile(with: profile)
+    },
+    onCompletion: { _ in // 9
+      hideLoadingIndicator()
   })
-  .onCompletion({ _ in // 9
-    hideLoadingIndicator()
-  })
-  .start() // 10
 ```
 
 1. Makes GET request to the given endpoint.
@@ -141,7 +141,6 @@ Restler(baseURL: myBaseURL)
 7. Since this moment we're operating on a request, not a request builder.
 8. A handler called if Restler would successfully end request.
 9. A handler called on completion of the request whatever the result would be.
-10. Create and start data task.
 
 #### POST
 
@@ -152,13 +151,13 @@ Restler(baseURL: myBaseURL)
   .failureDecode(ErrorToDecodeOnFailure.self)
   .decode(Profile.self)
 
-  .onFailure({ error in // 3
-    print("\(error)")
+  .subscribe(
+    onFailure: { error in // 3
+      print("\(error)")
+    },
+    onCompletion: { _ in
+      hideLoadingIndicator()
   })
-  .onCompletion({ _ in
-    hideLoadingIndicator()
-  })
-  .start()
 ```
 
 1. Makes POST request to the given endpoint.
