@@ -124,8 +124,8 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
@@ -142,10 +142,10 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -165,10 +165,33 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
+        XCTAssertNil(returnedError)
+        XCTAssertNotNil(decodedObject)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testGetVoid_subscribe_success_emptyData() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: Void?
+        var completionResult: Restler.VoidResult?
+        // Act
+        sut.get(self.endpoint)
+            .decode(Void.self)
+            .subscribe(
+                onSuccess: { decodedObject = $0 },
+                onFailure: { returnedError = $0 },
+                onCompletion: { completionResult = $0 })
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -189,10 +212,10 @@ extension GetInterfaceIntegrationTests {
         sut.get(self.endpoint)
             .receive(on: .main)
             .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -215,8 +238,8 @@ extension GetInterfaceIntegrationTests {
             .failureDecode(UndecodableErrorMock.self)
             .receive(on: .main)
             .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -235,8 +258,8 @@ extension GetInterfaceIntegrationTests {
         sut.get(self.endpoint)
             .failureDecode(UndecodableErrorMock.self)
             .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -255,8 +278,8 @@ extension GetInterfaceIntegrationTests {
         sut.get(self.endpoint)
             .failureDecode(DecodableErrorMock.self)
             .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -277,8 +300,8 @@ extension GetInterfaceIntegrationTests {
             .failureDecode(UndecodableErrorMock.self)
             .failureDecode(DecodableErrorMock.self)
             .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -306,8 +329,8 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(SomeObject?.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
@@ -324,10 +347,10 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -347,10 +370,10 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -372,10 +395,35 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, expectedObject)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
+    }
+    
+    func testGetOptionalDecodable_subscribe_success_properData() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
+        let data = try JSONEncoder().encode(expectedObject)
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        // Act
+        sut.get(self.endpoint)
+            .decode(SomeObject?.self)
+            .subscribe(
+                onSuccess: { decodedObject = $0 },
+                onFailure: { returnedError = $0 },
+                onCompletion: { completionResult = $0 })
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -398,10 +446,10 @@ extension GetInterfaceIntegrationTests {
         sut.get(self.endpoint)
             .receive(on: .main)
             .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -423,8 +471,8 @@ extension GetInterfaceIntegrationTests {
         sut.get(self.endpoint)
             .failureDecode(UndecodableErrorMock.self)
             .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -443,8 +491,8 @@ extension GetInterfaceIntegrationTests {
         sut.get(self.endpoint)
             .failureDecode(DecodableErrorMock.self)
             .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -465,8 +513,8 @@ extension GetInterfaceIntegrationTests {
             .failureDecode(UndecodableErrorMock.self)
             .failureDecode(DecodableErrorMock.self)
             .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -494,8 +542,8 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(SomeObject.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
@@ -512,10 +560,10 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -538,10 +586,10 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -566,10 +614,35 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, expectedObject)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
+    }
+    
+    func testGetDecodable_subscribe_success_properData() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
+        let data = try JSONEncoder().encode(expectedObject)
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        // Act
+        sut.get(self.endpoint)
+            .decode(SomeObject.self)
+            .subscribe(
+                onSuccess: { decodedObject = $0 },
+                onFailure: { returnedError = $0 },
+                onCompletion: { completionResult = $0 })
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -592,10 +665,10 @@ extension GetInterfaceIntegrationTests {
         sut.get(self.endpoint)
             .receive(on: .main)
             .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -617,8 +690,8 @@ extension GetInterfaceIntegrationTests {
         sut.get(self.endpoint)
             .failureDecode(UndecodableErrorMock.self)
             .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -637,8 +710,8 @@ extension GetInterfaceIntegrationTests {
         sut.get(self.endpoint)
             .failureDecode(DecodableErrorMock.self)
             .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -659,8 +732,8 @@ extension GetInterfaceIntegrationTests {
             .failureDecode(UndecodableErrorMock.self)
             .failureDecode(DecodableErrorMock.self)
             .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -688,8 +761,8 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(Data.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
@@ -706,10 +779,10 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(Data.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -730,10 +803,10 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(Data.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -754,10 +827,34 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(Data.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, data)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), data)
+    }
+    
+    func testGetData_subscribe_success_someData() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let data = try XCTUnwrap(#"{"some": "name"}"#.data(using: .utf8))
+        var returnedError: Error?
+        var decodedObject: Data?
+        var completionResult: Restler.DecodableResult<Data>?
+        // Act
+        sut.get(self.endpoint)
+            .decode(Data.self)
+            .subscribe(
+                onSuccess: { decodedObject = $0 },
+                onFailure: { returnedError = $0 },
+                onCompletion: { completionResult = $0 })
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -779,10 +876,10 @@ extension GetInterfaceIntegrationTests {
         sut.get(self.endpoint)
             .receive(on: .main)
             .decode(Data.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -803,8 +900,8 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(Data?.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
@@ -821,10 +918,10 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(Data?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -845,10 +942,10 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(Data?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -869,10 +966,34 @@ extension GetInterfaceIntegrationTests {
         // Act
         sut.get(self.endpoint)
             .decode(Data?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, data)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), data)
+    }
+    
+    func testGetOptionalData_subscribe_success_someData() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let data = try XCTUnwrap(#"{"some": "name"}"#.data(using: .utf8))
+        var returnedError: Error?
+        var decodedObject: Data?
+        var completionResult: Restler.DecodableResult<Data?>?
+        // Act
+        sut.get(self.endpoint)
+            .decode(Data?.self)
+            .subscribe(
+                onSuccess: { decodedObject = $0 },
+                onFailure: { returnedError = $0 },
+                onCompletion: { completionResult = $0 })
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -894,10 +1015,10 @@ extension GetInterfaceIntegrationTests {
         sut.get(self.endpoint)
             .receive(on: .main)
             .decode(Data?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)

@@ -35,6 +35,17 @@ extension Restler {
             self.buildNetworkingRequest()
         }
         
+        public override func subscribe(
+            onSuccess: ((SuccessfulResponseObject) -> Void)? = nil,
+            onFailure: ((Swift.Error) -> Void)? = nil,
+            onCompletion: ((Result<SuccessfulResponseObject, Swift.Error>) -> Void)? = nil
+        ) -> RestlerTaskType? {
+            self.successCompletionHandler = onSuccess
+            self.failureCompletionHandler = onFailure
+            self.completionHandler = onCompletion
+            return self.buildNetworkingRequest()
+        }
+        
         // MARK: - Internal
         internal func getCompletion() -> DataCompletion {
             let completion: Restler.VoidCompletion = {

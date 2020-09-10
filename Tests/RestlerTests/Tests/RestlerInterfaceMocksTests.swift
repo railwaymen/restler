@@ -21,8 +21,7 @@ extension RestlerInterfaceMocksTests {
             .body(object)
             .failureDecode(DecodableErrorMock.self)
             .decode(SomeObject.self)
-            .onCompletion { completionResult = $0 }
-            .start()
+            .subscribe(onCompletion: { completionResult = $0 })
         XCTAssertNoThrow(try self.restler.postReturnValue.callCompletion(type: SomeObject.self, result: .success(object)))
         // Assert
         let bodyObject = try XCTUnwrap(self.restler.postReturnValue.bodyParams.last?.object as? SomeObject)

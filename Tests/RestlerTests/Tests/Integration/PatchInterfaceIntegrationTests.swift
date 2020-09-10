@@ -88,8 +88,8 @@ extension PatchInterfaceIntegrationTests {
         // Act
         sut.patch(self.endpoint)
             .decode(Void.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
@@ -106,10 +106,10 @@ extension PatchInterfaceIntegrationTests {
         // Act
         sut.patch(self.endpoint)
             .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -128,10 +128,10 @@ extension PatchInterfaceIntegrationTests {
         // Act
         sut.patch(self.endpoint)
             .decode(Void.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -153,8 +153,8 @@ extension PatchInterfaceIntegrationTests {
         sut.patch(self.endpoint)
             .body(object)
             .decode(SomeObject?.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
@@ -171,10 +171,10 @@ extension PatchInterfaceIntegrationTests {
         // Act
         sut.patch(self.endpoint)
             .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -193,10 +193,10 @@ extension PatchInterfaceIntegrationTests {
         // Act
         sut.patch(self.endpoint)
             .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -217,10 +217,10 @@ extension PatchInterfaceIntegrationTests {
         // Act
         sut.patch(self.endpoint)
             .decode(SomeObject?.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -242,8 +242,8 @@ extension PatchInterfaceIntegrationTests {
         sut.patch(self.endpoint)
             .body(object)
             .decode(SomeObject.self)
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
@@ -260,10 +260,10 @@ extension PatchInterfaceIntegrationTests {
         // Act
         sut.patch(self.endpoint)
             .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -285,10 +285,10 @@ extension PatchInterfaceIntegrationTests {
         // Act
         sut.patch(self.endpoint)
             .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -312,10 +312,10 @@ extension PatchInterfaceIntegrationTests {
         // Act
         sut.patch(self.endpoint)
             .decode(SomeObject.self)
-            .onFailure({ returnedError = $0 })
-            .onSuccess({ decodedObject = $0 })
-            .onCompletion({ completionResult = $0 })
-            .start()
+            .deprecatedOnFailure({ returnedError = $0 })
+            .deprecatedOnSuccess({ decodedObject = $0 })
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
