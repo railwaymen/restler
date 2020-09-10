@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8A0BE49D250A1FC300E76F05 /* RxRestler in Frameworks */ = {isa = PBXBuildFile; productRef = 8A0BE49C250A1FC300E76F05 /* RxRestler */; };
+		8A0BE4A2250A209C00E76F05 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8A0BE4A1250A209C00E76F05 /* RxSwift */; };
 		8A41B560240E6CD200D96084 /* CommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41B55F240E6CD200D96084 /* CommentView.swift */; };
 		8A41B562240E6D4400D96084 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41B561240E6D4400D96084 /* CommentViewModel.swift */; };
 		8A5820DC2403CE9F00BC197B /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5820DB2403CE9F00BC197B /* PostView.swift */; };
@@ -55,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A0BE49D250A1FC300E76F05 /* RxRestler in Frameworks */,
+				8A0BE4A2250A209C00E76F05 /* RxSwift in Frameworks */,
 				8ADC306424E6975400FD49AD /* Restler in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -196,6 +200,8 @@
 			name = "Restler-Example";
 			packageProductDependencies = (
 				8ADC306324E6975400FD49AD /* Restler */,
+				8A0BE49C250A1FC300E76F05 /* RxRestler */,
+				8A0BE4A1250A209C00E76F05 /* RxSwift */,
 			);
 			productName = "Restler-Example";
 			productReference = 8A87AEEF2400084F007FA662 /* Restler-Example.app */;
@@ -225,6 +231,9 @@
 				Base,
 			);
 			mainGroup = 8A87AEE62400084F007FA662;
+			packageReferences = (
+				8A0BE49E250A209C00E76F05 /* XCRemoteSwiftPackageReference "RxSwift" */,
+			);
 			productRefGroup = 8A87AEF02400084F007FA662 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -498,7 +507,27 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		8A0BE49E250A209C00E76F05 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		8A0BE49C250A1FC300E76F05 /* RxRestler */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxRestler;
+		};
+		8A0BE4A1250A209C00E76F05 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8A0BE49E250A209C00E76F05 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
 		8ADC306324E6975400FD49AD /* Restler */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Restler;

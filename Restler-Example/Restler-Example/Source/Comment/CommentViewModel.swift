@@ -9,10 +9,13 @@
 import SwiftUI
 import Combine
 import Restler
+import RxRestler
+import RxSwift
 
 final class CommentViewModel: ObservableObject {
     private let restler = Restler(baseURL: URL(string: "https://jsonplaceholder.typicode.com")!)
     private let comment: PostComment
+    private let disposeBag = DisposeBag()
     private var tasks: Set<Restler.Task> = []
     
     let objectWillChange = PassthroughSubject<Void, Never>()
@@ -35,13 +38,14 @@ final class CommentViewModel: ObservableObject {
     
     // MARK: - Internal
     func checkExistence() {
-        let task = self.restler
-            .head(Endpoint.comments)
+        self.restler.head(Endpoint.comments)
             .decode(Void.self)
+            .rx
+            .observeOn(MainScheduler.instance)
             .subscribe(
                 onSuccess: { print("Endpoint exists") },
-                onFailure: { print("Request HEAD error:", $0) })
-        self.add(task: task)
+                onError: { print("Request HEAD error:", $0) })
+            .disposed(by: self.disposeBag)
     }
     
     func create() {

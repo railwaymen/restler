@@ -11,9 +11,11 @@ The Restler framework has been built to use features of the newest versions of S
 1. [Documentation](#documentation)
 2. [Instalation](#instalation)
 3. [Usage](#usage)
-  - [Error Parser](#error-parser)
-  - [Header](#header)
-  - [Restler calls](#restler-calls)
+    - [Error Parser](#error-parser)
+    - [Header](#header)
+    - [Restler calls](#restler-calls)
+    - [Combine](#restler--combine)
+    - [RxSwift](#restler--rxswift)
 4. [Contribution](#contribution)
 
 ## Documentation
@@ -56,10 +58,11 @@ Otherwise you can use **CocoaPods**. If you use one simply add to your `Podfile`
 
 ```ruby
 ...
-pod 'Restler'
+pod 'Restler/Core'
 ...
 ```
 
+It's important to specify it with `/Core`! (Changed in v1.0)
 and call in your console:
 
 ```bash
@@ -164,7 +167,11 @@ Restler(baseURL: myBaseURL)
 2. Encodes the object and puts it into the body of the request. Ignored if the selected request method doesn't support it.
 3. A handler called if the request has failed.
 
-#### Combine + Restler
+#### Other
+
+Any other method call is very similar to these two, but if you have questions simply create an issue.
+
+### Restler + Combine
 
 ```swift
 Restler(baseURL: myBaseURL)
@@ -189,9 +196,34 @@ Restler(baseURL: myBaseURL)
 8. Assigns each element from a Publisher to a property on an object.
 9. Stores this type-erasing cancellable instance in the specified collection.
 
-#### Other
+### Restler + RxSwift
 
-Any other method call is very similar to these two, but if you have questions simply create an issue.
+First of all you need to add `RxRestler` to your target you can do it simply in SPM. In CocoaPods you should add to your Podfile:
+
+```ruby
+pod `Restler/Rx`
+```
+
+Then `import RxRestler` to every file its needed.
+
+```swift
+Restler(baseURL: myBaseURL)
+  .get(Endpoint.myProfile)
+  .query(anEncodableQueryObject)
+  .receive(on: .main) // 1
+  .decode(Profile.self) // 2
+  .rx // 3
+  .subscribe( // 4
+    onSuccess: { print("This is my profile:", $0) },
+    onError: { print("This is an error:", $0) })
+  .disposed(by: bag) // 5
+```
+
+1. Subscribe handlers will be called on the provided queue even if it's done with RxSwift (setting a scheduler with this property set may cause some little delay between receiving a response and handling it but the handlers will be called on the provided scheduler).
+2. Decode some type on successful response - Void, Data, or some custom object.
+3. Move request to Rx usage. This returns `Single<Profile>` in this case.
+4. Here we call already the RxSwift function.
+5. Remember about adding the `Disposable` to the `DisposeBag`. The networking task will be canceled automatically if the `bag` will deinitialize.
 
 ## Contribution
 
