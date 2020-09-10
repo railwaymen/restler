@@ -70,6 +70,26 @@ public protocol RestlerBasicRequestBuilderType: class {
     ///
     func customRequestModification(_ modification: ((inout URLRequest) -> Void)?) -> Self
     
+    /// Calls handler if any error have occured during the request building proccess.
+    ///
+    /// - Parameters:
+    ///   - handler: A closure called only if any error have occured while building the request.
+    ///
+    /// - Returns: `self` for chaining.
+    ///
+    func catching(_ handler: ((Restler.Error) -> Void)?) -> Self
+    
+    /// Sets a dispatch queue on which finish handlers will be called.
+    ///
+    /// Detault queue **IS NOT** the main queue and it's picked by the `URLSession`.
+    ///
+    /// - Parameters:
+    ///   - queue: A dispatch queue on which finish handlers will be called. If nil, default queue will be use.
+    ///
+    /// - Returns: `self` for chaining.
+    ///
+    func receive(on queue: DispatchQueue?) -> Self
+    
     /// Builds a request with a decoding type.
     ///
     /// Ignores any data received on the successful request.
@@ -80,15 +100,6 @@ public protocol RestlerBasicRequestBuilderType: class {
     /// - Returns: Appropriate request for the given type.
     ///
     func decode(_ type: Void.Type) -> Restler.Request<Void>
-    
-    /// Calls handler if any error have occured during the request building proccess.
-    ///
-    /// - Parameters:
-    ///   - handler: A closure called only if any error have occured while building the request.
-    ///
-    /// - Returns: `self` for chaining.
-    ///
-    func catching(_ handler: ((Restler.Error) -> Void)?) -> Self
     
     /// Builds a URLRequest instance and returns it.
     ///

@@ -147,10 +147,10 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertNil(returnedError)
         XCTAssertNotNil(decodedObject)
         XCTAssertNotNil(try XCTUnwrap(completionResult).get())
@@ -170,16 +170,61 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
+        XCTAssertNil(returnedError)
+        XCTAssertNotNil(decodedObject)
+        XCTAssertNotNil(try XCTUnwrap(completionResult).get())
+    }
+    
+    func testGetVoid_success_responseOnMainQueue() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        var returnedError: Error?
+        var decodedObject: Void?
+        var completionResult: Restler.VoidResult?
+        // Act
+        sut.get(self.endpoint)
+            .receive(on: .main)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.last?.queue, DispatchQueue.main)
         XCTAssertNil(returnedError)
         XCTAssertNotNil(decodedObject)
         XCTAssertNotNil(try XCTUnwrap(completionResult).get())
     }
     
     // MARK: Decoding Failure
+    func testGetVoid_failure_onMainQueue() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let response = Restler.Response(.init(data: nil, response: nil, error: nil))
+        let error = Restler.Error.request(type: .validationError, response: response)
+        var returnedError: Error?
+        // Act
+        sut.get(self.endpoint)
+            .failureDecode(UndecodableErrorMock.self)
+            .receive(on: .main)
+            .decode(Void.self)
+            .onFailure({ returnedError = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.last?.queue, .main)
+        XCTAssertEqual(returnedError as? Restler.Error, error)
+    }
+    
     func testGetVoid_failure_undecodableError() throws {
         // Arrange
         let sut = self.buildSUT()
@@ -193,10 +238,10 @@ extension GetInterfaceIntegrationTests {
             .onFailure({ returnedError = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertEqual(returnedError as? Restler.Error, error)
     }
     
@@ -213,10 +258,10 @@ extension GetInterfaceIntegrationTests {
             .onFailure({ returnedError = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssert(returnedError is DecodableErrorMock)
     }
     
@@ -235,10 +280,10 @@ extension GetInterfaceIntegrationTests {
             .onFailure({ returnedError = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         guard case let .multiple(errors) = returnedError as? Restler.Error else { return XCTFail() }
         XCTAssertEqual(errors.count, 2)
         
@@ -284,10 +329,10 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertNil(returnedError)
         XCTAssertNil(decodedObject)
         XCTAssertNil(try XCTUnwrap(completionResult).get())
@@ -307,10 +352,10 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertNil(returnedError)
         XCTAssertNil(decodedObject)
         XCTAssertNil(try XCTUnwrap(completionResult).get())
@@ -332,10 +377,36 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, expectedObject)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
+    }
+    
+    func testGetOptionalDecodable_success_onMainQueue() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
+        let data = try JSONEncoder().encode(expectedObject)
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        // Act
+        sut.get(self.endpoint)
+            .receive(on: .main)
+            .decode(SomeObject?.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.last?.queue, DispatchQueue.main)
         XCTAssertNil(returnedError)
         XCTAssertEqual(decodedObject, expectedObject)
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
@@ -355,10 +426,10 @@ extension GetInterfaceIntegrationTests {
             .onFailure({ returnedError = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertEqual(returnedError as? Restler.Error, error)
     }
     
@@ -375,10 +446,10 @@ extension GetInterfaceIntegrationTests {
             .onFailure({ returnedError = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssert(returnedError is DecodableErrorMock)
     }
     
@@ -397,10 +468,10 @@ extension GetInterfaceIntegrationTests {
             .onFailure({ returnedError = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         guard case let .multiple(errors) = returnedError as? Restler.Error else { return XCTFail() }
         XCTAssertEqual(errors.count, 2)
         
@@ -446,10 +517,10 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertNil(decodedObject)
         let restlerError = try XCTUnwrap(returnedError as? Restler.Error)
         guard case let .common(type, base) = restlerError else { return XCTFail(returnedError.debugDescription) }
@@ -472,10 +543,10 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(Data()))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertNil(decodedObject)
         let restlerError = try XCTUnwrap(returnedError as? Restler.Error)
         guard case let .common(type, base) = restlerError else { return XCTFail(returnedError.debugDescription) }
@@ -500,10 +571,36 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, expectedObject)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
+    }
+    
+    func testGetDecodable_success_onMainQueue() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let expectedObject = SomeObject(id: 1, name: "some", double: 1.23)
+        let data = try JSONEncoder().encode(expectedObject)
+        var returnedError: Error?
+        var decodedObject: SomeObject?
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        // Act
+        sut.get(self.endpoint)
+            .receive(on: .main)
+            .decode(SomeObject.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.last?.queue, .main)
         XCTAssertNil(returnedError)
         XCTAssertEqual(decodedObject, expectedObject)
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), expectedObject)
@@ -523,10 +620,10 @@ extension GetInterfaceIntegrationTests {
             .onFailure({ returnedError = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertEqual(returnedError as? Restler.Error, error)
     }
     
@@ -543,10 +640,10 @@ extension GetInterfaceIntegrationTests {
             .onFailure({ returnedError = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssert(returnedError is DecodableErrorMock)
     }
     
@@ -565,10 +662,10 @@ extension GetInterfaceIntegrationTests {
             .onFailure({ returnedError = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         guard case let .multiple(errors) = returnedError as? Restler.Error else { return XCTFail() }
         XCTAssertEqual(errors.count, 2)
         
@@ -614,10 +711,10 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertNotNil(returnedError)
         XCTAssertNil(decodedObject)
         AssertResult(try XCTUnwrap(completionResult), errorCaseIs: Restler.Error.common(type: .invalidResponse, base: ""))
@@ -638,10 +735,10 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertNil(returnedError)
         XCTAssertEqual(decodedObject, data)
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), data)
@@ -662,10 +759,35 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, data)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), data)
+    }
+    
+    func testGetData_success_onMainQueue() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let data = try XCTUnwrap(#"{"some": "name"}"#.data(using: .utf8))
+        var returnedError: Error?
+        var decodedObject: Data?
+        var completionResult: Restler.DecodableResult<Data>?
+        // Act
+        sut.get(self.endpoint)
+            .receive(on: .main)
+            .decode(Data.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.last?.queue, .main)
         XCTAssertNil(returnedError)
         XCTAssertEqual(decodedObject, data)
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), data)
@@ -704,10 +826,10 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertNil(returnedError)
         XCTAssertNil(decodedObject)
         XCTAssertNil(try XCTUnwrap(completionResult).get())
@@ -728,10 +850,10 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
         XCTAssertNil(returnedError)
         XCTAssertEqual(decodedObject, data)
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), data)
@@ -752,10 +874,35 @@ extension GetInterfaceIntegrationTests {
             .onCompletion({ completionResult = $0 })
             .start()
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
-        self.dispatchQueueManager.performParams.forEach { $0.action() }
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
-        XCTAssertEqual(self.dispatchQueueManager.performParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.dispatchQueueManager.asyncParams.last).queue)
+        XCTAssertNil(returnedError)
+        XCTAssertEqual(decodedObject, data)
+        XCTAssertEqual(try XCTUnwrap(completionResult).get(), data)
+    }
+    
+    func testGetOptionalData_success_onMainQueue() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let data = try XCTUnwrap(#"{"some": "name"}"#.data(using: .utf8))
+        var returnedError: Error?
+        var decodedObject: Data?
+        var completionResult: Restler.DecodableResult<Data?>?
+        // Act
+        sut.get(self.endpoint)
+            .receive(on: .main)
+            .decode(Data?.self)
+            .onFailure({ returnedError = $0 })
+            .onSuccess({ decodedObject = $0 })
+            .onCompletion({ completionResult = $0 })
+            .start()
+        try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.count, 1)
+        XCTAssertEqual(self.dispatchQueueManager.asyncParams.last?.queue, .main)
         XCTAssertNil(returnedError)
         XCTAssertEqual(decodedObject, data)
         XCTAssertEqual(try XCTUnwrap(completionResult).get(), data)

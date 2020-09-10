@@ -119,27 +119,29 @@ Restler(baseURL: myBaseURL)
   .query(anEncodableQueryObject) // 2
   .failureDecode(ErrorToDecodeOnFailure.self) // 3
   .setInHeader("myNewTemporaryToken", forKey: "token") // 4
-  .decode(Profile.self) // 5
-  // 6
+  .receive(on: .main) // 5
+  .decode(Profile.self) // 6
+  // 7
 
-  .onSuccess({ profile in // 7
+  .onSuccess({ profile in // 8
     updateProfile(with: profile)
   })
-  .onCompletion({ _ in // 8
+  .onCompletion({ _ in // 9
     hideLoadingIndicator()
   })
-  .start() // 9
+  .start() // 10
 ```
 
 1. Makes GET request to the given endpoint.
 2. Encodes the object and puts it in query for GET request.
 3. If an error will occur, an error parser would try to decode the given type.
 4. Sets the specified value for the given key in the header only for this request.
-5. Decodes Profile object on a successful response. If it is not optional, a failure handler can be called.
-6. Since this moment we're operating on a request, not a request builder.
-7. A handler called if Restler would successfully end request.
-8. A handler called on completion of the request whatever the result would be.
-9. Create and start data task.
+5. Sets dispatch queue on which completion handlers will be called to the main queue.
+6. Decodes Profile object on a successful response. If it is not optional, a failure handler can be called.
+7. Since this moment we're operating on a request, not a request builder.
+8. A handler called if Restler would successfully end request.
+9. A handler called on completion of the request whatever the result would be.
+10. Create and start data task.
 
 #### POST
 

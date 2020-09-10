@@ -46,6 +46,7 @@ extension Restler.RequestBuilder {
         var errors: [Restler.Error] = []
         var customRequestModification: ((inout URLRequest) -> Void)?
         var builderErrorsHandler: ((Restler.Error) -> Void)?
+        var customDispatchQueue: DispatchQueue?
     }
 }
 
@@ -66,16 +67,21 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
         return self
     }
     
+    public func catching(_ handler: ((Restler.Error) -> Void)?) -> Self {
+        self.form.builderErrorsHandler = handler
+        return self
+    }
+    
+    public func receive(on queue: DispatchQueue?) -> Self {
+        self.form.customDispatchQueue = queue
+        return self
+    }
+    
     public func decode(_ type: Void.Type) -> Restler.Request<Void> {
         Restler.VoidRequest(dependencies: .init(
             dependencies: self.dependencies,
             form: self.form,
             urlRequest: self.urlRequest()))
-    }
-    
-    public func catching(_ handler: ((Restler.Error) -> Void)?) -> Self {
-        self.form.builderErrorsHandler = handler
-        return self
     }
     
     public func urlRequest() -> URLRequest? {

@@ -102,16 +102,20 @@ extension RestlerRequestBuilderMock: RestlerBasicRequestBuilderType {
         return self
     }
     
+    func catching(_ handler: ((Restler.Error) -> Void)?) -> Self {
+        self.catchingParams.append(CatchingParams(handler: handler))
+        return self
+    }
+    
+    func receive(on queue: DispatchQueue?) -> Self {
+        return self
+    }
+    
     func decode(_ type: Void.Type) -> Restler.Request<Void> {
         self.decodeParams.append(DecodeParams(type: type))
         let mock = RestlerRequestMock<Void>()
         self.decodeReturnedMocks.append(mock)
         return mock
-    }
-    
-    func catching(_ handler: ((Restler.Error) -> Void)?) -> Self {
-        self.catchingParams.append(CatchingParams(handler: handler))
-        return self
     }
     
     func urlRequest() -> URLRequest? {
