@@ -3,6 +3,7 @@ import RxSwift
 import Restler
 
 extension Restler.Request {
+    // swiftlint:disable:next identifier_name
     public var rx: Single<D> {
         Single<D>.create { single in
             let task = self.subscribe(
