@@ -43,14 +43,12 @@ final class PostViewModel: ObservableObject {
             .query(["postId": 1])
             .receive(on: .main)
             .decode([PostComment].self)
-            .onCompletion({ result in
-                switch result {
-                case let .success(comments):
+            .subscribe(
+                onSuccess: { comments in
                     self.comments = comments
-                case let .failure(error):
+                },
+                onFailure: { error in
                     print("Error:", error)
-                }
             })
-            .start()
     }
 }

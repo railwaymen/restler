@@ -38,13 +38,9 @@ final class CommentViewModel: ObservableObject {
         let task = self.restler
             .head(Endpoint.comments)
             .decode(Void.self)
-            .onSuccess({
-                print("Endpoint exists")
-            })
-            .onFailure({ error in
-                print("Request HEAD error:", error)
-            })
-            .start()
+            .subscribe(
+                onSuccess: { print("Endpoint exists") },
+                onFailure: { print("Request HEAD error:", $0) })
         self.add(task: task)
     }
     
@@ -53,15 +49,9 @@ final class CommentViewModel: ObservableObject {
             .post(Endpoint.comments)
             .body(self.comment)
             .decode(Void.self)
-            .onCompletion({ result in
-                switch result {
-                case .success:
-                    print("Comment posted")
-                case let .failure(error):
-                    print(error)
-                }
-            })
-            .start()
+            .subscribe(
+                onSuccess: { print("Comment posted")},
+                onFailure: { print($0) })
         self.add(task: task)
     }
     
@@ -73,8 +63,7 @@ final class CommentViewModel: ObservableObject {
             .setInHeader("Client-ID \(clientID)", forKey: .authorization)
             .multipart(self.imageEncoder)
             .decode(Void.self)
-            .onCompletion({ print("Multipart request result:", $0) })
-            .start()
+            .subscribe(onCompletion: { print("Multipart request result:", $0) })
         self.add(task: task)
     }
     
@@ -83,15 +72,9 @@ final class CommentViewModel: ObservableObject {
             .put(Endpoint.comment(1))
             .body(self.comment)
             .decode(Void.self)
-            .onCompletion({ result in
-                switch result {
-                case .success:
-                    print("Comment putted")
-                case let .failure(error):
-                    print(error)
-                }
-            })
-            .start()
+            .subscribe(
+                onSuccess: { print("Comment putted") },
+                onFailure: { print($0) })
         self.add(task: task)
     }
     
@@ -100,15 +83,9 @@ final class CommentViewModel: ObservableObject {
             .patch(Endpoint.comment(1))
             .body(self.comment)
             .decode(Void.self)
-            .onCompletion({ result in
-                switch result {
-                case .success:
-                    print("Comment patched")
-                case let .failure(error):
-                    print(error)
-                }
-            })
-            .start()
+            .subscribe(
+                onSuccess: { print("Comment patched") },
+                onFailure: { print($0) })
         self.add(task: task)
     }
     
@@ -116,15 +93,9 @@ final class CommentViewModel: ObservableObject {
         let task = self.restler
             .delete(Endpoint.comment(self.comment.id))
             .decode(Void.self)
-            .onCompletion({ result in
-                switch result {
-                case .success:
-                    print("Comment deleted")
-                case let .failure(error):
-                    print(error)
-                }
-            })
-            .start()
+            .subscribe(
+                onSuccess: { print("Comment deleted") },
+                onFailure: { print($0) })
         self.add(task: task)
     }
     
