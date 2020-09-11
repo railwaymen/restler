@@ -26,6 +26,6 @@ jobs:
         - name: Release to CocoaPods
           run: |
             pod trunk register $COCOAPODS_RELEASE_EMAIL
-            pod trunk push Restler.podspec
+            pod trunk push Restler.podspec --allow-warnings
           env:
             COCOAPODS_RELEASE_EMAIL: ${{ secrets.COCOAPODS_RELEASE_EMAIL }}
