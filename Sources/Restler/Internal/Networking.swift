@@ -9,6 +9,7 @@ typealias DataCompletion = (DataResult) -> Void
 protocol NetworkingType: class {
     func makeRequest(
         urlRequest: URLRequest,
+        urlSession: URLSessionType?,
         eventLogger: EventLoggerLogging,
         completion: @escaping DataCompletion) -> Restler.Task
     
@@ -40,13 +41,16 @@ final class Networking {
 extension Networking: NetworkingType {
     func makeRequest(
         urlRequest: URLRequest,
+        urlSession: URLSessionType?,
         eventLogger: EventLoggerLogging,
         completion: @escaping DataCompletion
     ) -> Restler.Task {
-        Restler.Task(task: self.runDataTask(
-            request: urlRequest,
-            eventLogger: eventLogger,
-            completion: completion))
+        Restler.Task(
+            task: self.runDataTask(
+                request: urlRequest,
+                urlSession: urlSession,
+                eventLogger: eventLogger,
+                completion: completion))
     }
     
     func buildRequest(
@@ -106,11 +110,13 @@ extension Networking {
     
     private func runDataTask(
         request: URLRequest,
+        urlSession: URLSessionType?,
         eventLogger: EventLoggerLogging,
         completion: @escaping DataCompletion
     ) -> URLSessionDataTaskType {
+        let session = urlSession ?? self.session
         let startTime: DispatchTime = .now()
-        let task = self.session.dataTask(with: request) { response in
+        let task = session.dataTask(with: request) { response in
             let elapsedTime: Milliseconds = DispatchTime.now().since(startTime).toMilliseconds()
             eventLogger.log(.requestCompleted(
                 request: request,

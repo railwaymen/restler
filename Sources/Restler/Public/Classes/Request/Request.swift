@@ -66,6 +66,17 @@ extension Restler {
             return nil
         }
         
+        /// Sets the request to use the provided `URLSession` instead of the default one.
+        ///
+        /// - Parameters:
+        ///   - session: A `URLSession` that will perform the built task. If not set, `shared` will be used.
+        ///
+        /// - Returns: `self` for chaining.
+        ///
+        open func using(session: URLSession) -> Self {
+            return self
+        }
+        
         /// Runs networking task with specified handlers at its completion.
         ///
         /// - Parameters:

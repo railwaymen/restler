@@ -15,6 +15,8 @@ public protocol RestlerRequest: class {
     @available(*, deprecated, message: "Use `subscribe(onSuccess:onFailure:onCompletion:)`")
     func start() -> RestlerTaskType?
     
+    func using(session: URLSession) -> Self
+    
     @discardableResult
     func subscribe(
         onSuccess: ((_ object: SuccessfulResponseObject) -> Void)?,
