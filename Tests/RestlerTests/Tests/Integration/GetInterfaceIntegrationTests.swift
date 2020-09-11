@@ -97,7 +97,8 @@ extension GetInterfaceIntegrationTests {
         let sut = self.buildSUT()
         let header = ["id": "1", "name": "name", "double": "1.23"]
         // Act
-        let request = sut.get(self.endpoint)
+        let request = sut
+            .get(self.endpoint)
             .query(header)
             .urlRequest()
         // Assert
@@ -128,6 +129,25 @@ extension GetInterfaceIntegrationTests {
             .deprecatedStart()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.networking.makeRequestParams.last).urlSession)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        XCTAssertNil(completionResult)
+    }
+    
+    func testGetVoid_withCustomSession_buildsRequest() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let session = URLSession()
+        var completionResult: Restler.VoidResult?
+        // Act
+        sut.get(self.endpoint)
+            .decode(Void.self)
+            .using(session: session)
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.last?.urlSession as? URLSession, session)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
@@ -333,6 +353,25 @@ extension GetInterfaceIntegrationTests {
             .deprecatedStart()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.networking.makeRequestParams.last).urlSession)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        XCTAssertNil(completionResult)
+    }
+    
+    func testGetOptionalDecodable_withCustomSession_buildsRequest() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let session = URLSession()
+        var completionResult: Restler.DecodableResult<SomeObject?>?
+        // Act
+        sut.get(self.endpoint)
+            .decode(SomeObject?.self)
+            .using(session: session)
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.last?.urlSession as? URLSession, session)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }
@@ -546,6 +585,25 @@ extension GetInterfaceIntegrationTests {
             .deprecatedStart()
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertNil(try XCTUnwrap(self.networking.makeRequestParams.last).urlSession)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        XCTAssertNil(completionResult)
+    }
+    
+    func testGetDecodable_withCustomSession_buildsRequest() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let session = URLSession()
+        var completionResult: Restler.DecodableResult<SomeObject>?
+        // Act
+        sut.get(self.endpoint)
+            .decode(SomeObject.self)
+            .using(session: session)
+            .deprecatedOnCompletion({ completionResult = $0 })
+            .deprecatedStart()
+        // Assert
+        XCTAssertEqual(self.networking.makeRequestParams.count, 1)
+        XCTAssertEqual(self.networking.makeRequestParams.last?.urlSession as? URLSession, session)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         XCTAssertNil(completionResult)
     }

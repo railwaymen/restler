@@ -2,6 +2,7 @@ import Foundation
 
 protocol RestlerRequestInternal: class {
     var dependencies: Restler.RequestDependencies { get }
+    var form: Restler.RequestForm { get }
     func getCompletion() -> DataCompletion
 }
 
@@ -13,6 +14,7 @@ extension RestlerRequestInternal {
         let completion = self.getCompletion()
         return self.dependencies.networking.makeRequest(
             urlRequest: urlRequest,
+            urlSession: self.form.urlSession,
             eventLogger: self.dependencies.eventLogger,
             completion: completion)
     }
@@ -54,5 +56,9 @@ extension Restler {
             self.customDispatchQueue = form.customDispatchQueue
             self.urlRequest = urlRequest
         }
+    }
+    
+    struct RequestForm {
+        var urlSession: URLSessionType?
     }
 }

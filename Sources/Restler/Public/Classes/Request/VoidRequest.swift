@@ -3,6 +3,7 @@ import Foundation
 extension Restler {
     public final class VoidRequest: Request<Void>, RestlerRequestInternal {
         internal let dependencies: Restler.RequestDependencies
+        internal var form: Restler.RequestForm = .init()
         
         private var successCompletionHandler: ((SuccessfulResponseObject) -> Void)?
         private var failureCompletionHandler: ((Swift.Error) -> Void)?
@@ -33,6 +34,11 @@ extension Restler {
         
         public override func start() -> RestlerTaskType? {
             self.buildNetworkingRequest()
+        }
+        
+        public override func using(session: URLSession) -> Self {
+            self.form.urlSession = session
+            return self
         }
         
         public override func subscribe(

@@ -26,7 +26,7 @@ extension NetworkingTests {
         let urlRequest = URLRequest(url: url)
         var completionResult: DataResult?
         // Act
-        let task = sut.makeRequest(urlRequest: urlRequest, eventLogger: eventLogger) { result in
+        let task = sut.makeRequest(urlRequest: urlRequest, urlSession: nil, eventLogger: eventLogger) { result in
             completionResult = result
         }
         // Assert
@@ -35,6 +35,27 @@ extension NetworkingTests {
         XCTAssertEqual(urlRequest, request)
         XCTAssertNil(completionResult)
         XCTAssertEqual(self.session.dataTaskReturnValue.resumeParams.count, 1)
+        XCTAssertNotNil(task)
+    }
+    
+    func testMakeRequest_providedCustomSession_makesProperRequest() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com"))
+        let urlRequest = URLRequest(url: url)
+        let session = URLSessionMock()
+        var completionResult: DataResult?
+        // Act
+        let task = sut.makeRequest(urlRequest: urlRequest, urlSession: session, eventLogger: eventLogger) { result in
+            completionResult = result
+        }
+        // Assert
+        XCTAssertEqual(self.session.dataTaskParams.count, 0)
+        XCTAssertEqual(session.dataTaskParams.count, 1)
+        let request = try XCTUnwrap(session.dataTaskParams.last?.request)
+        XCTAssertEqual(urlRequest, request)
+        XCTAssertNil(completionResult)
+        XCTAssertEqual(session.dataTaskReturnValue.resumeParams.count, 1)
         XCTAssertNotNil(task)
     }
     
@@ -49,7 +70,7 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: responseData, response: mockResponse, error: nil)
         var completionResult: DataResult?
         // Act
-        _ = sut.makeRequest(urlRequest: urlRequest, eventLogger: eventLogger) { result in
+        _ = sut.makeRequest(urlRequest: urlRequest, urlSession: nil, eventLogger: eventLogger) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
@@ -65,7 +86,7 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: Data(), response: nil, error: nil)
         var completionResult: DataResult?
         // Act
-        _ = sut.makeRequest(urlRequest: urlRequest, eventLogger: eventLogger) { result in
+        _ = sut.makeRequest(urlRequest: urlRequest, urlSession: nil, eventLogger: eventLogger) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
@@ -85,7 +106,7 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: Data(), response: mockResponse, error: nil)
         var completionResult: DataResult?
         // Act
-        _ = sut.makeRequest(urlRequest: urlRequest, eventLogger: eventLogger) { result in
+        _ = sut.makeRequest(urlRequest: urlRequest, urlSession: nil, eventLogger: eventLogger) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
@@ -105,7 +126,7 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: Data(), response: mockResponse, error: TestError())
         var completionResult: DataResult?
         // Act
-        _ = sut.makeRequest(urlRequest: urlRequest, eventLogger: eventLogger) { result in
+        _ = sut.makeRequest(urlRequest: urlRequest, urlSession: nil, eventLogger: eventLogger) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
@@ -124,7 +145,7 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: nil, response: mockResponse, error: nil)
         var completionResult: DataResult?
         // Act
-        _ = sut.makeRequest(urlRequest: urlRequest, eventLogger: eventLogger) { result in
+        _ = sut.makeRequest(urlRequest: urlRequest, urlSession: nil, eventLogger: eventLogger) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
@@ -143,7 +164,7 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: nil, response: mockResponse, error: returnedError)
         var completionResult: DataResult?
         // Act
-        _ = sut.makeRequest(urlRequest: urlRequest, eventLogger: eventLogger) { result in
+        _ = sut.makeRequest(urlRequest: urlRequest, urlSession: nil, eventLogger: eventLogger) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)
@@ -161,7 +182,7 @@ extension NetworkingTests {
         let response = HTTPRequestResponse(data: nil, response: nil, error: returnedError)
         var completionResult: DataResult?
         // Act
-        _ = sut.makeRequest(urlRequest: urlRequest, eventLogger: eventLogger) { result in
+        _ = sut.makeRequest(urlRequest: urlRequest, urlSession: nil, eventLogger: eventLogger) { result in
             completionResult = result
         }
         try XCTUnwrap(self.session.dataTaskParams.last).completion(response)

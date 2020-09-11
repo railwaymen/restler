@@ -11,6 +11,8 @@ final class NetworkingMock {
     private(set) var makeRequestParams: [MakeRequestParams] = []
     struct MakeRequestParams {
         let urlRequest: URLRequest
+        let urlSession: URLSessionType?
+        let eventLogger: EventLoggerLogging
         let completion: DataCompletion
     }
     
@@ -33,11 +35,14 @@ final class NetworkingMock {
 extension NetworkingMock: NetworkingType {
     func makeRequest(
         urlRequest: URLRequest,
+        urlSession: URLSessionType?,
         eventLogger: EventLoggerLogging,
         completion: @escaping DataCompletion
     ) -> Restler.Task {
         self.makeRequestParams.append(MakeRequestParams(
             urlRequest: urlRequest,
+            urlSession: urlSession,
+            eventLogger: eventLogger,
             completion: completion))
         return self.makeRequestReturnValue
     }
