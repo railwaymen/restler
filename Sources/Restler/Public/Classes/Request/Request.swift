@@ -16,6 +16,7 @@ extension Restler {
         ///
         @available(*, deprecated, message: "Use `subscribe(onSuccess:onFailure:onCompletion:)`")
         open func onSuccess(_ handler: @escaping (D) -> Void) -> Self {
+            assertionFailure("This function have to be overridden")
             return self
         }
         
@@ -30,6 +31,7 @@ extension Restler {
         ///
         @available(*, deprecated, message: "Use `subscribe(onSuccess:onFailure:onCompletion:)`")
         open func onFailure(_ handler: @escaping (Swift.Error) -> Void) -> Self {
+            assertionFailure("This function have to be overridden")
             return self
         }
         
@@ -44,6 +46,7 @@ extension Restler {
         ///
         @available(*, deprecated, message: "Use `subscribe(onSuccess:onFailure:onCompletion:)`")
         open func onCompletion(_ handler: @escaping (Result<D, Swift.Error>) -> Void) -> Self {
+            assertionFailure("This function have to be overridden")
             return self
         }
         
@@ -63,6 +66,7 @@ extension Restler {
         @discardableResult
         @available(*, deprecated, message: "Use `subscribe(onSuccess:onFailure:onCompletion:)`")
         open func start() -> RestlerTaskType? {
+            assertionFailure("This function have to be overridden")
             return nil
         }
         
@@ -74,6 +78,7 @@ extension Restler {
         /// - Returns: `self` for chaining.
         ///
         open func using(session: URLSession) -> Self {
+            assertionFailure("This function have to be overridden")
             return self
         }
         
@@ -99,6 +104,7 @@ extension Restler {
             onFailure: ((_ error: Swift.Error) -> Void)? = nil,
             onCompletion: ((_ result: Result<D, Swift.Error>) -> Void)? = nil
         ) -> RestlerTaskType? {
+            assertionFailure("This function have to be overridden")
             return nil
         }
     }
