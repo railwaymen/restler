@@ -1,14 +1,15 @@
 import Foundation
 
 protocol DispatchQueueManagerType: class {
-    func perform(on thread: DispatchQueueThread, _ syncType: DispatchQueueSynchronizationType, action: @escaping () -> Void)
+    func async(on queue: DispatchQueue?, execute action: @escaping @convention(block) () -> Void)
 }
 
-class DispatchQueueManager: DispatchQueueManagerType {
-    func perform(on thread: DispatchQueueThread, _ synchType: DispatchQueueSynchronizationType, action: @escaping () -> Void) {
-        switch synchType {
-        case .async: thread.queue.async(execute: action)
-        case .sync: thread.queue.sync(execute: action)
-        }
+final class DispatchQueueManager {}
+
+// MARK: - DispatchQueueManagerType
+extension DispatchQueueManager: DispatchQueueManagerType {
+    func async(on queue: DispatchQueue?, execute action: @escaping @convention(block) () -> Void) {
+        guard let queue = queue else { return action() }
+        queue.async(execute: action)
     }
 }

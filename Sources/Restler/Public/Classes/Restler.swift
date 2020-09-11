@@ -26,12 +26,19 @@ open class Restler: RestlerType {
     
     open var header: Restler.Header = .init()
     
+    public var levelOfLogDetails: LevelOfLogDetails {
+        get { self.eventLogger.levelOfDetails }
+        set { self.eventLogger.levelOfDetails = newValue }
+    }
+    
     private let baseURL: URL
     private let networking: NetworkingType
     private let dispatchQueueManager: DispatchQueueManagerType
+    private let eventLogger: EventLoggerable
     
     private var queryEncoder: QueryEncoder { .init(jsonEncoder: self.encoder) }
     private var multipartEncoder: MultipartEncoder { .init() }
+    
     // MARK: - Initialization
     
     /// Default initializer.
@@ -52,7 +59,8 @@ open class Restler: RestlerType {
             dispatchQueueManager: DispatchQueueManager(),
             encoder: encoder,
             decoder: decoder,
-            errorParser: Restler.ErrorParser())
+            errorParser: Restler.ErrorParser(),
+            eventLogger: EventLogger())
     }
     
     internal init(
@@ -61,7 +69,8 @@ open class Restler: RestlerType {
         dispatchQueueManager: DispatchQueueManagerType,
         encoder: RestlerJSONEncoderType,
         decoder: RestlerJSONDecoderType,
-        errorParser: RestlerErrorParserType
+        errorParser: RestlerErrorParserType,
+        eventLogger: EventLoggerable
     ) {
         self.baseURL = baseURL
         self.networking = networking
@@ -69,6 +78,7 @@ open class Restler: RestlerType {
         self.encoder = encoder
         self.decoder = decoder
         self.errorParser = errorParser
+        self.eventLogger = eventLogger
     }
     
     // MARK: - Open
@@ -110,6 +120,7 @@ extension Restler {
                 queryEncoder: self.queryEncoder,
                 multipartEncoder: self.multipartEncoder,
                 dispatchQueueManager: self.dispatchQueueManager,
+                eventLogger: self.eventLogger,
                 method: method),
             header: self.header,
             errorParser: self.errorParser)

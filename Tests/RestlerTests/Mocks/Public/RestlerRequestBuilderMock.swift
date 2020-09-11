@@ -1,7 +1,10 @@
 import XCTest
+#if canImport(Combine)
+import Combine
+#endif
 import Restler
 
-class RestlerRequestBuilderMock {
+final class RestlerRequestBuilderMock {
     
     // MARK: - RestlerBasicRequestBuilderType
     private(set) var setInHeaderParams: [SetInHeaderParams] = []
@@ -19,6 +22,18 @@ class RestlerRequestBuilderMock {
     struct CustomRequestModificationParams {
         let modification: ((inout URLRequest) -> Void)?
     }
+    
+    private(set) var catchingParams: [CatchingParams] = []
+    struct CatchingParams {
+        let handler: ((Restler.Error) -> Void)?
+    }
+    
+    var urlRequestReturnValue: URLRequest?
+    private(set) var urlRequestParams: [URLRequestParams] = []
+    struct URLRequestParams {}
+    
+    private(set) var publisherParams: [PublisherParams] = []
+    struct PublisherParams {}
     
     // MARK: - RestlerQueryRequestBuilderType
     private(set) var queryParams: [QueryParams] = []
@@ -48,19 +63,21 @@ class RestlerRequestBuilderMock {
     
     // MARK: - Internal
     func callCompletion<T>(type: T.Type, result: Result<T, Error>) throws {
-        guard let request = self.decodeReturnedMocks.last as? RestlerRequestMock<T> else { throw "Decode hasn't return value with a specified type." }
+        guard let request = self.decodeReturnedMocks.last as? RestlerRequestMock<T> else {
+            throw "Decode hasn't return value with a specified type."
+        }
         var isCalledAnything = false
         switch result {
         case let .success(object):
-            guard let successHandler = request.onSuccessParams.last?.handler else { break }
+            guard let successHandler = request.lastSuccessHandler else { break }
             successHandler(object)
             isCalledAnything = true
         case let .failure(error):
-            guard let failureHandler = request.onFailureParams.last?.handler else { break }
+            guard let failureHandler = request.lastFailureHandler else { break }
             failureHandler(error)
             isCalledAnything = true
         }
-        if let completionHandler = request.onCompletionParams.last?.handler {
+        if let completionHandler = request.lastCompletionHandler {
             completionHandler(result)
             isCalledAnything = true
         }
@@ -85,12 +102,34 @@ extension RestlerRequestBuilderMock: RestlerBasicRequestBuilderType {
         return self
     }
     
+    func catching(_ handler: ((Restler.Error) -> Void)?) -> Self {
+        self.catchingParams.append(CatchingParams(handler: handler))
+        return self
+    }
+    
+    func receive(on queue: DispatchQueue?) -> Self {
+        return self
+    }
+    
     func decode(_ type: Void.Type) -> Restler.Request<Void> {
         self.decodeParams.append(DecodeParams(type: type))
         let mock = RestlerRequestMock<Void>()
         self.decodeReturnedMocks.append(mock)
         return mock
     }
+    
+    func urlRequest() -> URLRequest? {
+        self.urlRequestParams.append(URLRequestParams())
+        return self.urlRequestReturnValue
+    }
+    
+    #if canImport(Combine)
+    @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func publisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure>? {
+        self.publisherParams.append(PublisherParams())
+        return nil
+    }
+    #endif
 }
 
 // MARK: - RestlerQueryRequestBuilderType

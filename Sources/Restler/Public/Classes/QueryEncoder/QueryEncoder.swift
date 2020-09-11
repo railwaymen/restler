@@ -1,7 +1,7 @@
 import Foundation
 
 extension Restler {
-    public class QueryEncoder: RestlerQueryEncoderType {
+    public final class QueryEncoder: RestlerQueryEncoderType {
         private let jsonEncoder: RestlerJSONEncoderType
         
         private var containers: [QueryItemsRepresentable] = []

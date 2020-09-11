@@ -1,8 +1,9 @@
 import Foundation
 
 extension Restler {
-    public class VoidRequest: Request<Void>, RestlerRequestInternal {
+    public final class VoidRequest: Request<Void>, RestlerRequestInternal {
         internal let dependencies: Restler.RequestDependencies
+        internal var form: Restler.RequestForm = .init()
         
         private var successCompletionHandler: ((SuccessfulResponseObject) -> Void)?
         private var failureCompletionHandler: ((Swift.Error) -> Void)?
@@ -35,6 +36,22 @@ extension Restler {
             self.buildNetworkingRequest()
         }
         
+        public override func using(session: URLSession) -> Self {
+            self.form.urlSession = session
+            return self
+        }
+        
+        public override func subscribe(
+            onSuccess: ((SuccessfulResponseObject) -> Void)? = nil,
+            onFailure: ((Swift.Error) -> Void)? = nil,
+            onCompletion: ((Result<SuccessfulResponseObject, Swift.Error>) -> Void)? = nil
+        ) -> RestlerTaskType? {
+            self.successCompletionHandler = onSuccess
+            self.failureCompletionHandler = onFailure
+            self.completionHandler = onCompletion
+            return self.buildNetworkingRequest()
+        }
+        
         // MARK: - Internal
         internal func getCompletion() -> DataCompletion {
             let completion: Restler.VoidCompletion = {
@@ -47,7 +64,7 @@ extension Restler {
                 }
                 completionHandler?(result)
             }
-            let responseHandler = self.responseHandlerClosure(completion: self.mainThreadClosure(of: completion))
+            let responseHandler = self.responseHandlerClosure(completion: self.customQueueClosure(of: completion))
             return { result in
                 responseHandler(result)
             }

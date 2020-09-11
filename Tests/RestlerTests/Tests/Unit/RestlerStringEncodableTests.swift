@@ -1,161 +1,161 @@
 import XCTest
 import Restler
 
-class RestlerStringEncodableTests: XCTestCase {}
+final class RestlerStringEncodableTests: XCTestCase {}
 
 // MARK: - restlerStringValue
 extension RestlerStringEncodableTests {
     func testRestlerStringValue_decimal() {
-        //Arrange
+        // Arrange
         let sut: Decimal = 2.33
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "2.33")
     }
     
     func testRestlerStringValue_double() {
-        //Arrange
+        // Arrange
         let sut: Double = 2.33
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "2.33")
     }
     
     func testRestlerStringValue_float() {
-        //Arrange
+        // Arrange
         let sut: Float = 2.33
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "2.33")
     }
     
     func testRestlerStringValue_int() {
-        //Arrange
+        // Arrange
         let sut: Int = 24
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "24")
     }
     
     func testRestlerStringValue_int8() {
-        //Arrange
+        // Arrange
         let sut: Int8 = 24
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "24")
     }
     
     func testRestlerStringValue_int16() {
-        //Arrange
+        // Arrange
         let sut: Int16 = 24
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "24")
     }
     
     func testRestlerStringValue_int32() {
-        //Arrange
+        // Arrange
         let sut: Int32 = 24
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "24")
     }
     
     func testRestlerStringValue_int64() {
-        //Arrange
+        // Arrange
         let sut: Int64 = 24
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "24")
     }
     
     func testRestlerStringValue_uint() {
-        //Arrange
+        // Arrange
         let sut: UInt = 24
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "24")
     }
     
     func testRestlerStringValue_uint8() {
-        //Arrange
+        // Arrange
         let sut: UInt8 = 24
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "24")
     }
     
     func testRestlerStringValue_uint16() {
-        //Arrange
+        // Arrange
         let sut: UInt16 = 24
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "24")
     }
     
     func testRestlerStringValue_uint32() {
-        //Arrange
+        // Arrange
         let sut: UInt32 = 24
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "24")
     }
     
     func testRestlerStringValue_uint64() {
-        //Arrange
+        // Arrange
         let sut: UInt64 = 24
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "24")
     }
     
     func testRestlerStringValue_string() {
-        //Arrange
+        // Arrange
         let sut: String = "hello"
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "hello")
     }
     
     func testRestlerStringValue_url() throws {
-        //Arrange
+        // Arrange
         let urlString = "https://example.com/some?name=hey"
         let sut: URL = try XCTUnwrap(URL(string: urlString))
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, urlString)
     }
     
     func testRestlerStringValue_boolTrue() {
-        //Arrange
+        // Arrange
         let sut: Bool = true
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "true")
     }
     
     func testRestlerStringValue_boolFalse() {
-        //Arrange
+        // Arrange
         let sut: Bool = false
-        //Act
+        // Act
         let string = sut.restlerStringValue
-        //Assert
+        // Assert
         XCTAssertEqual(string, "false")
     }
 }

@@ -1,12 +1,14 @@
 import Foundation
 @testable import Restler
 
-class HTTPURLResponseMock {
+final class HTTPURLResponseMock {
     
     // MARK: - HTTPURLResponseType
     var isSuccessfulReturnValue: Bool = true
     
     var statusCodeReturnValue: Int = 200
+    
+    var allHeaderFieldsReturnValue: [AnyHashable: Any] = [:]
 }
 
 // MARK: - HTTPURLResponseType
@@ -17,5 +19,9 @@ extension HTTPURLResponseMock: HTTPURLResponseType {
     
     var statusCode: Int {
         self.statusCodeReturnValue
+    }
+    
+    var allHeaderFields: [AnyHashable: Any] {
+        self.allHeaderFieldsReturnValue
     }
 }

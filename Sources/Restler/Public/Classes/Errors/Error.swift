@@ -26,3 +26,12 @@ extension Restler.Error: Equatable {
         }
     }
 }
+
+// MARK: - Array Extension
+extension Array where Element == Restler.Error {
+    func single() -> Restler.Error? {
+        guard let first = self.first else { return nil }
+        guard self.count == 1 else { return .multiple(self) }
+        return first
+    }
+}

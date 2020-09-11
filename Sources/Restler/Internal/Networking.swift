@@ -1,18 +1,34 @@
 import Foundation
+#if canImport(Combine)
+import Combine
+#endif
 
 typealias DataResult = Result<Data?, Error>
 typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType: class {
     func makeRequest(
+        urlRequest: URLRequest,
+        urlSession: URLSessionType?,
+        eventLogger: EventLoggerLogging,
+        completion: @escaping DataCompletion) -> Restler.Task
+    
+    func buildRequest(
         url: URL,
         method: HTTPMethod,
         header: Restler.Header,
-        customRequestModification: ((inout URLRequest) -> Void)?,
-        completion: @escaping DataCompletion) -> Restler.Task?
+        customRequestModification: ((inout URLRequest) -> Void)?) -> URLRequest?
+    
+    #if canImport(Combine)
+    @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func getPublisher(
+        urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging
+    ) -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure>
+    #endif
 }
 
-class Networking {
+final class Networking {
     private let session: URLSessionType
         
     // MARK: - Initialization
@@ -24,22 +40,59 @@ class Networking {
 // MARK: - NetworkingType
 extension Networking: NetworkingType {
     func makeRequest(
+        urlRequest: URLRequest,
+        urlSession: URLSessionType?,
+        eventLogger: EventLoggerLogging,
+        completion: @escaping DataCompletion
+    ) -> Restler.Task {
+        Restler.Task(
+            task: self.runDataTask(
+                request: urlRequest,
+                urlSession: urlSession,
+                eventLogger: eventLogger,
+                completion: completion))
+    }
+    
+    func buildRequest(
         url: URL,
         method: HTTPMethod,
         header: Restler.Header,
-        customRequestModification: ((inout URLRequest) -> Void)?,
-        completion: @escaping DataCompletion
-    ) -> Restler.Task? {
+        customRequestModification: ((inout URLRequest) -> Void)?
+    ) -> URLRequest? {
         guard var request = self.buildURLRequest(
             url: url,
             httpMethod: method,
             header: header) else {
-                completion(.failure(Restler.internalError()))
                 return nil
         }
         customRequestModification?(&request)
-        return Restler.Task(task: self.runDataTask(request: request, completion: completion))
+        return request
     }
+    
+    #if canImport(Combine)
+    @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func getPublisher(
+        urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging
+    ) -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure> {
+        var startTime: DispatchTime?
+        return self.session.dataTaskPublisher(for: urlRequest)
+            .handleEvents(
+                receiveSubscription: { _ in startTime = .now() },
+                receiveOutput: { data, response in
+                    let elapsedTime: Milliseconds = DispatchTime.now().since(startTime ?? .now()).toMilliseconds()
+                    let httpResponse = HTTPRequestResponse(data: data, response: response as? HTTPURLResponseType, error: nil)
+                    eventLogger.log(.requestCompleted(request: urlRequest, response: httpResponse, elapsedTime: elapsedTime))
+            },
+                receiveCompletion: { completion in
+                    guard case let .failure(error) = completion else { return }
+                    let elapsedTime: Milliseconds = DispatchTime.now().since(startTime ?? .now()).toMilliseconds()
+                    let httpResponse = HTTPRequestResponse(data: nil, response: nil, error: error)
+                    eventLogger.log(.requestCompleted(request: urlRequest, response: httpResponse, elapsedTime: elapsedTime))
+            })
+            .eraseToAnyPublisher()
+    }
+    #endif
 }
 
 // MARK: - Private
@@ -55,8 +108,20 @@ extension Networking {
         return request
     }
     
-    private func runDataTask(request: URLRequest, completion: @escaping DataCompletion) -> URLSessionDataTaskType {
-        let task = self.session.dataTask(with: request) { response in
+    private func runDataTask(
+        request: URLRequest,
+        urlSession: URLSessionType?,
+        eventLogger: EventLoggerLogging,
+        completion: @escaping DataCompletion
+    ) -> URLSessionDataTaskType {
+        let session = urlSession ?? self.session
+        let startTime: DispatchTime = .now()
+        let task = session.dataTask(with: request) { response in
+            let elapsedTime: Milliseconds = DispatchTime.now().since(startTime).toMilliseconds()
+            eventLogger.log(.requestCompleted(
+                request: request,
+                response: response,
+                elapsedTime: elapsedTime))
             self.handleResponse(response: response, completion: completion)
         }
         task.resume()
@@ -72,7 +137,8 @@ extension Networking {
     }
     
     private func handle(result: HTTPRequestResponse) -> Error {
-        let errorType = Restler.ErrorType(statusCode: result.response?.statusCode ?? (result.error as NSError?)?.code ?? 0) ?? .unknownError
+        let statusCode = result.response?.statusCode ?? (result.error as NSError?)?.code ?? 0
+        let errorType = Restler.ErrorType(statusCode: statusCode) ?? .unknownError
         return Restler.Error.request(type: errorType, response: Restler.Response(result))
     }
 }

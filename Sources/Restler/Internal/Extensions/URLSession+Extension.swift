@@ -2,6 +2,11 @@ import Foundation
 
 protocol URLSessionType: class {
     func dataTask(with request: URLRequest, completion: @escaping (HTTPRequestResponse) -> Void) -> URLSessionDataTaskType
+    
+    #if canImport(Combine)
+    @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func dataTaskPublisher(for request: URLRequest) -> URLSession.DataTaskPublisher
+    #endif
 }
 
 // MARK: - URLSessionType

@@ -1,8 +1,9 @@
 import Foundation
 
 extension Restler {
-    public class OptionalDecodableRequest<D: Decodable>: Request<D?>, RestlerRequestInternal {
+    public final class OptionalDecodableRequest<D: Decodable>: Request<D?>, RestlerRequestInternal {
         internal let dependencies: Restler.RequestDependencies
+        internal var form: Restler.RequestForm = .init()
         
         private var successCompletionHandler: ((D?) -> Void)?
         private var failureCompletionHandler: ((Swift.Error) -> Void)?
@@ -36,6 +37,22 @@ extension Restler {
             self.buildNetworkingRequest()
         }
         
+        public override func using(session: URLSession) -> Self {
+            self.form.urlSession = session
+            return self
+        }
+        
+        public override func subscribe(
+            onSuccess: ((D?) -> Void)? = nil,
+            onFailure: ((Swift.Error) -> Void)? = nil,
+            onCompletion: ((Result<D?, Swift.Error>) -> Void)? = nil
+        ) -> RestlerTaskType? {
+            self.successCompletionHandler = onSuccess
+            self.failureCompletionHandler = onFailure
+            self.completionHandler = onCompletion
+            return self.buildNetworkingRequest()
+        }
+        
         // MARK: - Internal
         internal func getCompletion() -> DataCompletion {
             let completion: Restler.DecodableCompletion<D?> = {
@@ -48,7 +65,7 @@ extension Restler {
                 }
                 completionHandler?(result)
             }
-            let responseHandler = self.responseHandlerClosure(completion: self.mainThreadClosure(of: completion))
+            let responseHandler = self.responseHandlerClosure(completion: self.customQueueClosure(of: completion))
             return { result in
                 responseHandler(result)
             }
@@ -58,8 +75,10 @@ extension Restler {
 
 // MARK: - Private
 extension Restler.OptionalDecodableRequest {
-    private func responseHandlerClosure<D>(completion: @escaping Restler.DecodableCompletion<D?>) -> (DataResult) -> Void where D: Decodable {
-        return { [decoder, errorParser] result in
+    private func responseHandlerClosure<D>(
+        completion: @escaping Restler.DecodableCompletion<D?>
+    ) -> (DataResult) -> Void where D: Decodable {
+        { [decoder, errorParser] result in
             switch result {
             case let .success(optionalData):
                 var object: D?

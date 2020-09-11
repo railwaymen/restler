@@ -15,6 +15,9 @@ public protocol RestlerType: class {
     /// Global header sent in requests.
     var header: Restler.Header { get set }
     
+    /// A level of details in logs displayed in the console. Logs are displaying only for DEBUG builds.
+    var levelOfLogDetails: Restler.LevelOfLogDetails { get set }
+    
     /// Creates GET request builder.
     ///
     /// - Parameter endpoint: Endpoint for the request

@@ -1,49 +1,49 @@
 import XCTest
 @testable import Restler
 
-class HTTPMethodTests: XCTestCase {}
+final class HTTPMethodTests: XCTestCase {}
 
 // MARK: - name
 extension HTTPMethodTests {
     func testName_get() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .get(query: [])
-        //Assert
+        // Assert
         XCTAssertEqual(sut.name, "GET")
     }
     
     func testName_post() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .post(content: nil)
-        //Assert
+        // Assert
         XCTAssertEqual(sut.name, "POST")
     }
     
     func testName_put() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .put(content: nil)
-        //Assert
+        // Assert
         XCTAssertEqual(sut.name, "PUT")
     }
     
     func testName_patch() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .patch(content: nil)
-        //Assert
+        // Assert
         XCTAssertEqual(sut.name, "PATCH")
     }
     
     func testName_delete() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .delete
-        //Assert
+        // Assert
         XCTAssertEqual(sut.name, "DELETE")
     }
     
     func testName_head() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .head
-        //Assert
+        // Assert
         XCTAssertEqual(sut.name, "HEAD")
     }
 }
@@ -51,48 +51,48 @@ extension HTTPMethodTests {
 // MARK: - query
 extension HTTPMethodTests {
     func testQuery_get() {
-        //Arrange
+        // Arrange
         let queryParameters = ["key": "value", "nil": nil, "some": "another"].map { URLQueryItem(name: $0, value: $1) }
         let sut: HTTPMethod = .get(query: queryParameters)
-        //Assert
+        // Assert
         XCTAssertEqual(sut.query, queryParameters)
     }
     
     func testQuery_post() throws {
-        //Arrange
+        // Arrange
         let content = ["key": "value", "nil": nil, "some": "another"]
         let sut: HTTPMethod = .post(content: try JSONEncoder().encode(content))
-        //Assert
+        // Assert
         XCTAssertNil(sut.query)
     }
     
     func testQuery_put() throws {
-        //Arrange
+        // Arrange
         let content = ["key": "value", "nil": nil, "some": "another"]
         let sut: HTTPMethod = .put(content: try JSONEncoder().encode(content))
-        //Assert
+        // Assert
         XCTAssertNil(sut.query)
     }
     
     func testQuery_patch() throws {
-        //Arrange
+        // Arrange
         let content = ["key": "value", "nil": nil, "some": "another"]
         let sut: HTTPMethod = .patch(content: try JSONEncoder().encode(content))
-        //Assert
+        // Assert
         XCTAssertNil(sut.query)
     }
     
     func testQuery_delete() throws {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .delete
-        //Assert
+        // Assert
         XCTAssertNil(sut.query)
     }
     
     func testQuery_head() throws {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .head
-        //Assert
+        // Assert
         XCTAssertNil(sut.query)
     }
 }
@@ -100,51 +100,51 @@ extension HTTPMethodTests {
 // MARK: - content
 extension HTTPMethodTests {
     func testContent_get() {
-        //Arrange
+        // Arrange
         let queryParameters = ["key": "value", "nil": nil, "some": "another"].map { URLQueryItem(name: $0, value: $1) }
         let sut: HTTPMethod = .get(query: queryParameters)
-        //Assert
+        // Assert
         XCTAssertNil(sut.content)
     }
     
     func testContent_post() throws {
-        //Arrange
+        // Arrange
         let content = ["key": "value", "nil": nil, "some": "another"]
         let data = try JSONEncoder().encode(content)
         let sut: HTTPMethod = .post(content: data)
-        //Assert
+        // Assert
         XCTAssertEqual(sut.content, data)
     }
     
     func testContent_put() throws {
-        //Arrange
+        // Arrange
         let content = ["key": "value", "nil": nil, "some": "another"]
         let data = try JSONEncoder().encode(content)
         let sut: HTTPMethod = .put(content: data)
-        //Assert
+        // Assert
         XCTAssertEqual(sut.content, data)
     }
     
     func testContent_patch() throws {
-        //Arrange
+        // Arrange
         let content = ["key": "value", "nil": nil, "some": "another"]
         let data = try JSONEncoder().encode(content)
         let sut: HTTPMethod = .patch(content: data)
-        //Assert
+        // Assert
         XCTAssertEqual(sut.content, data)
     }
     
     func testContent_delete() throws {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .delete
-        //Assert
+        // Assert
         XCTAssertNil(sut.content)
     }
     
     func testContent_head() throws {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .head
-        //Assert
+        // Assert
         XCTAssertNil(sut.content)
     }
 }
@@ -152,44 +152,44 @@ extension HTTPMethodTests {
 // MARK: - isQueryAvailable
 extension HTTPMethodTests {
     func testIsQueryAvailable_get() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .get(query: [])
-        //Assert
+        // Assert
         XCTAssertTrue(sut.isQueryAvailable)
     }
     
     func testIsQueryAvailable_post() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .post(content: nil)
-        //Assert
+        // Assert
         XCTAssertFalse(sut.isQueryAvailable)
     }
     
     func testIsQueryAvailable_put() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .put(content: nil)
-        //Assert
+        // Assert
         XCTAssertFalse(sut.isQueryAvailable)
     }
     
     func testIsQueryAvailable_patch() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .patch(content: nil)
-        //Assert
+        // Assert
         XCTAssertFalse(sut.isQueryAvailable)
     }
     
     func testIsQueryAvailable_delete() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .delete
-        //Assert
+        // Assert
         XCTAssertFalse(sut.isQueryAvailable)
     }
     
     func testIsQueryAvailable_head() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .head
-        //Assert
+        // Assert
         XCTAssertFalse(sut.isQueryAvailable)
     }
 }
@@ -197,44 +197,44 @@ extension HTTPMethodTests {
 // MARK: - isBodyAvailable
 extension HTTPMethodTests {
     func testIsBodyAvailable_get() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .get(query: [])
-        //Assert
+        // Assert
         XCTAssertFalse(sut.isBodyAvailable)
     }
     
     func testIsBodyAvailable_post() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .post(content: nil)
-        //Assert
+        // Assert
         XCTAssertTrue(sut.isBodyAvailable)
     }
     
     func testIsBodyAvailable_put() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .put(content: nil)
-        //Assert
+        // Assert
         XCTAssertTrue(sut.isBodyAvailable)
     }
     
     func testIsBodyAvailable_patch() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .patch(content: nil)
-        //Assert
+        // Assert
         XCTAssertTrue(sut.isBodyAvailable)
     }
     
     func testIsBodyAvailable_delete() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .delete
-        //Assert
+        // Assert
         XCTAssertFalse(sut.isBodyAvailable)
     }
     
     func testIsBodyAvailable_head() {
-        //Arrange
+        // Arrange
         let sut: HTTPMethod = .head
-        //Assert
+        // Assert
         XCTAssertFalse(sut.isBodyAvailable)
     }
 }

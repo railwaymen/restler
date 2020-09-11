@@ -3,6 +3,7 @@ import Foundation
 protocol HTTPURLResponseType: class {
     var isSuccessful: Bool { get }
     var statusCode: Int { get }
+    var allHeaderFields: [AnyHashable: Any] { get }
 }
 
 extension HTTPURLResponse: HTTPURLResponseType {

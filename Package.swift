@@ -1,24 +1,29 @@
-// swift-tools-version:5.1
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version:5.0
 import PackageDescription
 
 let package = Package(
     name: "Restler",
-    platforms: [
-        .iOS(.v11),
-        .macOS(.v10_15)
-    ],
     products: [
         .library(
             name: "Restler",
             targets: ["Restler"]),
+        .library(
+            name: "RxRestler",
+            targets: ["RxRestler"]),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "5.1.1")),
+    ],
     targets: [
         .target(
             name: "Restler",
             dependencies: []),
+        .target(
+            name: "RxRestler",
+            dependencies: [
+                "Restler",
+                .product(name: "RxSwift", package: "RxSwift"),
+            ]),
         .testTarget(
             name: "RestlerTests",
             dependencies: ["Restler"])

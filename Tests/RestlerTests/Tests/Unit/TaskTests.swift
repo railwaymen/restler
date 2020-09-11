@@ -1,7 +1,7 @@
 import XCTest
 @testable import Restler
 
-class TaskTests: XCTestCase {
+final class TaskTests: XCTestCase {
     private var task: URLSessionDataTaskMock!
     
     override func setUp() {
@@ -13,13 +13,13 @@ class TaskTests: XCTestCase {
 // MARK: - identifier
 extension TaskTests {
     func testIdentifier() {
-        //Arrange
+        // Arrange
         let sut = Restler.Task(task: self.task)
         let expectedID = 1121
         self.task.taskIdentifierReturnValue = expectedID
-        //Act
+        // Act
         let id = sut.identifier
-        //Assert
+        // Assert
         XCTAssertEqual(id, expectedID)
     }
 }
@@ -27,13 +27,13 @@ extension TaskTests {
 // MARK: - state
 extension TaskTests {
     func testState() {
-        //Arrange
+        // Arrange
         let sut = Restler.Task(task: self.task)
         let expectedState: URLSessionTask.State = .suspended
         self.task.stateReturnValue = expectedState
-        //Act
+        // Act
         let state = sut.state
-        //Assert
+        // Assert
         XCTAssertEqual(state, expectedState)
     }
 }
@@ -41,11 +41,11 @@ extension TaskTests {
 // MARK: - cancel()
 extension TaskTests {
     func testCancel() {
-        //Arrange
+        // Arrange
         let sut = Restler.Task(task: self.task)
-        //Act
+        // Act
         sut.cancel()
-        //Assert
+        // Assert
         XCTAssertEqual(self.task.cancelParams.count, 1)
     }
 }
@@ -53,11 +53,11 @@ extension TaskTests {
 // MARK: - suspend()
 extension TaskTests {
     func testSuspend() {
-        //Arrange
+        // Arrange
         let sut = Restler.Task(task: self.task)
-        //Act
+        // Act
         sut.suspend()
-        //Assert
+        // Assert
         XCTAssertEqual(self.task.suspendParams.count, 1)
     }
 }
@@ -65,11 +65,11 @@ extension TaskTests {
 // MARK: - resume()
 extension TaskTests {
     func testResume() {
-        //Arrange
+        // Arrange
         let sut = Restler.Task(task: self.task)
-        //Act
+        // Act
         sut.resume()
-        //Assert
+        // Assert
         XCTAssertEqual(self.task.resumeParams.count, 1)
     }
 }

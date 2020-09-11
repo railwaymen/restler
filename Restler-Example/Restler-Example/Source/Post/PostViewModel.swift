@@ -10,7 +10,7 @@ import Foundation
 import Combine
 import Restler
 
-class PostViewModel: ObservableObject {
+final class PostViewModel: ObservableObject {
     private let restler = Restler(baseURL: URL(string: "https://jsonplaceholder.typicode.com")!)
     
     let objectWillChange = PassthroughSubject<Void, Never>()
@@ -41,15 +41,14 @@ class PostViewModel: ObservableObject {
         _ = self.restler
             .get(Endpoint.comments)
             .query(["postId": 1])
+            .receive(on: .main)
             .decode([PostComment].self)
-            .onCompletion({ result in
-                switch result {
-                case let .success(comments):
+            .subscribe(
+                onSuccess: { comments in
                     self.comments = comments
-                case let .failure(error):
+                },
+                onFailure: { error in
                     print("Error:", error)
-                }
             })
-            .start()
     }
 }

@@ -11,9 +11,11 @@ The Restler framework has been built to use features of the newest versions of S
 1. [Documentation](#documentation)
 2. [Instalation](#instalation)
 3. [Usage](#usage)
-  - [Error Parser](#error-parser)
-  - [Header](#header)
-  - [Restler calls](#restler-calls)
+    - [Error Parser](#error-parser)
+    - [Header](#header)
+    - [Restler calls](#restler-calls)
+    - [Combine](#restler--combine)
+    - [RxSwift](#restler--rxswift)
 4. [Contribution](#contribution)
 
 ## Documentation
@@ -56,10 +58,11 @@ Otherwise you can use **CocoaPods**. If you use one simply add to your `Podfile`
 
 ```ruby
 ...
-pod 'Restler'
+pod 'Restler/Core'
 ...
 ```
 
+It's important to specify it with `/Core`! (Changed in v1.0)
 and call in your console:
 
 ```bash
@@ -119,27 +122,28 @@ Restler(baseURL: myBaseURL)
   .query(anEncodableQueryObject) // 2
   .failureDecode(ErrorToDecodeOnFailure.self) // 3
   .setInHeader("myNewTemporaryToken", forKey: "token") // 4
-  .decode(Profile.self) // 5
-  // 6
+  .receive(on: .main) // 5
+  .decode(Profile.self) // 6
+  // 7
 
-  .onSuccess({ profile in // 7
-    updateProfile(with: profile)
+  .subscribe(
+    onSuccess: { profile in // 8
+      updateProfile(with: profile)
+    },
+    onCompletion: { _ in // 9
+      hideLoadingIndicator()
   })
-  .onCompletion({ _ in // 8
-    hideLoadingIndicator()
-  })
-  .start() // 9
 ```
 
 1. Makes GET request to the given endpoint.
 2. Encodes the object and puts it in query for GET request.
 3. If an error will occur, an error parser would try to decode the given type.
 4. Sets the specified value for the given key in the header only for this request.
-5. Decodes Profile object on a successful response. If it is not optional, a failure handler can be called.
-6. Since this moment we're operating on a request, not a request builder.
-7. A handler called if Restler would successfully end request.
-8. A handler called on completion of the request whatever the result would be.
-9. Create and start data task.
+5. Sets dispatch queue on which completion handlers will be called to the main queue.
+6. Decodes Profile object on a successful response. If it is not optional, a failure handler can be called.
+7. Since this moment we're operating on a request, not a request builder.
+8. A handler called if Restler would successfully end request.
+9. A handler called on completion of the request whatever the result would be.
 
 #### POST
 
@@ -150,13 +154,13 @@ Restler(baseURL: myBaseURL)
   .failureDecode(ErrorToDecodeOnFailure.self)
   .decode(Profile.self)
 
-  .onFailure({ error in // 3
-    print("\(error)")
+  .subscribe(
+    onFailure: { error in // 3
+      print("\(error)")
+    },
+    onCompletion: { _ in
+      hideLoadingIndicator()
   })
-  .onCompletion({ _ in
-    hideLoadingIndicator()
-  })
-  .start()
 ```
 
 1. Makes POST request to the given endpoint.
@@ -167,6 +171,60 @@ Restler(baseURL: myBaseURL)
 
 Any other method call is very similar to these two, but if you have questions simply create an issue.
 
+### Restler + Combine
+
+```swift
+Restler(baseURL: myBaseURL)
+  .get(Endpoint.myProfile) // 1
+  .query(anEncodableQueryObject) // 2
+  .publisher()? // 3
+  .receive(on: DispatchQueue.main) // 4
+  .map(\.data) // 5
+  .decode(type: Profile.self, decoder: JSONDecoder()) // 6
+  .catch { _ in Empty() } // 7
+  .assign(to: \.profile, on: self) // 8
+  .store(in: &subscriptions) // 9
+```
+
+1. Makes GET request to the given endpoint.
+2. Encodes the object and puts it in query for GET request.
+3. Builds a request and returns publisher for Combine support.
+4. Specifies the scheduler on which to receive elements from the publisher. In this case main queue.
+5. Get Data object from `DataTaskPublisher`.
+6. Decodes Profile object.
+7. Handle error
+8. Assigns each element from a Publisher to a property on an object.
+9. Stores this type-erasing cancellable instance in the specified collection.
+
+### Restler + RxSwift
+
+First of all you need to add `RxRestler` to your target you can do it simply in SPM. In CocoaPods you should add to your Podfile:
+
+```ruby
+pod `Restler/Rx`
+```
+
+Then `import RxRestler` to every file its needed.
+
+```swift
+Restler(baseURL: myBaseURL)
+  .get(Endpoint.myProfile)
+  .query(anEncodableQueryObject)
+  .receive(on: .main) // 1
+  .decode(Profile.self) // 2
+  .rx // 3
+  .subscribe( // 4
+    onSuccess: { print("This is my profile:", $0) },
+    onError: { print("This is an error:", $0) })
+  .disposed(by: bag) // 5
+```
+
+1. Subscribe handlers will be called on the provided queue even if it's done with RxSwift (setting a scheduler with this property set may cause some little delay between receiving a response and handling it but the handlers will be called on the provided scheduler).
+2. Decode some type on successful response - Void, Data, or some custom object.
+3. Move request to Rx usage. This returns `Single<Profile>` in this case.
+4. Here we call already the RxSwift function.
+5. Remember about adding the `Disposable` to the `DisposeBag`. The networking task will be canceled automatically if the `bag` will deinitialize.
+
 ## Contribution
 
 If you want to contribute in this framework, simply put your pull request here.
@@ -174,6 +232,14 @@ If you want to contribute in this framework, simply put your pull request here.
 If you have found any bug, file it in the issues.
 
 If you would like Restler to do something else, create an issue for feature request.
+
+### Configuration
+
+1. Clone the project and open the project's folder in terminal.
+2. Run a configuration script: `./Scripts/configure.sh`
+3. Fill configuration file in folder `Restler-Example/Restler-Example/Configuration` named `Debug.xcconfig` with needed information.
+4. Open the project in the folder `Restler-Example`. You can do it from terminal: `open Restler-Example/Restler-Example.xcodeproj`
+5. Run tests to be sure everything works properly.
 
 ### Dependencies
 
