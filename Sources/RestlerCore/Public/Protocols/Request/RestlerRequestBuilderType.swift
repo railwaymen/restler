@@ -6,6 +6,7 @@ import Combine
 public typealias RestlerGetRequestBuilderType =
     RestlerQueryRequestBuilderType
     & RestlerDecodableResponseRequestBuilderType
+    & RestlerDownloadRequestBuilderType
 
 public typealias RestlerPostRequestBuilderType =
     RestlerBodyRequestBuilderType
@@ -208,4 +209,12 @@ public protocol RestlerDecodableResponseRequestBuilderType: RestlerBasicRequestB
     /// - Returns: Appropriate request for the given type.
     ///
     func decode<T>(_ type: T.Type) -> Restler.Request<T> where T: Decodable
+}
+
+// MARK: - RestlerDownloadRequestBuilderType
+public protocol RestlerDownloadRequestBuilderType: RestlerBasicRequestBuilderType {
+    
+    func resumeData(_ data: Data) -> Self
+    
+    func requestDownload() -> RestlerDownloadRequestType
 }
