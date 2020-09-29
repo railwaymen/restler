@@ -74,13 +74,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		7C258D7F6F9EB17C0F3D70F6 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		8A41B55E240E6CC300D96084 /* Comment */ = {
 			isa = PBXGroup;
 			children = (
@@ -113,7 +106,6 @@
 			children = (
 				8A87AEF12400084F007FA662 /* Restler-Example */,
 				8A87AEF02400084F007FA662 /* Products */,
-				7C258D7F6F9EB17C0F3D70F6 /* Pods */,
 				65676EA07F1AB6EB79937005 /* Frameworks */,
 			);
 			sourceTree = "<group>";

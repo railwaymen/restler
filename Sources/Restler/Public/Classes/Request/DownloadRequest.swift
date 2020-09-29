@@ -2,7 +2,7 @@ import Foundation
 
 public protocol RestlerDownloadRequestType: class {
     func subscribe(
-        onProgress: ((Progress) -> Void)?,
+        onProgress: ((RestlerDownloadTaskType) -> Void)?,
         onSuccess: ((URL) -> Void)?,
         onError: ((Restler.Error) -> Void)?,
         onCompletion: ((Result<URL, Restler.Error>) -> Void)?
@@ -11,7 +11,7 @@ public protocol RestlerDownloadRequestType: class {
 
 extension RestlerDownloadRequestType {
     public func subscribe(
-        onProgress: ((Progress) -> Void)? = nil,
+        onProgress: ((RestlerDownloadTaskType) -> Void)? = nil,
         onSuccess: ((URL) -> Void)? = nil,
         onError: ((Restler.Error) -> Void)? = nil,
         onCompletion: ((Result<URL, Restler.Error>) -> Void)? = nil
@@ -28,11 +28,6 @@ extension Restler {
     final public class DownloadRequest: RestlerDownloadRequestType {
         private let dependencies: RequestDependencies
         
-        private var onProgressHandler: ((Progress) -> Void)?
-        private var onSuccessHandler: ((URL) -> Void)?
-        private var onErrorHandler: ((Error) -> Void)?
-        private var onCompletionHandler: ((Result<URL, Error>) -> Void)?
-        
         // MARK: - Initialization
         init(dependencies: RequestDependencies) {
             self.dependencies = dependencies
@@ -40,25 +35,44 @@ extension Restler {
         
         // MARK: - Public
         public func subscribe(
-            onProgress: ((Progress) -> Void)?,
+            onProgress: ((RestlerDownloadTaskType) -> Void)?,
             onSuccess: ((URL) -> Void)?,
             onError: ((Restler.Error) -> Void)?,
             onCompletion: ((Result<URL, Restler.Error>) -> Void)?
         ) -> RestlerDownloadTaskType? {
-            if let onProgress = onProgress {
-                self.onProgressHandler = onProgress
-            }
-            if let onSuccess = onSuccess {
-                self.onSuccessHandler = onSuccess
-            }
-            if let onError = onError {
-                self.onErrorHandler = onError
-            }
-            if let onCompletion = onCompletion {
-                self.onCompletionHandler = onCompletion
-            }
-            
-            return nil
+            guard let request = self.dependencies.urlRequest else { return nil }
+            return self.dependencies.networking.downloadRequest(
+                urlRequest: request,
+                eventLogger: self.dependencies.eventLogger,
+                progressHandler: { task in
+                    self.performOnProperQueue {
+                        onProgress?(task)
+                    }
+                },
+                completionHandler: { result in
+                    self.performOnProperQueue {
+                        switch result {
+                        case let .success(url):
+                            onSuccess?(url)
+                        case let .failure(error):
+                            onError?(error)
+                        }
+                        onCompletion?(result)
+                    }
+                })
+        }
+    }
+}
+
+// MARK: - Private
+extension Restler.DownloadRequest {
+    private func performOnProperQueue(work: @escaping () -> Void) {
+        guard let customQueue = self.dependencies.customDispatchQueue else {
+            work()
+            return
+        }
+        customQueue.async {
+            work()
         }
     }
 }
