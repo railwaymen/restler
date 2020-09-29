@@ -35,6 +35,10 @@ final class ContentViewModel: ObservableObject {
         return PostViewModel(post: post)
     }
     
+    func createDownloadsViewModel() -> DownloadsViewModel {
+        DownloadsViewModel()
+    }
+    
     // MARK: - Private
     private func fetchData() -> AnyPublisher<[BlogPost], Error>? {
         self.restler

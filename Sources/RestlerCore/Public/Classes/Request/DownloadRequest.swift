@@ -1,6 +1,7 @@
 import Foundation
 
 public protocol RestlerDownloadRequestType: class {
+    @discardableResult
     func subscribe(
         onProgress: ((RestlerDownloadTaskType) -> Void)?,
         onSuccess: ((URL) -> Void)?,
@@ -10,6 +11,7 @@ public protocol RestlerDownloadRequestType: class {
 }
 
 extension RestlerDownloadRequestType {
+    @discardableResult
     public func subscribe(
         onProgress: ((RestlerDownloadTaskType) -> Void)? = nil,
         onSuccess: ((URL) -> Void)? = nil,
@@ -34,6 +36,7 @@ extension Restler {
         }
         
         // MARK: - Public
+        @discardableResult
         public func subscribe(
             onProgress: ((RestlerDownloadTaskType) -> Void)?,
             onSuccess: ((URL) -> Void)?,
