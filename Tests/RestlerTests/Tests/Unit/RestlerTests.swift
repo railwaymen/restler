@@ -1,5 +1,5 @@
 import XCTest
-@testable import Restler
+@testable import RestlerCore
 
 final class RestlerTests: XCTestCase {
     private let baseURLString = "https://example.com"

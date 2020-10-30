@@ -1,6 +1,6 @@
 import Foundation
 import RxSwift
-import Restler
+import RestlerCore
 
 extension Restler.Request {
     public var rx: Single<D> {

@@ -1,5 +1,5 @@
 import XCTest
-@testable import Restler
+@testable import RestlerCore
 
 class InterfaceIntegrationTestsBase: XCTestCase {
     let baseURL = URL(string: "https://example.com")!

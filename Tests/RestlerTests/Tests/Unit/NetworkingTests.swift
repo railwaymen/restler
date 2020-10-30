@@ -1,5 +1,5 @@
 import XCTest
-@testable import Restler
+@testable import RestlerCore
 
 final class NetworkingTests: XCTestCase {
     private var session: URLSessionMock!

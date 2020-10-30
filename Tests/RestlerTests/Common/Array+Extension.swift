@@ -1,5 +1,5 @@
 import Foundation
-import Restler
+import RestlerCore
 
 extension Array where Element == (String, RestlerStringEncodable) {
     func toQueryItems() -> [URLQueryItem] {

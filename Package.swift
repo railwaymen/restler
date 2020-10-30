@@ -5,8 +5,8 @@ let package = Package(
     name: "Restler",
     products: [
         .library(
-            name: "Restler",
-            targets: ["Restler"]),
+            name: "RestlerCore",
+            targets: ["RestlerCore"]),
         .library(
             name: "RxRestler",
             targets: ["RxRestler"]),
@@ -16,16 +16,16 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Restler",
+            name: "RestlerCore",
             dependencies: []),
         .target(
             name: "RxRestler",
             dependencies: [
-                "Restler",
+                .target(name: "RestlerCore"),
                 .product(name: "RxSwift", package: "RxSwift"),
             ]),
         .testTarget(
             name: "RestlerTests",
-            dependencies: ["Restler"])
+            dependencies: ["RestlerCore"])
     ]
 )

@@ -1,5 +1,5 @@
 import Foundation
-import Restler
+import RestlerCore
 
 final class RestlerErrorParserMock {
     

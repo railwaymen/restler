@@ -1,5 +1,5 @@
 import Foundation
-@testable import Restler
+@testable import RestlerCore
 
 extension Restler.Request {
     func deprecatedOnSuccess(_ handler: @escaping (D) -> Void) -> Self {

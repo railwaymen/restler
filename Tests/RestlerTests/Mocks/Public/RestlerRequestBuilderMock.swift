@@ -2,7 +2,7 @@ import XCTest
 #if canImport(Combine)
 import Combine
 #endif
-import Restler
+import RestlerCore
 
 final class RestlerRequestBuilderMock {
     
