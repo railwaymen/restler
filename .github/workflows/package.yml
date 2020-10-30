@@ -28,8 +28,10 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
+      - name: Setup bundler
+        run: ./Scripts/setup_bundler.sh
       - name: Lint podspec
-        run: pod lib lint --allow-warnings
+        run: bundle exec Scripts/pod_lib_lint.rb Restler.podspec
 
   test:
     runs-on: macos-latest
