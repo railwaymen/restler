@@ -1,6 +1,5 @@
 .DS_Store
 .build
-.bundle
 Packages
 /*.xcodeproj
 /*.xcworkspace
