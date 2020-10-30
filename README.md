@@ -245,6 +245,6 @@ If you would like Restler to do something else, create an issue with a feature r
 
 #### Gems
 
-- [cocoapods](https://rubygems.org/gems/cocoapods) 1.9.3
-- [fastlane](https://rubygems.org/gems/fastlane) 2.149.1
-- [slather](https://rubygems.org/gems/slather) 2.4.9
+- [cocoapods](https://rubygems.org/gems/cocoapods) 1.10.0
+- [fastlane](https://rubygems.org/gems/fastlane) 2.165.0
+- [slather](https://rubygems.org/gems/slather) 2.5.0
