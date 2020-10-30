@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name = 'Restler'
+  s.name = 'RxRestler'
   s.version = '1.0.1'
   s.summary = 'Framework for REST requests in Swift'
   s.description = <<-DESC
@@ -15,16 +15,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.swift_versions = '5.2'
 
-  s.default_subspec = 'Core'
-
-  # Core
-  s.subspec 'Core' do |ss|
-    ss.dependency 'RestlerCore'
-  end
-
-  # RxRestler
-  s.subspec 'Rx' do |ss|
-    ss.dependency 'Restler/Core'
-    ss.dependency 'RxRestler'
-  end
+  s.source_files = 'Sources/RxRestler/**/*.swift'
+  s.dependency 'RestlerCore'
+  s.dependency 'RxSwift', '~> 5.1.1'
 end

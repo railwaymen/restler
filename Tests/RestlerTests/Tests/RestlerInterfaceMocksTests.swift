@@ -1,5 +1,5 @@
 import XCTest
-import Restler
+import RestlerCore
 
 final class RestlerInterfaceMocksTests: XCTestCase {
     private var restler: RestlerMock!

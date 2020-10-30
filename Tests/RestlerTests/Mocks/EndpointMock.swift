@@ -1,5 +1,5 @@
 import Foundation
-@testable import Restler
+@testable import RestlerCore
 
 enum EndpointMock: RestlerEndpointable {
     case mock

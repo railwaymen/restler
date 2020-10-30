@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Restler
+import RestlerCore
 
 enum ImgurEndpoint: RestlerEndpointable {
     case upload
