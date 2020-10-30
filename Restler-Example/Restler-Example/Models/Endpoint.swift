@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Restler
+import RestlerCore
 
 enum Endpoint: RestlerEndpointable {
     case comment(Int)

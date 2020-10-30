@@ -8,7 +8,7 @@
 
 import SwiftUI
 import Combine
-import Restler
+import RestlerCore
 import RxRestler
 import RxSwift
 
