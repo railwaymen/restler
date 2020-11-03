@@ -19,12 +19,12 @@ Pod::Spec.new do |s|
 
   # Core
   s.subspec 'Core' do |ss|
-    ss.dependency 'RestlerCore'
+    ss.dependency 'RestlerCore', '~> 1.0.1'
   end
 
   # RxRestler
   s.subspec 'Rx' do |ss|
     ss.dependency 'Restler/Core'
-    ss.dependency 'RxRestler'
+    ss.dependency 'RxRestler', '~> 1.0.1'
   end
 end

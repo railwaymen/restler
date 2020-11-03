@@ -12,3 +12,4 @@ muter_logs
 Pods
 vendor
 fastlane/report.xml
+*.bak
