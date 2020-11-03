@@ -6,11 +6,9 @@ struct Manifest {
     
     // MARK: - Internal
     func versionString(of pod: Pod) -> String {
-        let finalVersion: String
+        var finalVersion: String = version
         if let betaNumber = pod.betaNumber {
-            finalVersion = version + "-beta.\(betaNumber)"
-        } else {
-            finalVersion = version
+            finalVersion.append("-beta.\(betaNumber)")
         }
         return pod.podVersion ?? finalVersion
     }

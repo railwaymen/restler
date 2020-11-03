@@ -19,10 +19,6 @@ final class FileReader {
     
     // MARK: - Internal
     func replaceAll(regex: String, with text: String) {
-        guard !dryRun else {
-            console.info("replaceAll: \(regex) with: \(text)")
-            return
-        }
         guard var content = readFile() else { return }
         var newContent = content
         repeat {
@@ -33,20 +29,12 @@ final class FileReader {
     }
     
     func replace(firstRegex: String, with text: String) {
-        guard !dryRun else {
-            console.info("replaceFirst: \(firstRegex) with: \(text)")
-            return
-        }
         guard var content = readFile() else { return }
         content = replace(firstRegex: firstRegex, with: text, in: content)
         writeToFile(text: content)
     }
     
     func writeToFile(text: String?) {
-        guard !dryRun else {
-            console.info("writeToFile: \(text ?? "<nil>")")
-            return
-        }
         if fileExists() {
             removeFile()
         }
@@ -54,11 +42,7 @@ final class FileReader {
     }
     
     func readFile() -> String? {
-        guard !dryRun else {
-            console.info("readFile")
-            return nil
-        }
-        return readString(encoding: .utf8)
+        readString(encoding: .utf8)
     }
     
     func removeFile() {
@@ -74,10 +58,6 @@ final class FileReader {
     }
     
     func fileExists() -> Bool {
-        guard !dryRun else {
-            console.info("fileExists")
-            return false
-        }
         return fileManager.fileExists(atPath: fileURL.path)
     }
     
@@ -108,6 +88,10 @@ extension FileReader {
     }
     
     private func createFile(content: String?) {
+        guard !dryRun else {
+            console.info("writeToFile: \(text ?? "<nil>")")
+            return
+        }
         fileManager.createFile(
             atPath: fileURL.path,
             contents: content?.data(using: .utf8))

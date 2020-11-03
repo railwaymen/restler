@@ -32,7 +32,7 @@ extension Executor {
         task.arguments = command.split(separator: " ").map { String($0) }
         if let workingDir = workingDir {
             task.currentDirectoryURL = workingDir
-            task.currentDirectoryPath = workingDir.relativeString
+            task.currentDirectoryPath = workingDir.path
         }
         return task
     }
