@@ -24,22 +24,22 @@ final class ReleaseCommand: Command {
     func run(using context: CommandContext, signature: Signature) throws {
         let executor = Executor(dryRun: signature.dryRun)
         let gitRoot = URL(fileURLWithPath: signature.gitRoot)
-        context.console.info(gitRoot.absoluteString)
-        
+        context.console.info(gitRoot.path)
         let manifest = Manifest.shared
-        manifest.pods.filter(\.releasing).forEach { pod in
-            let warningsOK = pod.allowWarnings ? "--allow-warnings" : ""
-            let command: String = "pod trunk push --skip-tests --synchronous \(warningsOK) \(pod.name).podspec"
-            executor.execute(command, workingDir: gitRoot)
-        }
-    }
-}
-
-struct PodspecVersionManager {
-    let manifest: Manifest
-    let gitRoot: URL
-    
-    func updateVersions() {
         
+        context.console.info("Changing versions in podspecs...")
+        PodspecVersionManager(
+            manifest: manifest,
+            gitRoot: gitRoot,
+            executor: executor,
+            dryRun: signature.dryRun)
+            .updateVersions()
+        
+        context.console.info("Pushing pods to trunk...")
+        PodspecPusher(
+            manifest: manifest,
+            executor: executor,
+            gitRoot: gitRoot)
+            .pushToTrunk()
     }
 }

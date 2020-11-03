@@ -17,10 +17,8 @@ final class Executor {
     
     @discardableResult
     func execute(_ command: String, workingDir: URL? = nil) -> Int32 {
-        guard !self.dryRun else {
-            console.info(command)
-            return 0
-        }
+        console.info(command)
+        guard !self.dryRun else { return 0 }
         let task = createTask(forCommand: command, workingDir: workingDir)
         return run(task: task)
     }

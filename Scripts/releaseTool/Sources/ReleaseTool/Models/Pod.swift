@@ -2,7 +2,7 @@ import Foundation
 
 struct Pod {
     let name: String
-    let isBeta: Bool
+    let betaNumber: Int?
     let allowWarnings: Bool
     let podVersion: String?
     let releasing: Bool
@@ -10,15 +10,20 @@ struct Pod {
     // MARK: - Initialization
     init(
         name: String,
-        isBeta: Bool = false,
+        betaNumber: Int? = nil,
         allowWarnings: Bool = false,
         podVersion: String? = nil,
         releasing: Bool = true
     ) {
         self.name = name
-        self.isBeta = isBeta
+        self.betaNumber = betaNumber
         self.allowWarnings = allowWarnings
         self.podVersion = podVersion
         self.releasing = releasing
+    }
+    
+    // MARK: - Internal
+    func filename() -> String {
+        name + ".podspec"
     }
 }
