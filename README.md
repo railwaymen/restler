@@ -241,6 +241,12 @@ If you would like Restler to do something else, create an issue with a feature r
 4. Open the project in the folder `Restler-Example`. You can do it from the terminal: `open Restler-Example/Restler-Example.xcodeproj`
 5. Run tests to be sure everything works properly.
 
+### Releasing
+
+1. Open the project root directory.
+2. `cd Scripts/releaseTool`
+3. `swift run ReleaseTool release ../..`
+
 ### Dependencies
 
 #### Gems
