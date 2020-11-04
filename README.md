@@ -4,7 +4,7 @@
 [![Example App Build Status](https://github.com/railwaymen/restler/workflows/Example%20App%20Actions/badge.svg)](https://github.com/railwaymen/restler/actions)
 [![Coverage Status](https://coveralls.io/repos/github/railwaymen/restler/badge.svg?branch=master)](https://coveralls.io/github/railwaymen/restler?branch=master)
 
-The Restler framework has been built to use features of the newest versions of Swift. Inspiration for it is Vapor library for building Server-side with Swift. What we love is functional programming, so you can build your desired request just calling some chained functions. The main goal of the framework is to provide nice interface for making API requests the easiest as possible and the fastest as possible.
+The Restler framework has been built to use features of the newest versions of Swift. Inspiration for it is the Vapor library for building Server-side with Swift. What we love is functional programming, so you can build your desired request just calling some chained functions. The main goal of the framework is to provide a nice interface for making API requests the easiest as possible and the fastest as possible.
 
 ## List of Content
 
@@ -52,7 +52,7 @@ All these protocols are defined in one file: [RestlerRequestBuilderType](Sources
 
 ## Instalation
 
-Nothing is easier there - you just add the framework to the **Swift Package Manager** dependecies if you use one.
+Nothing is easier there - you just add the framework to the **Swift Package Manager** dependencies if you use one.
 
 Otherwise you can use **CocoaPods**. If you use one simply add to your `Podfile`:
 
@@ -72,7 +72,7 @@ pod install
 Import the framework to the project:
 
 ```swift
-import Restler
+import RestlerCore
 ```
 
 and call it!
@@ -81,7 +81,7 @@ and call it!
 
 ### Error parser
 
-If you don't want to add the same error to be parsed on failure of every request, simply add the error directly to the error parser of the Restler object.
+If you don't want to add the same error to be parsed on a failure of every request, simply add the error directly to the error parser of the Restler object.
 
 ```swift
 restler.errorParser.decode(ErrorToDecodeOnFailure.self)
@@ -106,7 +106,7 @@ restler.header = [
 restler.header[.cacheControl] = nil
 ```
 
-If you're using basic authentication at "Authorization" key, simply provide username and password to header:
+If you're using basic authentication in the "Authorization" key, simply provide username and password to the header:
 
 ```swift
 restler.header.setBasicAuthentication(username: "me", password: "password")
@@ -136,13 +136,13 @@ Restler(baseURL: myBaseURL)
 ```
 
 1. Makes GET request to the given endpoint.
-2. Encodes the object and puts it in query for GET request.
+2. Encodes the object and puts it in query for the GET request.
 3. If an error will occur, an error parser would try to decode the given type.
 4. Sets the specified value for the given key in the header only for this request.
 5. Sets dispatch queue on which completion handlers will be called to the main queue.
 6. Decodes Profile object on a successful response. If it is not optional, a failure handler can be called.
 7. Since this moment we're operating on a request, not a request builder.
-8. A handler called if Restler would successfully end request.
+8. A handler called if Restler would successfully end the request.
 9. A handler called on completion of the request whatever the result would be.
 
 #### POST
@@ -187,9 +187,9 @@ Restler(baseURL: myBaseURL)
 ```
 
 1. Makes GET request to the given endpoint.
-2. Encodes the object and puts it in query for GET request.
+2. Encodes the object and puts it in query for the GET request.
 3. Builds a request and returns publisher for Combine support.
-4. Specifies the scheduler on which to receive elements from the publisher. In this case main queue.
+4. Specifies the scheduler on which to receive elements from the publisher. In this case the main queue.
 5. Get Data object from `DataTaskPublisher`.
 6. Decodes Profile object.
 7. Handle error
@@ -198,13 +198,13 @@ Restler(baseURL: myBaseURL)
 
 ### Restler + RxSwift
 
-First of all you need to add `RxRestler` to your target you can do it simply in SPM. In CocoaPods you should add to your Podfile:
+First of all, you need to add `RxRestler` to your target you can do it simply in SPM. In CocoaPods you should add to your Podfile:
 
 ```ruby
 pod `Restler/Rx`
 ```
 
-Then `import RxRestler` to every file its needed.
+Then `import RxRestler` to every file it's needed.
 
 ```swift
 Restler(baseURL: myBaseURL)
@@ -231,20 +231,26 @@ If you want to contribute in this framework, simply put your pull request here.
 
 If you have found any bug, file it in the issues.
 
-If you would like Restler to do something else, create an issue for feature request.
+If you would like Restler to do something else, create an issue with a feature request.
 
 ### Configuration
 
-1. Clone the project and open the project's folder in terminal.
+1. Clone the project and open the project's folder in the terminal.
 2. Run a configuration script: `./Scripts/configure.sh`
 3. Fill configuration file in folder `Restler-Example/Restler-Example/Configuration` named `Debug.xcconfig` with needed information.
-4. Open the project in the folder `Restler-Example`. You can do it from terminal: `open Restler-Example/Restler-Example.xcodeproj`
+4. Open the project in the folder `Restler-Example`. You can do it from the terminal: `open Restler-Example/Restler-Example.xcodeproj`
 5. Run tests to be sure everything works properly.
+
+### Releasing
+
+1. Open the project root directory.
+2. `cd Scripts/releaseTool`
+3. `swift run ReleaseTool release ../..`
 
 ### Dependencies
 
 #### Gems
 
-- [cocoapods](https://rubygems.org/gems/cocoapods) 1.9.3
-- [fastlane](https://rubygems.org/gems/fastlane) 2.149.1
-- [slather](https://rubygems.org/gems/slather) 2.4.9
+- [cocoapods](https://rubygems.org/gems/cocoapods) 1.10.0
+- [fastlane](https://rubygems.org/gems/fastlane) 2.165.0
+- [slather](https://rubygems.org/gems/slather) 2.5.0

@@ -1,5 +1,5 @@
 import Foundation
-import Restler
+import RestlerCore
 
 struct ImageEncoder: Encodable, RestlerMultipartEncodable {
     let id: Int

@@ -8,7 +8,7 @@
 
 import Foundation
 import Combine
-import Restler
+import RestlerCore
 
 final class PostViewModel: ObservableObject {
     private let restler = Restler(baseURL: URL(string: "https://jsonplaceholder.typicode.com")!)

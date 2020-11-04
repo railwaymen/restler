@@ -1,5 +1,5 @@
 import Foundation
-import Restler
+import RestlerCore
 
 struct SomeObject: Codable, Equatable, RestlerQueryEncodable, RestlerMultipartEncodable {
     let id: Int

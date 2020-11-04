@@ -1,5 +1,5 @@
 import Foundation
-@testable import Restler
+@testable import RestlerCore
 
 protocol UniqueValuedEnumerator {
     var uniqueValue: Int { get }

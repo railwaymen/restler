@@ -13,6 +13,7 @@
 		8A41B562240E6D4400D96084 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41B561240E6D4400D96084 /* CommentViewModel.swift */; };
 		8A5820DC2403CE9F00BC197B /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5820DB2403CE9F00BC197B /* PostView.swift */; };
 		8A5820DF2403CEB200BC197B /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5820DE2403CEB200BC197B /* PostViewModel.swift */; };
+		8A7AD917254C04C80057E6D5 /* RestlerCore in Frameworks */ = {isa = PBXBuildFile; productRef = 8A7AD916254C04C80057E6D5 /* RestlerCore */; };
 		8A87AEF32400084F007FA662 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A87AEF22400084F007FA662 /* AppDelegate.swift */; };
 		8A87AEF52400084F007FA662 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A87AEF42400084F007FA662 /* SceneDelegate.swift */; };
 		8A87AEF72400084F007FA662 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A87AEF62400084F007FA662 /* ContentView.swift */; };
@@ -25,7 +26,6 @@
 		8A9D33AD241F8333002C99DF /* ImgurEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9D33AC241F8333002C99DF /* ImgurEndpoint.swift */; };
 		8AAAE2C5240FD7D3004C70BE /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAAE2C4240FD7D3004C70BE /* Endpoint.swift */; };
 		8AC1C89C2403D3E500FF329E /* PostComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC1C89B2403D3E500FF329E /* PostComment.swift */; };
-		8ADC306424E6975400FD49AD /* Restler in Frameworks */ = {isa = PBXBuildFile; productRef = 8ADC306324E6975400FD49AD /* Restler */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,8 +58,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A0BE49D250A1FC300E76F05 /* RxRestler in Frameworks */,
+				8A7AD917254C04C80057E6D5 /* RestlerCore in Frameworks */,
 				8A0BE4A2250A209C00E76F05 /* RxSwift in Frameworks */,
-				8ADC306424E6975400FD49AD /* Restler in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,9 +199,9 @@
 			);
 			name = "Restler-Example";
 			packageProductDependencies = (
-				8ADC306324E6975400FD49AD /* Restler */,
 				8A0BE49C250A1FC300E76F05 /* RxRestler */,
 				8A0BE4A1250A209C00E76F05 /* RxSwift */,
+				8A7AD916254C04C80057E6D5 /* RestlerCore */,
 			);
 			productName = "Restler-Example";
 			productReference = 8A87AEEF2400084F007FA662 /* Restler-Example.app */;
@@ -528,9 +528,9 @@
 			package = 8A0BE49E250A209C00E76F05 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
 		};
-		8ADC306324E6975400FD49AD /* Restler */ = {
+		8A7AD916254C04C80057E6D5 /* RestlerCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Restler;
+			productName = RestlerCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

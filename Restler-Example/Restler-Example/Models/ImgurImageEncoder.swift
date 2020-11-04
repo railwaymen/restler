@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Restler
+import RestlerCore
 
 struct ImgurImageEncoder: Encodable, RestlerMultipartEncodable {
     let title: String

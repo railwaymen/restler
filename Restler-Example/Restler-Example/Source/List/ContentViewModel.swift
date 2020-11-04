@@ -8,7 +8,7 @@
 
 import SwiftUI
 import Combine
-import Restler
+import RestlerCore
 
 final class ContentViewModel: ObservableObject {
     private let restler = Restler(baseURL: URL(string: "https://jsonplaceholder.typicode.com")!)

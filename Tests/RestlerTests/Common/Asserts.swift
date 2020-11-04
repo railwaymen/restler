@@ -1,5 +1,5 @@
 import XCTest
-@testable import Restler
+@testable import RestlerCore
 
 // swiftlint:disable identifier_name
 

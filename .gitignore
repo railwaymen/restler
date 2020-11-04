@@ -1,6 +1,5 @@
 .DS_Store
 .build
-.bundle
 Packages
 /*.xcodeproj
 /*.xcworkspace
@@ -13,3 +12,4 @@ muter_logs
 Pods
 vendor
 fastlane/report.xml
+*.bak
