@@ -25,7 +25,7 @@ struct DownloadsView: View {
     }
 }
 
-struct ProgressView: View {
+private struct ProgressView: View {
     let progress: Progress
     
     var body: some View {

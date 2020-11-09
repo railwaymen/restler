@@ -312,6 +312,6 @@ extension NetworkingTests {
 // MARK: - Private
 extension NetworkingTests {
     private func buildSUT() -> Networking {
-        Networking(session: self.session)
+        Networking(dataSession: self.session)
     }
 }
