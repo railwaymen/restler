@@ -214,7 +214,19 @@ public protocol RestlerDecodableResponseRequestBuilderType: RestlerBasicRequestB
 // MARK: - RestlerDownloadRequestBuilderType
 public protocol RestlerDownloadRequestBuilderType: RestlerBasicRequestBuilderType {
     
+    /// Sets resume data to the request to continue suspended download task.
+    ///
+    /// - Parameters:
+    ///   - data: Data returned by cancelling a download request.
+    ///
+    /// - Returns: `self` for chaining
+    ///
     func resumeData(_ data: Data) -> Self
     
+    ///
+    /// Creates download request.
+    ///
+    /// If you want to continue a previously cancelled request, provide the resume data using the `resumeData(_:)` function.
+    ///
     func requestDownload() -> RestlerDownloadRequestType
 }

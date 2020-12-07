@@ -47,6 +47,7 @@ extension Restler {
             return self.dependencies.networking.downloadRequest(
                 urlRequest: request,
                 eventLogger: self.dependencies.eventLogger,
+                resumeData: self.dependencies.downloadResumeData,
                 progressHandler: { task in
                     self.performOnProperQueue {
                         onProgress?(task)

@@ -24,6 +24,7 @@ protocol NetworkingType: class {
     func downloadRequest(
         urlRequest: URLRequest,
         eventLogger: EventLoggerLogging,
+        resumeData: Data?,
         progressHandler: @escaping (RestlerDownloadTaskType) -> Void,
         completionHandler: @escaping (Result<URL, Restler.Error>) -> Void
     ) -> RestlerDownloadTaskType
@@ -98,13 +99,15 @@ extension Networking: NetworkingType {
     func downloadRequest(
         urlRequest: URLRequest,
         eventLogger: EventLoggerLogging,
+        resumeData: Data?,
         progressHandler: @escaping (RestlerDownloadTaskType) -> Void,
         completionHandler: @escaping (Result<URL, Restler.Error>) -> Void
     ) -> RestlerDownloadTaskType {
         let task = Restler.DownloadTask(
             urlTask: self.runDownloadTask(
                 request: urlRequest,
-                eventLogger: eventLogger))
+                eventLogger: eventLogger,
+                resumeData: resumeData))
         self.downloadTaskProgressHandlers[task.id] = { progressHandler(task) }
         self.downloadTaskCompletionHandlers[task.id] = completionHandler
         task.resume()
@@ -236,8 +239,13 @@ extension Networking {
     
     private func runDownloadTask(
         request: URLRequest,
-        eventLogger: EventLoggerLogging
+        eventLogger: EventLoggerLogging,
+        resumeData: Data?
     ) -> URLSessionDownloadTaskType {
-        self.downloadSession.downloadTask(with: request)
+        if let data = resumeData {
+            return self.downloadSession.downloadTask(withResumeData: data)
+        } else {
+            return self.downloadSession.downloadTask(with: request)
+        }
     }
 }

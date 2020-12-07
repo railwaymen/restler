@@ -35,6 +35,7 @@ final class NetworkingMock {
     struct DownloadRequestParams {
         let urlRequest: URLRequest
         let eventLogger: EventLoggerLogging
+        let resumeData: Data?
         let progressHandler: (RestlerDownloadTaskType) -> Void
         let completionHandler: (Result<URL, Restler.Error>) -> Void
     }
@@ -87,6 +88,7 @@ extension NetworkingMock: NetworkingType {
     func downloadRequest(
         urlRequest: URLRequest,
         eventLogger: EventLoggerLogging,
+        resumeData: Data?,
         progressHandler: @escaping (RestlerDownloadTaskType) -> Void,
         completionHandler: @escaping (Result<URL, Restler.Error>) -> Void
     ) -> RestlerDownloadTaskType {
@@ -94,6 +96,7 @@ extension NetworkingMock: NetworkingType {
             .init(
                 urlRequest: urlRequest,
                 eventLogger: eventLogger,
+                resumeData: resumeData,
                 progressHandler: progressHandler,
                 completionHandler: completionHandler))
         return downloadRequestReturnValue
