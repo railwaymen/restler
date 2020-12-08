@@ -6,6 +6,7 @@ final class URLSessionDownloadTaskMock {
     // MARK: - URLSessionDownloadTaskType
     var taskIdentifierReturnValue: Int = 0
     var progressReturnValue: Progress = .init()
+    // swiftlint:disable:next identifier_name
     var countOfBytesClientExpectsToReceiveReturnValue: Int64 = 0
     var countOfBytesExpectedToReceiveReturnValue: Int64 = 0
     var countOfBytesReceivedReturnValue: Int64 = 0
@@ -68,4 +69,3 @@ extension URLSessionDownloadTaskMock: URLSessionDownloadTaskType {
         cancelByProducingResumeDataParams.append(.init(completionHandler: completionHandler))
     }
 }
-
