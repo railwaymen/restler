@@ -37,7 +37,7 @@ final class DownloadsViewModel: ObservableObject {
     func download() {
         guard let url = self.url else { return }
         Restler(baseURL: url)
-            .get("")
+            .get()
             .receive(on: .main)
             .requestDownload()
             .subscribe(

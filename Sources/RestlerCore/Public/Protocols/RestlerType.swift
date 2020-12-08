@@ -66,3 +66,54 @@ public protocol RestlerType: class {
     ///
     func head(_ endpoint: RestlerEndpointable) -> RestlerHeadRequestBuilderType
 }
+
+extension RestlerType {
+    
+    /// Creates GET request builder for the base URL.
+    ///
+    /// - Returns: Restler.RequestBuilder for building the request in the functional way.
+    ///
+    public func get() -> RestlerGetRequestBuilderType {
+        self.get("")
+    }
+    
+    /// Creates POST request builder for the base URL.
+    ///
+    /// - Returns: Restler.RequestBuilder for building the request in the functional way.
+    ///
+    public func post() -> RestlerPostRequestBuilderType {
+        self.post("")
+    }
+    
+    /// Creates PUT request builder for the base URL.
+    ///
+    /// - Returns: Restler.RequestBuilder for building the request in the functional way.
+    ///
+    public func put() -> RestlerPutRequestBuilderType {
+        self.put("")
+    }
+    
+    /// Creates PATCH request builder for the base URL.
+    ///
+    /// - Returns: Restler.RequestBuilder for building the request in the functional way.
+    ///
+    public func patch() -> RestlerPatchRequestBuilderType {
+        self.patch("")
+    }
+    
+    /// Creates DELETE request builder for the base URL.
+    ///
+    /// - Returns: Restler.RequestBuilder for building the request in the functional way.
+    ///
+    public func delete() -> RestlerDeleteRequestBuilderType {
+        self.delete("")
+    }
+    
+    /// Creates HEAD request builder for the base URL.
+    ///
+    /// - Returns: Restler.RequestBuilder for building the request in the functional way.
+    ///
+    public func head() -> RestlerHeadRequestBuilderType {
+        self.head("")
+    }
+}
