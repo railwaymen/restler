@@ -15,6 +15,18 @@ final class URLSessionMock {
     struct DataTaskPublisherParams {
         let request: URLRequest
     }
+    
+    var downloadTaskWithRequestReturnValue: URLSessionDownloadTaskMock = .init()
+    private(set) var downloadTaskWithRequestParams: [DownloadTaskWithRequestParams] = []
+    struct DownloadTaskWithRequestParams {
+        let request: URLRequest
+    }
+    
+    var downloadTaskWithResumeDataReturnValue: URLSessionDownloadTaskMock = .init()
+    private(set) var downloadTaskWithResumeDataParams: [DownloadTaskWithResumeDataParams] = []
+    struct DownloadTaskWithResumeDataParams {
+        let resumeData: Data
+    }
 }
 
 // MARK: - URLSessionType
@@ -31,4 +43,14 @@ extension URLSessionMock: URLSessionType {
         return URLSession.shared.dataTaskPublisher(for: request)
     }
     #endif
+    
+    func downloadTask(with request: URLRequest) -> URLSessionDownloadTaskType {
+        downloadTaskWithRequestParams.append(.init(request: request))
+        return downloadTaskWithRequestReturnValue
+    }
+    
+    func downloadTask(withResumeData resumeData: Data) -> URLSessionDownloadTaskType {
+        downloadTaskWithResumeDataParams.append(.init(resumeData: resumeData))
+        return downloadTaskWithResumeDataReturnValue
+    }
 }

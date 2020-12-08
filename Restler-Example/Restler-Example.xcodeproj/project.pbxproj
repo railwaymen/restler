@@ -26,6 +26,8 @@
 		8A9D33AD241F8333002C99DF /* ImgurEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9D33AC241F8333002C99DF /* ImgurEndpoint.swift */; };
 		8AAAE2C5240FD7D3004C70BE /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAAE2C4240FD7D3004C70BE /* Endpoint.swift */; };
 		8AC1C89C2403D3E500FF329E /* PostComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC1C89B2403D3E500FF329E /* PostComment.swift */; };
+		8AD434042523063500186599 /* DownloadsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD434032523063500186599 /* DownloadsView.swift */; };
+		8AD434082523064E00186599 /* DownloadsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD434072523064E00186599 /* DownloadsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +51,8 @@
 		8AAAE2C4240FD7D3004C70BE /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		8AC1C89B2403D3E500FF329E /* PostComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComment.swift; sourceTree = "<group>"; };
 		8AC1C89D2403D67100FF329E /* Restler-Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Restler-Example.entitlements"; sourceTree = "<group>"; };
+		8AD434032523063500186599 /* DownloadsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsView.swift; sourceTree = "<group>"; };
+		8AD434072523064E00186599 /* DownloadsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsViewModel.swift; sourceTree = "<group>"; };
 		8ADC306224E6973D00FD49AD /* restler */ = {isa = PBXFileReference; lastKnownFileType = folder; name = restler; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,13 +76,6 @@
 				8ADC306224E6973D00FD49AD /* restler */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		7C258D7F6F9EB17C0F3D70F6 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		8A41B55E240E6CC300D96084 /* Comment */ = {
@@ -113,7 +110,6 @@
 			children = (
 				8A87AEF12400084F007FA662 /* Restler-Example */,
 				8A87AEF02400084F007FA662 /* Products */,
-				7C258D7F6F9EB17C0F3D70F6 /* Pods */,
 				65676EA07F1AB6EB79937005 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -175,10 +171,20 @@
 			isa = PBXGroup;
 			children = (
 				8A41B55E240E6CC300D96084 /* Comment */,
-				8A5820DD2403CEA200BC197B /* Post */,
+				8AD434022523061400186599 /* Downloads */,
 				8A5820DA2403CDBC00BC197B /* List */,
+				8A5820DD2403CEA200BC197B /* Post */,
 			);
 			path = Source;
+			sourceTree = "<group>";
+		};
+		8AD434022523061400186599 /* Downloads */ = {
+			isa = PBXGroup;
+			children = (
+				8AD434032523063500186599 /* DownloadsView.swift */,
+				8AD434072523064E00186599 /* DownloadsViewModel.swift */,
+			);
+			path = Downloads;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -214,7 +220,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1220;
 				ORGANIZATIONNAME = Railwaymen;
 				TargetAttributes = {
 					8A87AEEE2400084F007FA662 = {
@@ -273,7 +279,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which mint >/dev/null; then\n  mint run swiftlint\nelse\n  echo \"warning: Mint not installed, download from https://github.com/yonaskolb/Mint\"\nfi\n";
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -284,6 +290,7 @@
 			files = (
 				8A41B560240E6CD200D96084 /* CommentView.swift in Sources */,
 				8A9D33AB241F6558002C99DF /* ImgurImageEncoder.swift in Sources */,
+				8AD434042523063500186599 /* DownloadsView.swift in Sources */,
 				8A87AEF32400084F007FA662 /* AppDelegate.swift in Sources */,
 				8A9D33AD241F8333002C99DF /* ImgurEndpoint.swift in Sources */,
 				8A5820DF2403CEB200BC197B /* PostViewModel.swift in Sources */,
@@ -295,6 +302,7 @@
 				8A41B562240E6D4400D96084 /* CommentViewModel.swift in Sources */,
 				8AAAE2C5240FD7D3004C70BE /* Endpoint.swift in Sources */,
 				8A87AF0D24000E76007FA662 /* ContentViewModel.swift in Sources */,
+				8AD434082523064E00186599 /* DownloadsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +347,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -363,7 +372,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -401,6 +410,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -419,7 +429,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				RE_DEVELOPMENT_TEAM_ID = "$(RE_DEVELOPMENT_TEAM_ID)";

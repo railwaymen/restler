@@ -47,6 +47,7 @@ extension Restler.RequestBuilder {
         var customRequestModification: ((inout URLRequest) -> Void)?
         var builderErrorsHandler: ((Restler.Error) -> Void)?
         var customDispatchQueue: DispatchQueue?
+        var downloadResumeData: Data?
     }
 }
 
@@ -164,5 +165,21 @@ extension Restler.RequestBuilder: RestlerDecodableResponseRequestBuilderType {
             dependencies: self.dependencies,
             form: self.form,
             urlRequest: self.urlRequest()))
+    }
+}
+
+// MARK: - RestlerDownloadRequestBuilderType
+extension Restler.RequestBuilder: RestlerDownloadRequestBuilderType {
+    public func resumeData(_ data: Data) -> Self {
+        self.form.downloadResumeData = data
+        return self
+    }
+    
+    public func requestDownload() -> RestlerDownloadRequestType {
+        Restler.DownloadRequest(
+            dependencies: .init(
+                dependencies: self.dependencies,
+                form: self.form,
+                urlRequest: self.urlRequest()))
     }
 }

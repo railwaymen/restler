@@ -6,6 +6,7 @@ import Combine
 public typealias RestlerGetRequestBuilderType =
     RestlerQueryRequestBuilderType
     & RestlerDecodableResponseRequestBuilderType
+    & RestlerDownloadRequestBuilderType
 
 public typealias RestlerPostRequestBuilderType =
     RestlerBodyRequestBuilderType
@@ -208,4 +209,24 @@ public protocol RestlerDecodableResponseRequestBuilderType: RestlerBasicRequestB
     /// - Returns: Appropriate request for the given type.
     ///
     func decode<T>(_ type: T.Type) -> Restler.Request<T> where T: Decodable
+}
+
+// MARK: - RestlerDownloadRequestBuilderType
+public protocol RestlerDownloadRequestBuilderType: RestlerBasicRequestBuilderType {
+    
+    /// Sets resume data to the request to continue suspended download task.
+    ///
+    /// - Parameters:
+    ///   - data: Data returned by cancelling a download request.
+    ///
+    /// - Returns: `self` for chaining
+    ///
+    func resumeData(_ data: Data) -> Self
+    
+    ///
+    /// Creates download request.
+    ///
+    /// If you want to continue a previously cancelled request, provide the resume data using the `resumeData(_:)` function.
+    ///
+    func requestDownload() -> RestlerDownloadRequestType
 }
