@@ -4,6 +4,8 @@ import XCTest
 final class RestlerDownloadTaskMock {
     
     // MARK: - RestlerDownloadTaskType
+    var identifierReturnValue: Int = 0
+    
     var progressReturnValue: Progress = .init()
     
     var downloadProgressReturnValue: Double = 0
@@ -24,6 +26,10 @@ final class RestlerDownloadTaskMock {
 
 // MARK: - RestlerDownloadTaskType
 extension RestlerDownloadTaskMock: RestlerDownloadTaskType {
+    var identifier: Int {
+        self.identifierReturnValue
+    }
+    
     var progress: Progress {
         self.progressReturnValue
     }

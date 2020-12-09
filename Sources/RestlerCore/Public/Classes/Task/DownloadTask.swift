@@ -1,22 +1,18 @@
 import Foundation
 
-public protocol RestlerDownloadTaskType: class {
+public protocol RestlerDownloadTaskType: RestlerTaskType {
     @available(OSX 10.13, iOS 11, *)
     var progress: Progress { get }
     var downloadProgress: Double { get }
-    var state: URLSessionTask.State { get }
     
-    func resume()
-    func cancel()
     func cancel(byProducingResumeData completionHandler: @escaping (Data?) -> Void)
-    func suspend()
 }
 
 extension Restler {
     final public class DownloadTask: RestlerDownloadTaskType {
         private let urlTask: URLSessionDownloadTaskType
         
-        public var id: Int { urlTask.taskIdentifier }
+        public var identifier: Int { urlTask.taskIdentifier }
         
         /// A progress of the download task.
         @available(OSX 10.13, iOS 11, *)
@@ -63,10 +59,10 @@ extension Restler {
 // MARK: - Hashable
 extension Restler.DownloadTask: Hashable {
     public static func == (lhs: Restler.DownloadTask, rhs: Restler.DownloadTask) -> Bool {
-        lhs.id == rhs.id
+        lhs.identifier == rhs.identifier
     }
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(identifier)
     }
 }

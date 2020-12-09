@@ -108,8 +108,8 @@ extension Networking: NetworkingType {
                 request: urlRequest,
                 eventLogger: eventLogger,
                 resumeData: resumeData))
-        self.downloadTaskProgressHandlers[task.id] = { progressHandler(task) }
-        self.downloadTaskCompletionHandlers[task.id] = completionHandler
+        self.downloadTaskProgressHandlers[task.identifier] = { progressHandler(task) }
+        self.downloadTaskCompletionHandlers[task.identifier] = completionHandler
         task.resume()
         return task
     }
