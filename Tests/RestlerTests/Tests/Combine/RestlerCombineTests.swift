@@ -4,7 +4,7 @@ import Combine
 @testable import RestlerCombine
 
 final class RestlerCombineTests: InterfaceIntegrationTestsBase {
-    private var cancellable: AnyCancellable?
+    private var subscribtions: Set<AnyCancellable> = []
 }
 
 extension RestlerCombineTests {
@@ -14,12 +14,13 @@ extension RestlerCombineTests {
         var completionResult: Subscribers.Completion<RestlerRequestPublisher<Void>.Failure>?
         var valueReceivedCount: Int = 0
         // Act
-        cancellable = sut.get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Void.self)
             .publisher
             .sink(
                 receiveCompletion: { completion in completionResult = completion },
                 receiveValue: { valueReceivedCount += 1 })
+            .store(in: &subscribtions)
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertNil(try XCTUnwrap(self.networking.makeRequestParams.last).urlSession)
@@ -35,13 +36,14 @@ extension RestlerCombineTests {
         var completionResult: Subscribers.Completion<RestlerRequestPublisher<Void>.Failure>?
         var valueReceivedCount: Int = 0
         // Act
-        cancellable = sut.get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Void.self)
             .using(session: session)
             .publisher
             .sink(
                 receiveCompletion: { completion in completionResult = completion },
                 receiveValue: { valueReceivedCount += 1 })
+            .store(in: &subscribtions)
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
         XCTAssertEqual(self.networking.makeRequestParams.last?.urlSession as? URLSession, session)
@@ -56,12 +58,13 @@ extension RestlerCombineTests {
         var completionResult: Subscribers.Completion<RestlerRequestPublisher<Void>.Failure>?
         var valueReceivedCount: Int = 0
         // Act
-        cancellable = sut.get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(Void.self)
             .publisher
             .sink(
                 receiveCompletion: { completion in completionResult = completion },
                 receiveValue: { valueReceivedCount += 1 })
+            .store(in: &subscribtions)
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(nil))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -79,13 +82,14 @@ extension RestlerCombineTests {
         var completionResult: Subscribers.Completion<RestlerRequestPublisher<Void>.Failure>?
         var valueReceivedCount: Int = 0
         // Act
-        cancellable = sut.get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(UndecodableErrorMock.self)
             .decode(Void.self)
             .publisher
             .sink(
                 receiveCompletion: { completion in completionResult = completion },
                 receiveValue: { valueReceivedCount += 1 })
+            .store(in: &subscribtions)
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -104,13 +108,14 @@ extension RestlerCombineTests {
         var completionResult: Subscribers.Completion<RestlerRequestPublisher<Void>.Failure>?
         var valueReceivedCount: Int = 0
         // Act
-        cancellable = sut.get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(DecodableErrorMock.self)
             .decode(Void.self)
             .publisher
             .sink(
                 receiveCompletion: { completion in completionResult = completion },
                 receiveValue: { valueReceivedCount += 1 })
+            .store(in: &subscribtions)
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -129,7 +134,7 @@ extension RestlerCombineTests {
         var completionResult: Subscribers.Completion<RestlerRequestPublisher<Void>.Failure>?
         var valueReceivedCount: Int = 0
         // Act
-        cancellable = sut.get(self.endpoint)
+        sut.get(self.endpoint)
             .failureDecode(DecodableErrorMock.self)
             .failureDecode(UndecodableErrorMock.self)
             .failureDecode(DecodableErrorMock.self)
@@ -138,6 +143,7 @@ extension RestlerCombineTests {
             .sink(
                 receiveCompletion: { completion in completionResult = completion },
                 receiveValue: { valueReceivedCount += 1 })
+            .store(in: &subscribtions)
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.failure(error))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -165,12 +171,13 @@ extension RestlerCombineTests {
         var completionResult: Subscribers.Completion<RestlerRequestPublisher<Void>.Failure>?
         var decodedObject: SomeObject?
         // Act
-        cancellable = sut.get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(SomeObject?.self)
             .publisher
             .sink(
                 receiveCompletion: { completion in completionResult = completion },
                 receiveValue: { decodedObject = $0 })
+            .store(in: &subscribtions)
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
@@ -188,12 +195,13 @@ extension RestlerCombineTests {
         var completionResult: Subscribers.Completion<RestlerRequestPublisher<Void>.Failure>?
         var decodedObject: SomeObject?
         // Act
-        cancellable = sut.get(self.endpoint)
+        sut.get(self.endpoint)
             .decode(SomeObject.self)
             .publisher
             .sink(
                 receiveCompletion: { completion in completionResult = completion },
                 receiveValue: { decodedObject = $0 })
+            .store(in: &subscribtions)
         try XCTUnwrap(self.networking.makeRequestParams.first).completion(.success(data))
         // Assert
         XCTAssertEqual(self.networking.makeRequestParams.count, 1)
