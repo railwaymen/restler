@@ -265,7 +265,7 @@ If you would like Restler to do something else, create an issue with a feature r
 
 ### Lint
 
-Run command `./Scripts/pod_lib_lint.rb Restler` to lint the podspec before pushing changes to the repo.
+Run command `./Scripts/pod_lib_lint.rb Restler.podspec` to lint the podspec before pushing changes to the repo.
 
 ### Releasing
 
