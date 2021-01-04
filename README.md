@@ -30,6 +30,7 @@ We think that README isn't a good place for complete documentation so that's why
 
 - [RestlerBasicRequestBuilderType](Documentation/Reference/protocols/RestlerBasicRequestBuilderType.md) - available for all HTTP methods.
 - [RestlerQueryRequestBuilderType](Documentation/Reference/protocols/RestlerQueryRequestBuilderType.md) - available only for GET.
+- [RestlerDownloadRequestBuilderType](Documentation/Reference/protocols/RestlerDownloadRequestBuilderType.md) - available only for GET.
 - [RestlerBodyRequestBuilderType](Documentation/Reference/protocols/RestlerBodyRequestBuilderType.md) - available for POST, PUT and PATCH.
 - [RestlerMultipartRequestBuilderType](Documentation/Reference/protocols/RestlerMultipartRequestBuilderType.md) - available only for POST.
 - [RestlerDecodableResponseRequestBuilderType](Documentation/Reference/protocols/RestlerDecodableResponseRequestBuilderType.md) - available for GET, POST, PUT, PATCH and DELETE (all without HEAD).
@@ -173,6 +174,27 @@ Any other method call is very similar to these two, but if you have questions si
 
 ### Restler + Combine
 
+- Restler approach:
+
+```swift
+Restler(baseURL: myBaseURL)
+  .get("/profile") // 1
+  .decode(Profile.self) // 2
+  .publisher // 3
+  .catch { _ in Empty() } // 4
+  .assign(to: \.profile, on: self) // 5
+  .store(in: &subscriptions) // 6
+```
+
+1. Makes GET request to the given endpoint.
+2. Decode `Profile` object.
+3. Convert the request object to publisher for easy using Combine in your code.
+4. Handle the thrown error
+5. Assign each element from a Publisher to a property on an object.
+6. Stores this type-erasing cancellable instance in the specified collection.
+
+- More Combine approach:
+
 ```swift
 Restler(baseURL: myBaseURL)
   .get(Endpoint.myProfile) // 1
@@ -191,8 +213,8 @@ Restler(baseURL: myBaseURL)
 3. Builds a request and returns publisher for Combine support.
 4. Specifies the scheduler on which to receive elements from the publisher. In this case the main queue.
 5. Get Data object from `DataTaskPublisher`.
-6. Decodes Profile object.
-7. Handle error
+6. Decode `Profile` object.
+7. Handle the error
 8. Assigns each element from a Publisher to a property on an object.
 9. Stores this type-erasing cancellable instance in the specified collection.
 
@@ -240,6 +262,10 @@ If you would like Restler to do something else, create an issue with a feature r
 3. Fill configuration file in folder `Restler-Example/Restler-Example/Configuration` named `Debug.xcconfig` with needed information.
 4. Open the project in the folder `Restler-Example`. You can do it from the terminal: `open Restler-Example/Restler-Example.xcodeproj`
 5. Run tests to be sure everything works properly.
+
+### Lint
+
+Run command `./Scripts/pod_lib_lint.rb Restler` to lint the podspec before pushing changes to the repo.
 
 ### Releasing
 
