@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name = 'Restler'
+  s.name = 'RestlerCombine'
   s.version = '1.1'
   s.summary = 'Framework for REST requests in Swift'
   s.description = <<-DESC
@@ -12,27 +12,9 @@ Pod::Spec.new do |s|
     :git => 'https://github.com/railwaymen/restler.git',
     :tag => s.version.to_s
   }
+  s.ios.deployment_target = '13.0'
   s.swift_versions = '5.2'
 
-  s.default_subspec = 'Core'
-
-  # Core
-  s.subspec 'Core' do |ss|
-    s.ios.deployment_target = '9.0'
-    ss.dependency 'RestlerCore', '~> 1.1'
-  end
-
-  # RxRestler
-  s.subspec 'Rx' do |ss|
-    s.ios.deployment_target = '9.0'
-    ss.dependency 'Restler/Core'
-    ss.dependency 'RxRestler', '~> 1.1'
-  end
-
-  # RestlerCombine
-  s.subspec 'Combine' do |ss|
-    s.ios.deployment_target = '13.0'
-    ss.dependency 'Restler/Core'
-    ss.dependency 'RestlerCombine', '~> 1.1'
-  end
+  s.source_files = 'Sources/RestlerCombine/**/*.swift'
+  s.dependency 'RestlerCore', '~> 1.1'
 end

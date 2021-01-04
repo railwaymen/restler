@@ -10,17 +10,18 @@ struct Manifest {
         if let betaNumber = pod.betaNumber {
             finalVersion.append("-beta.\(betaNumber)")
         }
-        return pod.podVersion ?? finalVersion
+        return finalVersion
     }
 }
 
 // MARK: - Shared
 extension Manifest {
     static let shared = Manifest(
-        version: "1.0.1",
+        version: "1.1",
         pods: [
             Pod(name: "RestlerCore"),
             Pod(name: "RxRestler"),
+            Pod(name: "RestlerCombine"),
             Pod(name: "Restler"),
         ])
 }

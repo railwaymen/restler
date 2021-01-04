@@ -8,6 +8,9 @@ let package = Package(
             name: "RestlerCore",
             targets: ["RestlerCore"]),
         .library(
+            name: "RestlerCombine",
+            targets: ["RestlerCombine"]),
+        .library(
             name: "RxRestler",
             targets: ["RxRestler"]),
     ],
@@ -15,6 +18,11 @@ let package = Package(
         .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "5.1.1")),
     ],
     targets: [
+        .target(
+            name: "RestlerCombine",
+            dependencies: [
+                .target(name: "RestlerCore"),
+            ]),
         .target(
             name: "RestlerCore",
             dependencies: []),
@@ -26,6 +34,6 @@ let package = Package(
             ]),
         .testTarget(
             name: "RestlerTests",
-            dependencies: ["RestlerCore"])
+            dependencies: ["RestlerCore", "RestlerCombine"])
     ]
 )
