@@ -89,7 +89,7 @@ extension FileReader {
     
     private func createFile(content: String?) {
         guard !dryRun else {
-            console.info("writeToFile: \(text ?? "<nil>")")
+            console.info("writeToFile: \(content ?? "<nil>")")
             return
         }
         fileManager.createFile(
