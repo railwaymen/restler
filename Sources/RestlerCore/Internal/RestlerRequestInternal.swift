@@ -39,6 +39,7 @@ extension Restler {
         let eventLogger: EventLoggerLogging
         let errors: [Restler.Error]
         let customDispatchQueue: DispatchQueue?
+        let downloadResumeData: Data?
         let urlRequest: URLRequest?
         
         init(
@@ -54,6 +55,7 @@ extension Restler {
             self.errorParser = form.errorParser
             self.errors = form.errors
             self.customDispatchQueue = form.customDispatchQueue
+            self.downloadResumeData = form.downloadResumeData
             self.urlRequest = urlRequest
         }
     }

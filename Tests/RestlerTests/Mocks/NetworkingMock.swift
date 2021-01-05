@@ -29,6 +29,16 @@ final class NetworkingMock {
     struct GetPublisherParams {
         let urlRequest: URLRequest
     }
+    
+    var downloadRequestReturnValue: Restler.DownloadTask = .init(urlTask: URLSessionDownloadTaskMock())
+    private(set) var downloadRequestParams: [DownloadRequestParams] = []
+    struct DownloadRequestParams {
+        let urlRequest: URLRequest
+        let eventLogger: EventLoggerLogging
+        let resumeData: Data?
+        let progressHandler: (RestlerDownloadTaskType) -> Void
+        let completionHandler: (Result<URL, Restler.Error>) -> Void
+    }
 }
 
 // MARK: - NetworkingType
@@ -74,4 +84,21 @@ extension NetworkingMock: NetworkingType {
         .eraseToAnyPublisher()
     }
     #endif
+    
+    func downloadRequest(
+        urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging,
+        resumeData: Data?,
+        progressHandler: @escaping (RestlerDownloadTaskType) -> Void,
+        completionHandler: @escaping (Result<URL, Restler.Error>) -> Void
+    ) -> RestlerDownloadTaskType {
+        downloadRequestParams.append(
+            .init(
+                urlRequest: urlRequest,
+                eventLogger: eventLogger,
+                resumeData: resumeData,
+                progressHandler: progressHandler,
+                completionHandler: completionHandler))
+        return downloadRequestReturnValue
+    }
 }

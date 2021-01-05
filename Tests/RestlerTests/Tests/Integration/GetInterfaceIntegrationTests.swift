@@ -137,7 +137,7 @@ extension GetInterfaceIntegrationTests {
     func testGetVoid_withCustomSession_buildsRequest() throws {
         // Arrange
         let sut = self.buildSUT()
-        let session = URLSession()
+        let session = URLSession(configuration: .default)
         var completionResult: Restler.VoidResult?
         // Act
         sut.get(self.endpoint)
@@ -361,7 +361,7 @@ extension GetInterfaceIntegrationTests {
     func testGetOptionalDecodable_withCustomSession_buildsRequest() throws {
         // Arrange
         let sut = self.buildSUT()
-        let session = URLSession()
+        let session = URLSession(configuration: .default)
         var completionResult: Restler.DecodableResult<SomeObject?>?
         // Act
         sut.get(self.endpoint)
@@ -593,7 +593,7 @@ extension GetInterfaceIntegrationTests {
     func testGetDecodable_withCustomSession_buildsRequest() throws {
         // Arrange
         let sut = self.buildSUT()
-        let session = URLSession()
+        let session = URLSession(configuration: .default)
         var completionResult: Restler.DecodableResult<SomeObject>?
         // Act
         sut.get(self.endpoint)

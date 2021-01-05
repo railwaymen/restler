@@ -1,0 +1,6 @@
+**EXTENSION**
+
+# `Decimal`
+
+## Properties
+### `restlerStringValue`

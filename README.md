@@ -24,31 +24,32 @@ We think that README isn't a good place for complete documentation so that's why
 
 ### Restler
 
-[RestlerType](Documentation/Reference/protocols/RestlerType) - it's the main protocol which should be used when it comes to mocking or using [Restler's](Documentation/Reference/classes/Restler.md) class' instance.
+[RestlerType](Documentation/Reference/RestlerCore/protocols/RestlerType) - it's the main protocol which should be used when it comes to mocking or using [Restler's](Documentation/Reference/RestlerCore/classes/Restler.md) class' instance.
 
 ### Request builder
 
-- [RestlerBasicRequestBuilderType](Documentation/Reference/protocols/RestlerBasicRequestBuilderType.md) - available for all HTTP methods.
-- [RestlerQueryRequestBuilderType](Documentation/Reference/protocols/RestlerQueryRequestBuilderType.md) - available only for GET.
-- [RestlerBodyRequestBuilderType](Documentation/Reference/protocols/RestlerBodyRequestBuilderType.md) - available for POST, PUT and PATCH.
-- [RestlerMultipartRequestBuilderType](Documentation/Reference/protocols/RestlerMultipartRequestBuilderType.md) - available only for POST.
-- [RestlerDecodableResponseRequestBuilderType](Documentation/Reference/protocols/RestlerDecodableResponseRequestBuilderType.md) - available for GET, POST, PUT, PATCH and DELETE (all without HEAD).
+- [RestlerBasicRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerBasicRequestBuilderType.md) - available for all HTTP methods.
+- [RestlerQueryRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerQueryRequestBuilderType.md) - available only for GET.
+- [RestlerDownloadRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerDownloadRequestBuilderType.md) - available only for GET.
+- [RestlerBodyRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerBodyRequestBuilderType.md) - available for POST, PUT and PATCH.
+- [RestlerMultipartRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerMultipartRequestBuilderType.md) - available only for POST.
+- [RestlerDecodableResponseRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerDecodableResponseRequestBuilderType.md) - available for GET, POST, PUT, PATCH and DELETE (all without HEAD).
 
 All these protocols are defined in one file: [RestlerRequestBuilderType](Sources/Restler/Public/Protocols/Request/RestlerRequestBuilderType.swift)
 
 ### Request
 
-[Restler.Request](Documentation/Reference/classes/Restler.Request.md) - generic class for all request types provided by Restler.
+[Restler.Request](Documentation/Reference/RestlerCore/classes/Restler.Request.md) - generic class for all request types provided by Restler.
 
 ### Errors
 
-- [Restler.Error](Documentation/Reference/enums/Restler.Error.md) - errors returned by Restler.
-- [Restler.ErrorType](Documentation/Reference/enums/Restler.ErrorType.md) - types which Restler can decode by himself. Every different type would be an `unknownError`.
+- [Restler.Error](Documentation/Reference/RestlerCore/enums/Restler.Error.md) - errors returned by Restler.
+- [Restler.ErrorType](Documentation/Reference/RestlerCore/enums/Restler.ErrorType.md) - types which Restler can decode by himself. Every different type would be an `unknownError`.
 
 ### Error parser
 
-- [RestlerErrorParserType](Documentation/Reference/protocols/RestlerErrorParserType.md) - a public protocol for the ErrorParser class.
-- [RestlerErrorDecodable](Documentation/Reference/protocols/RestlerErrorDecodable.md) - a protocol to implement if an object should be decoded by the ErrorParser.
+- [RestlerErrorParserType](Documentation/Reference/RestlerCore/protocols/RestlerErrorParserType.md) - a public protocol for the ErrorParser class.
+- [RestlerErrorDecodable](Documentation/Reference/RestlerCore/protocols/RestlerErrorDecodable.md) - a protocol to implement if an object should be decoded by the ErrorParser.
 
 ## Instalation
 
@@ -173,6 +174,27 @@ Any other method call is very similar to these two, but if you have questions si
 
 ### Restler + Combine
 
+- Restler approach:
+
+```swift
+Restler(baseURL: myBaseURL)
+  .get("/profile") // 1
+  .decode(Profile.self) // 2
+  .publisher // 3
+  .catch { _ in Empty() } // 4
+  .assign(to: \.profile, on: self) // 5
+  .store(in: &subscriptions) // 6
+```
+
+1. Makes GET request to the given endpoint.
+2. Decode `Profile` object.
+3. Convert the request object to publisher for easy using Combine in your code.
+4. Handle the thrown error
+5. Assign each element from a Publisher to a property on an object.
+6. Stores this type-erasing cancellable instance in the specified collection.
+
+- More Combine approach:
+
 ```swift
 Restler(baseURL: myBaseURL)
   .get(Endpoint.myProfile) // 1
@@ -191,8 +213,8 @@ Restler(baseURL: myBaseURL)
 3. Builds a request and returns publisher for Combine support.
 4. Specifies the scheduler on which to receive elements from the publisher. In this case the main queue.
 5. Get Data object from `DataTaskPublisher`.
-6. Decodes Profile object.
-7. Handle error
+6. Decode `Profile` object.
+7. Handle the error
 8. Assigns each element from a Publisher to a property on an object.
 9. Stores this type-erasing cancellable instance in the specified collection.
 
@@ -241,6 +263,10 @@ If you would like Restler to do something else, create an issue with a feature r
 4. Open the project in the folder `Restler-Example`. You can do it from the terminal: `open Restler-Example/Restler-Example.xcodeproj`
 5. Run tests to be sure everything works properly.
 
+### Lint
+
+Run command `./Scripts/pod_lib_lint.rb Restler.podspec` to lint the podspec before pushing changes to the repo.
+
 ### Releasing
 
 1. Open the project root directory.
@@ -252,5 +278,5 @@ If you would like Restler to do something else, create an issue with a feature r
 #### Gems
 
 - [cocoapods](https://rubygems.org/gems/cocoapods) 1.10.0
-- [fastlane](https://rubygems.org/gems/fastlane) 2.165.0
-- [slather](https://rubygems.org/gems/slather) 2.5.0
+- [fastlane](https://rubygems.org/gems/fastlane) 2.171.0
+- [slather](https://rubygems.org/gems/slather) 2.6.0

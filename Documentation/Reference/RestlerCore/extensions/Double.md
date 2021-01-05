@@ -1,0 +1,6 @@
+**EXTENSION**
+
+# `Double`
+
+## Properties
+### `restlerStringValue`

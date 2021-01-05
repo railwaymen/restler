@@ -7,17 +7,27 @@ typealias DataResult = Result<Data?, Error>
 typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType: class {
-    func makeRequest(
-        urlRequest: URLRequest,
-        urlSession: URLSessionType?,
-        eventLogger: EventLoggerLogging,
-        completion: @escaping DataCompletion) -> Restler.Task
-    
     func buildRequest(
         url: URL,
         method: HTTPMethod,
         header: Restler.Header,
-        customRequestModification: ((inout URLRequest) -> Void)?) -> URLRequest?
+        customRequestModification: ((inout URLRequest) -> Void)?
+    ) -> URLRequest?
+    
+    func makeRequest(
+        urlRequest: URLRequest,
+        urlSession: URLSessionType?,
+        eventLogger: EventLoggerLogging,
+        completion: @escaping DataCompletion
+    ) -> Restler.Task
+    
+    func downloadRequest(
+        urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging,
+        resumeData: Data?,
+        progressHandler: @escaping (RestlerDownloadTaskType) -> Void,
+        completionHandler: @escaping (Result<URL, Restler.Error>) -> Void
+    ) -> RestlerDownloadTaskType
     
     #if canImport(Combine)
     @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
@@ -28,31 +38,34 @@ protocol NetworkingType: class {
     #endif
 }
 
-final class Networking {
+final class Networking: NSObject {
     private let session: URLSessionType
-        
+    private let customDownloadSession: URLSessionType?
+    
+    private lazy var defaultDownloadSession: URLSessionType = URLSession(
+        configuration: .default,
+        delegate: self,
+        delegateQueue: nil)
+    
+    private var downloadSession: URLSessionType {
+        self.customDownloadSession ?? self.defaultDownloadSession
+    }
+    
+    private var downloadTaskCompletionHandlers: [Int: (Result<URL, Restler.Error>) -> Void] = [:]
+    private var downloadTaskProgressHandlers: [Int: () -> Void] = [:]
+    
     // MARK: - Initialization
-    init(session: URLSessionType = URLSession.shared) {
-        self.session = session
+    init(
+        dataSession: URLSessionType = URLSession.shared,
+        customDownloadSession: URLSessionType? = nil
+    ) {
+        self.session = dataSession
+        self.customDownloadSession = customDownloadSession
     }
 }
 
 // MARK: - NetworkingType
 extension Networking: NetworkingType {
-    func makeRequest(
-        urlRequest: URLRequest,
-        urlSession: URLSessionType?,
-        eventLogger: EventLoggerLogging,
-        completion: @escaping DataCompletion
-    ) -> Restler.Task {
-        Restler.Task(
-            task: self.runDataTask(
-                request: urlRequest,
-                urlSession: urlSession,
-                eventLogger: eventLogger,
-                completion: completion))
-    }
-    
     func buildRequest(
         url: URL,
         method: HTTPMethod,
@@ -67,6 +80,38 @@ extension Networking: NetworkingType {
         }
         customRequestModification?(&request)
         return request
+    }
+    
+    func makeRequest(
+        urlRequest: URLRequest,
+        urlSession: URLSessionType?,
+        eventLogger: EventLoggerLogging,
+        completion: @escaping DataCompletion
+    ) -> Restler.Task {
+        Restler.Task(
+            task: self.runDataTask(
+                request: urlRequest,
+                urlSession: urlSession,
+                eventLogger: eventLogger,
+                completion: completion))
+    }
+    
+    func downloadRequest(
+        urlRequest: URLRequest,
+        eventLogger: EventLoggerLogging,
+        resumeData: Data?,
+        progressHandler: @escaping (RestlerDownloadTaskType) -> Void,
+        completionHandler: @escaping (Result<URL, Restler.Error>) -> Void
+    ) -> RestlerDownloadTaskType {
+        let task = Restler.DownloadTask(
+            urlTask: self.runDownloadTask(
+                request: urlRequest,
+                eventLogger: eventLogger,
+                resumeData: resumeData))
+        self.downloadTaskProgressHandlers[task.identifier] = { progressHandler(task) }
+        self.downloadTaskCompletionHandlers[task.identifier] = completionHandler
+        task.resume()
+        return task
     }
     
     #if canImport(Combine)
@@ -93,6 +138,56 @@ extension Networking: NetworkingType {
             .eraseToAnyPublisher()
     }
     #endif
+}
+
+// MARK: - URLSessionDelegate
+extension Networking: URLSessionDelegate {}
+
+// MARK: - URLSessionTaskDelegate
+extension Networking: URLSessionTaskDelegate {
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        guard let handler = self.downloadTaskCompletionHandlers[task.taskIdentifier] else { return }
+        guard let systemError = task.error ?? error else { return }
+        let response = task.response as? HTTPURLResponse
+        let statusCode = response?.statusCode
+            ?? (systemError as NSError?)?.code
+            ?? 0
+        let errorType = Restler.ErrorType(statusCode: statusCode) ?? .unknownError
+        let error = Restler.Error.request(
+            type: errorType,
+            response: Restler.Response(
+                data: nil,
+                response: response,
+                error: systemError))
+        handler(.failure(error))
+        self.downloadTaskProgressHandlers.removeValue(forKey: task.taskIdentifier)
+        self.downloadTaskCompletionHandlers.removeValue(forKey: task.taskIdentifier)
+    }
+}
+
+// MARK: - URLSessionDownloadDelegate
+extension Networking: URLSessionDownloadDelegate {
+    func urlSession(
+        _ session: URLSession,
+        downloadTask: URLSessionDownloadTask,
+        didWriteData bytesWritten: Int64,
+        totalBytesWritten: Int64,
+        totalBytesExpectedToWrite: Int64
+    ) {
+        guard let handler = self.downloadTaskProgressHandlers[downloadTask.taskIdentifier] else { return }
+        handler()
+    }
+    
+    func urlSession(
+        _ session: URLSession,
+        downloadTask: URLSessionDownloadTask,
+        didFinishDownloadingTo location: URL
+    ) {
+        guard let handler = self.downloadTaskCompletionHandlers[downloadTask.taskIdentifier] else { return }
+        handler(.success(location))
+        self.downloadTaskProgressHandlers.removeValue(forKey: downloadTask.taskIdentifier)
+        self.downloadTaskCompletionHandlers.removeValue(forKey: downloadTask.taskIdentifier)
+    }
 }
 
 // MARK: - Private
@@ -140,5 +235,17 @@ extension Networking {
         let statusCode = result.response?.statusCode ?? (result.error as NSError?)?.code ?? 0
         let errorType = Restler.ErrorType(statusCode: statusCode) ?? .unknownError
         return Restler.Error.request(type: errorType, response: Restler.Response(result))
+    }
+    
+    private func runDownloadTask(
+        request: URLRequest,
+        eventLogger: EventLoggerLogging,
+        resumeData: Data?
+    ) -> URLSessionDownloadTaskType {
+        if let data = resumeData {
+            return self.downloadSession.downloadTask(withResumeData: data)
+        } else {
+            return self.downloadSession.downloadTask(with: request)
+        }
     }
 }

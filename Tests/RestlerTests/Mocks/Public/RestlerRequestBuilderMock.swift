@@ -61,6 +61,16 @@ final class RestlerRequestBuilderMock {
         let type: Any
     }
     
+    // MARK: - RestlerDownloadRequestBuilderType
+    private(set) var resumeDataParams: [ResumeDataParams] = []
+    struct ResumeDataParams {
+        let data: Data
+    }
+    
+    var requestDownloadReturnValue: RestlerDownloadRequestMock = .init()
+    private(set) var requestDownloadParams: [RequestDownloadParams] = []
+    struct RequestDownloadParams {}
+    
     // MARK: - Internal
     func callCompletion<T>(type: T.Type, result: Result<T, Error>) throws {
         guard let request = self.decodeReturnedMocks.last as? RestlerRequestMock<T> else {
@@ -170,5 +180,18 @@ extension RestlerRequestBuilderMock: RestlerDecodableResponseRequestBuilderType 
         let mock = RestlerRequestMock<T>()
         self.decodeReturnedMocks.append(mock)
         return mock
+    }
+}
+
+// MARK: - RestlerDownloadRequestBuilderType
+extension RestlerRequestBuilderMock: RestlerDownloadRequestBuilderType {
+    func resumeData(_ data: Data) -> Self {
+        self.resumeDataParams.append(ResumeDataParams(data: data))
+        return self
+    }
+    
+    func requestDownload() -> RestlerDownloadRequestType {
+        self.requestDownloadParams.append(RequestDownloadParams())
+        return self.requestDownloadReturnValue
     }
 }

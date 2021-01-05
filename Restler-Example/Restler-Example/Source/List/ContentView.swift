@@ -15,5 +15,9 @@ struct ContentView: View {
         List(self.viewModel.posts) { [viewModel = self.viewModel] post in
             NavigationLink(post.title, destination: PostView(viewModel: viewModel.createPostViewModel(post: post)))
         }
+        .navigationBarItems(
+            trailing: NavigationLink(
+                "Downloads",
+                destination: DownloadsView(viewModel: viewModel.createDownloadsViewModel())))
     }
 }

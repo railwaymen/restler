@@ -9,6 +9,7 @@
 import SwiftUI
 import Combine
 import RestlerCore
+import RestlerCombine
 
 final class ContentViewModel: ObservableObject {
     private let restler = Restler(baseURL: URL(string: "https://jsonplaceholder.typicode.com")!)
@@ -32,17 +33,20 @@ final class ContentViewModel: ObservableObject {
     
     // MARK: - Internal
     func createPostViewModel(post: BlogPost) -> PostViewModel {
-        return PostViewModel(post: post)
+        PostViewModel(post: post)
+    }
+    
+    func createDownloadsViewModel() -> DownloadsViewModel {
+        DownloadsViewModel()
     }
     
     // MARK: - Private
     private func fetchData() -> AnyPublisher<[BlogPost], Error>? {
         self.restler
             .get(Endpoint.posts)
-            .publisher()?
-            .map(\.data)
-            .decode(type: [BlogPost].self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
+            .receive(on: .main)
+            .decode([BlogPost].self)
+            .publisher
             .eraseToAnyPublisher()
     }
 }

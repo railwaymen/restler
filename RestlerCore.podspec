@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'RestlerCore'
-  s.version = '1.0.1'
+  s.version = '1.1'
   s.summary = 'Framework for REST requests in Swift'
   s.description = <<-DESC
     Restler is a framework for type-safe and easy REST API requests in Swift.

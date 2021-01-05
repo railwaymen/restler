@@ -1,0 +1,6 @@
+**EXTENSION**
+
+# `UUID`
+
+## Properties
+### `restlerStringValue`

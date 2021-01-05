@@ -25,7 +25,7 @@ class InterfaceIntegrationTestsBase: XCTestCase {
     
     // MARK: - Internal
     func buildSUT() -> Restler {
-        return Restler(
+        Restler(
             baseURL: self.baseURL,
             networking: self.networking,
             dispatchQueueManager: self.dispatchQueueManager,
