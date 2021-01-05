@@ -1,0 +1,6 @@
+**PROTOCOL**
+
+# `RestlerDataEncodable`
+
+## Methods
+### `encodeToData()`

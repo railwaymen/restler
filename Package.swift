@@ -19,13 +19,13 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "RestlerCore",
+            dependencies: []),
+        .target(
             name: "RestlerCombine",
             dependencies: [
                 .target(name: "RestlerCore"),
             ]),
-        .target(
-            name: "RestlerCore",
-            dependencies: []),
         .target(
             name: "RxRestler",
             dependencies: [

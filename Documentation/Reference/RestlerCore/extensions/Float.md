@@ -1,0 +1,6 @@
+**EXTENSION**
+
+# `Float`
+
+## Properties
+### `restlerStringValue`

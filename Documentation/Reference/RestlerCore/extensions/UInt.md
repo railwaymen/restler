@@ -1,0 +1,6 @@
+**EXTENSION**
+
+# `UInt`
+
+## Properties
+### `restlerStringValue`

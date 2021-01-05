@@ -1,0 +1,3 @@
+**TYPEALIAS**
+
+# `Restler.VoidResult`
