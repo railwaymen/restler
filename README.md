@@ -24,32 +24,32 @@ We think that README isn't a good place for complete documentation so that's why
 
 ### Restler
 
-[RestlerType](Documentation/Reference/protocols/RestlerType) - it's the main protocol which should be used when it comes to mocking or using [Restler's](Documentation/Reference/classes/Restler.md) class' instance.
+[RestlerType](Documentation/Reference/RestlerCore/protocols/RestlerType) - it's the main protocol which should be used when it comes to mocking or using [Restler's](Documentation/Reference/RestlerCore/classes/Restler.md) class' instance.
 
 ### Request builder
 
-- [RestlerBasicRequestBuilderType](Documentation/Reference/protocols/RestlerBasicRequestBuilderType.md) - available for all HTTP methods.
-- [RestlerQueryRequestBuilderType](Documentation/Reference/protocols/RestlerQueryRequestBuilderType.md) - available only for GET.
-- [RestlerDownloadRequestBuilderType](Documentation/Reference/protocols/RestlerDownloadRequestBuilderType.md) - available only for GET.
-- [RestlerBodyRequestBuilderType](Documentation/Reference/protocols/RestlerBodyRequestBuilderType.md) - available for POST, PUT and PATCH.
-- [RestlerMultipartRequestBuilderType](Documentation/Reference/protocols/RestlerMultipartRequestBuilderType.md) - available only for POST.
-- [RestlerDecodableResponseRequestBuilderType](Documentation/Reference/protocols/RestlerDecodableResponseRequestBuilderType.md) - available for GET, POST, PUT, PATCH and DELETE (all without HEAD).
+- [RestlerBasicRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerBasicRequestBuilderType.md) - available for all HTTP methods.
+- [RestlerQueryRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerQueryRequestBuilderType.md) - available only for GET.
+- [RestlerDownloadRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerDownloadRequestBuilderType.md) - available only for GET.
+- [RestlerBodyRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerBodyRequestBuilderType.md) - available for POST, PUT and PATCH.
+- [RestlerMultipartRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerMultipartRequestBuilderType.md) - available only for POST.
+- [RestlerDecodableResponseRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerDecodableResponseRequestBuilderType.md) - available for GET, POST, PUT, PATCH and DELETE (all without HEAD).
 
 All these protocols are defined in one file: [RestlerRequestBuilderType](Sources/Restler/Public/Protocols/Request/RestlerRequestBuilderType.swift)
 
 ### Request
 
-[Restler.Request](Documentation/Reference/classes/Restler.Request.md) - generic class for all request types provided by Restler.
+[Restler.Request](Documentation/Reference/RestlerCore/classes/Restler.Request.md) - generic class for all request types provided by Restler.
 
 ### Errors
 
-- [Restler.Error](Documentation/Reference/enums/Restler.Error.md) - errors returned by Restler.
-- [Restler.ErrorType](Documentation/Reference/enums/Restler.ErrorType.md) - types which Restler can decode by himself. Every different type would be an `unknownError`.
+- [Restler.Error](Documentation/Reference/RestlerCore/enums/Restler.Error.md) - errors returned by Restler.
+- [Restler.ErrorType](Documentation/Reference/RestlerCore/enums/Restler.ErrorType.md) - types which Restler can decode by himself. Every different type would be an `unknownError`.
 
 ### Error parser
 
-- [RestlerErrorParserType](Documentation/Reference/protocols/RestlerErrorParserType.md) - a public protocol for the ErrorParser class.
-- [RestlerErrorDecodable](Documentation/Reference/protocols/RestlerErrorDecodable.md) - a protocol to implement if an object should be decoded by the ErrorParser.
+- [RestlerErrorParserType](Documentation/Reference/RestlerCore/protocols/RestlerErrorParserType.md) - a public protocol for the ErrorParser class.
+- [RestlerErrorDecodable](Documentation/Reference/RestlerCore/protocols/RestlerErrorDecodable.md) - a protocol to implement if an object should be decoded by the ErrorParser.
 
 ## Instalation
 
