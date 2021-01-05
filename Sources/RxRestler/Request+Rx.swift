@@ -7,7 +7,7 @@ extension Restler.Request {
         Single<D>.create { single in
             let task = self.subscribe(
                 onSuccess: { single(.success($0)) },
-                onFailure: { single(.error($0)) })
+                onFailure: { single(.failure($0)) })
             return Disposables.create { task?.cancel() }
         }
     }

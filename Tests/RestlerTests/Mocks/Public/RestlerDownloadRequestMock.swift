@@ -7,7 +7,7 @@ final class RestlerDownloadRequestMock {
     var subscribeReturnValue: RestlerDownloadTaskMock = .init()
     private(set) var subscribeParams: [SubscribeParams] = []
     struct SubscribeParams {
-        let onProgress: ((Progress) -> Void)?
+        let onProgress: ((RestlerDownloadTaskType) -> Void)?
         let onSuccess: ((URL) -> Void)?
         let onError: ((Restler.Error) -> Void)?
         let onCompletion: ((Result<URL, Restler.Error>) -> Void)?
@@ -17,7 +17,7 @@ final class RestlerDownloadRequestMock {
 // MARK: - RestlerDownloadRequestType
 extension RestlerDownloadRequestMock: RestlerDownloadRequestType {
     func subscribe(
-        onProgress: ((Progress) -> Void)?,
+        onProgress: ((RestlerDownloadTaskType) -> Void)?,
         onSuccess: ((URL) -> Void)?,
         onError: ((Restler.Error) -> Void)?,
         onCompletion: ((Result<URL, Restler.Error>) -> Void)?

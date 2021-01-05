@@ -41,10 +41,10 @@ final class CommentViewModel: ObservableObject {
         self.restler.head(Endpoint.comments)
             .decode(Void.self)
             .rx
-            .observeOn(MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
             .subscribe(
                 onSuccess: { print("Endpoint exists") },
-                onError: { print("Request HEAD error:", $0) })
+                onFailure: { print("Request HEAD error:", $0) })
             .disposed(by: self.disposeBag)
     }
     
