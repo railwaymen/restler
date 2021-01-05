@@ -278,5 +278,5 @@ Run command `./Scripts/pod_lib_lint.rb Restler.podspec` to lint the podspec befo
 #### Gems
 
 - [cocoapods](https://rubygems.org/gems/cocoapods) 1.10.0
-- [fastlane](https://rubygems.org/gems/fastlane) 2.165.0
-- [slather](https://rubygems.org/gems/slather) 2.5.0
+- [fastlane](https://rubygems.org/gems/fastlane) 2.171.0
+- [slather](https://rubygems.org/gems/slather) 2.6.0

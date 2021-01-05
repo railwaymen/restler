@@ -17,5 +17,5 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Sources/RxRestler/**/*.swift'
   s.dependency 'RestlerCore', '~> 1.1'
-  s.dependency 'RxSwift', '~> 5.1.1'
+  s.dependency 'RxSwift', '~> 6.0'
 end
