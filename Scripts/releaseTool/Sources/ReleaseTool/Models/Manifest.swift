@@ -17,7 +17,7 @@ struct Manifest {
 // MARK: - Shared
 extension Manifest {
     static let shared = Manifest(
-        version: "1.1",
+        version: "1.1.1",
         pods: [
             Pod(name: "RestlerCore"),
             Pod(name: "RxRestler"),
