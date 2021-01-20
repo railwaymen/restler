@@ -29,9 +29,9 @@ We think that README isn't a good place for complete documentation so that's why
 ### Request builder
 
 - [RestlerBasicRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerBasicRequestBuilderType.md) - available for all HTTP methods.
-- [RestlerQueryRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerQueryRequestBuilderType.md) - available only for GET.
+- [RestlerQueryRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerQueryRequestBuilderType.md) - available for all HTTP methods.
+- [RestlerBodyRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerBodyRequestBuilderType.md) - available for all HTTP methods.
 - [RestlerDownloadRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerDownloadRequestBuilderType.md) - available only for GET.
-- [RestlerBodyRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerBodyRequestBuilderType.md) - available for POST, PUT and PATCH.
 - [RestlerMultipartRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerMultipartRequestBuilderType.md) - available only for POST.
 - [RestlerDecodableResponseRequestBuilderType](Documentation/Reference/RestlerCore/protocols/RestlerDecodableResponseRequestBuilderType.md) - available for GET, POST, PUT, PATCH and DELETE (all without HEAD).
 

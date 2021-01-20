@@ -5,27 +5,35 @@ import Combine
 
 public typealias RestlerGetRequestBuilderType =
     RestlerQueryRequestBuilderType
+    & RestlerBodyRequestBuilderType
     & RestlerDecodableResponseRequestBuilderType
     & RestlerDownloadRequestBuilderType
 
 public typealias RestlerPostRequestBuilderType =
-    RestlerBodyRequestBuilderType
+    RestlerQueryRequestBuilderType
+    & RestlerBodyRequestBuilderType
     & RestlerMultipartRequestBuilderType
     & RestlerDecodableResponseRequestBuilderType
 
 public typealias RestlerPutRequestBuilderType =
-    RestlerBodyRequestBuilderType
+    RestlerQueryRequestBuilderType
+    & RestlerBodyRequestBuilderType
     & RestlerDecodableResponseRequestBuilderType
 
 public typealias RestlerPatchRequestBuilderType =
-    RestlerBodyRequestBuilderType
+    RestlerQueryRequestBuilderType
+    & RestlerBodyRequestBuilderType
     & RestlerDecodableResponseRequestBuilderType
 
 public typealias RestlerDeleteRequestBuilderType =
-    RestlerDecodableResponseRequestBuilderType
+    RestlerQueryRequestBuilderType
+    & RestlerBodyRequestBuilderType
+    & RestlerDecodableResponseRequestBuilderType
 
 public typealias RestlerHeadRequestBuilderType =
-    RestlerBasicRequestBuilderType
+    RestlerQueryRequestBuilderType
+    & RestlerBodyRequestBuilderType
+    & RestlerBasicRequestBuilderType
 
 // MARK: - RestlerRequestBuilderType
 /// A request builder. Builds a request from the given data.
