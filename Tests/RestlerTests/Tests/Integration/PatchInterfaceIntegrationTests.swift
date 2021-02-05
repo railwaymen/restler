@@ -16,9 +16,11 @@ extension PatchInterfaceIntegrationTests {
         XCTAssertEqual(request, expectedRequest)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .patch(content: nil))
-        XCTAssertNil(requestParams.header[.contentType])
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .patch)
+        XCTAssertNil(requestParams.requestData.header[.contentType])
+        XCTAssertNil(requestParams.requestData.content)
+        XCTAssertEqual(requestParams.requestData.query, [])
     }
     
     func testURLRequestBuilding_withoutBody_customHeader() throws {
@@ -27,15 +29,17 @@ extension PatchInterfaceIntegrationTests {
         // Act
         let request = sut
             .patch(self.endpoint)
-            .setInHeader("hello darkness", forKey: .contentType)
+            .setInHeader("hello_darkness", forKey: .contentType)
             .urlRequest()
         // Assert
         XCTAssertEqual(request, expectedRequest)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .patch(content: nil))
-        XCTAssertEqual(requestParams.header[.contentType], "hello darkness")
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .patch)
+        XCTAssertEqual(requestParams.requestData.header[.contentType], "hello_darkness")
+        XCTAssertNil(requestParams.requestData.content)
+        XCTAssertEqual(requestParams.requestData.query, [])
     }
     
     func testURLRequestBuilding_encodingBody() throws {
@@ -52,9 +56,11 @@ extension PatchInterfaceIntegrationTests {
         XCTAssertEqual(request, expectedRequest)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .patch(content: data))
-        XCTAssertEqual(requestParams.header[.contentType], "application/json")
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .patch)
+        XCTAssertEqual(requestParams.requestData.header[.contentType], "application/json")
+        XCTAssertEqual(requestParams.requestData.content, data)
+        XCTAssertEqual(requestParams.requestData.query, [])
     }
     
     func testURLRequestBuilding_encodingBodyFails() throws {

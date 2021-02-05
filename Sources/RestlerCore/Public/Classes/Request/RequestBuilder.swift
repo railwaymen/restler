@@ -90,10 +90,14 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
             self.form.builderErrorsHandler?(error)
             return nil
         }
-        return self.dependencies.networking.buildRequest(
+        let requestData = RequestData(
             url: self.dependencies.url,
-            method: self.dependencies.method.combinedWith(query: self.form.query, body: self.form.body),
-            header: self.form.header,
+            method: self.dependencies.method,
+            content: self.form.body,
+            query: self.form.query ?? [],
+            header: self.form.header)
+        return self.dependencies.networking.buildRequest(
+            requestData: requestData,
             customRequestModification: self.form.customRequestModification)
     }
     
@@ -111,10 +115,8 @@ extension Restler.RequestBuilder: RestlerBasicRequestBuilderType {
 // MARK: - RestlerQueryRequestBuilderType
 extension Restler.RequestBuilder: RestlerQueryRequestBuilderType {
     public func query<E>(_ object: E) -> Self where E: RestlerQueryEncodable {
-        guard self.dependencies.method.isQueryAvailable else { return self }
         do {
             self.form.query = try self.dependencies.queryEncoder.encode(object)
-            self.form.header[.contentType] = "application/x-www-form-urlencoded"
         } catch {
             self.form.errors.append(Restler.Error.common(type: .invalidParameters, base: error))
         }
@@ -125,7 +127,6 @@ extension Restler.RequestBuilder: RestlerQueryRequestBuilderType {
 // MARK: - RestlerBodyRequestBuilderType
 extension Restler.RequestBuilder: RestlerBodyRequestBuilderType {
     public func body<E>(_ object: E) -> Self where E: Encodable {
-        guard self.dependencies.method.isBodyAvailable else { return self }
         do {
             self.form.body = try self.dependencies.encoder.encode(object)
             self.form.header[.contentType] = "application/json"
@@ -139,7 +140,6 @@ extension Restler.RequestBuilder: RestlerBodyRequestBuilderType {
 // MARK: - RestlerMultipartRequestBuilderType
 extension Restler.RequestBuilder: RestlerMultipartRequestBuilderType {
     public func multipart<E>(_ object: E, boundary: String? = nil) -> Self where E: RestlerMultipartEncodable {
-        guard self.dependencies.method.isMultipartAvailable else { return self }
         do {
             let unwrappedBoundary = boundary ?? "Boundary--\(UUID().uuidString)"
             self.form.body = try self.dependencies.multipartEncoder.encode(object, boundary: unwrappedBoundary)

@@ -15,7 +15,7 @@ extension DownloadInterfaceIntegrationTests {
             .subscribe()
         // Assert
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
-        XCTAssertEqual(self.networking.buildRequestParams.last?.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(self.networking.buildRequestParams.last?.requestData.url.absoluteString, self.mockURLString)
         XCTAssertEqual(self.networking.downloadRequestParams.count, 1)
         XCTAssertEqual(self.networking.downloadRequestParams.last?.urlRequest.url?.absoluteString, expectedURL.absoluteString)
     }
@@ -30,8 +30,10 @@ extension DownloadInterfaceIntegrationTests {
             .subscribe()
         // Assert
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
-        XCTAssertEqual(self.networking.buildRequestParams.last?.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(self.networking.buildRequestParams.last?.method, .get(query: [URLQueryItem(name: "user", value: "yes")]))
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.last)
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .get)
+        XCTAssertEqual(requestParams.requestData.query, [URLQueryItem(name: "user", value: "yes")])
     }
     
     func testDownloadInterface_usingResumeData() throws {

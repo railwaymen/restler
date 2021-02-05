@@ -198,112 +198,133 @@ extension NetworkingTests {
         // Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        let queryParameters = ["some": "key", "another": "key1"].map { URLQueryItem(name: $0, value: $1) }
         let header = ["key1": "value1", "key2": "value2"]
+        let requestData = RequestData(
+            url: url,
+            method: .get,
+            content: Data(),
+            query: ["some": "key", "another": "key1"].map { URLQueryItem(name: $0, value: $1) },
+            header: Restler.Header(raw: header))
         // Act
         let request = sut.buildRequest(
-            url: url,
-            method: .get(query: queryParameters),
-            header: Restler.Header(raw: header),
+            requestData: requestData,
             customRequestModification: self.cacheModification)
         // Assert
         let unwrappedRequest = try XCTUnwrap(request)
-        let requestURL = unwrappedRequest.url
-        XCTAssertTrue(try XCTUnwrap(requestURL?.query?.contains("some=key")))
-        XCTAssertTrue(try XCTUnwrap(requestURL?.query?.contains("another=key1")))
-        XCTAssertTrue(try XCTUnwrap(requestURL?.absoluteString.starts(with: "https://www.example.com")))
+        let requestURL = try XCTUnwrap(unwrappedRequest.url)
+        XCTAssertTrue(try XCTUnwrap(requestURL.query?.contains("some=key")))
+        XCTAssertTrue(try XCTUnwrap(requestURL.query?.contains("another=key1")))
+        XCTAssertTrue(try XCTUnwrap(requestURL.absoluteString.starts(with: "https://www.example.com")))
         XCTAssertEqual(unwrappedRequest.httpMethod, "GET")
-        XCTAssertNil(unwrappedRequest.httpBody)
+        XCTAssertEqual(unwrappedRequest.httpBody, requestData.content)
         XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
         XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
     }
-    
+
     func testBuildRequest_post_makesProperRequest() throws {
         // Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        let content = Data()
         let header = ["key1": "value1", "key2": "value2"]
+        let requestData = RequestData(
+            url: url,
+            method: .post,
+            content: Data(),
+            query: ["some": "key", "another": "key1"].map { URLQueryItem(name: $0, value: $1) },
+            header: Restler.Header(raw: header))
         // Act
         let request = sut.buildRequest(
-            url: url,
-            method: .post(content: content),
-            header: Restler.Header(raw: header),
+            requestData: requestData,
             customRequestModification: self.cacheModification)
         // Assert
         let unwrappedRequest = try XCTUnwrap(request)
         let requestURL = try XCTUnwrap(unwrappedRequest.url)
-        XCTAssertNil(requestURL.query)
+        XCTAssertTrue(try XCTUnwrap(requestURL.query?.contains("some=key")))
+        XCTAssertTrue(try XCTUnwrap(requestURL.query?.contains("another=key1")))
         XCTAssertTrue(requestURL.absoluteString.starts(with: "https://www.example.com"))
         XCTAssertEqual(unwrappedRequest.httpMethod, "POST")
-        XCTAssertEqual(unwrappedRequest.httpBody, content)
+        XCTAssertEqual(unwrappedRequest.httpBody, requestData.content)
         XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
         XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
     }
-    
+
     func testBuildRequest_put_makesProperRequest() throws {
         // Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
-        let content = Data()
         let header = ["key1": "value1", "key2": "value2"]
+        let requestData = RequestData(
+            url: url,
+            method: .put,
+            content: Data(),
+            query: ["some": "key", "another": "key1"].map { URLQueryItem(name: $0, value: $1) },
+            header: Restler.Header(raw: header))
         // Act
         let request = sut.buildRequest(
-            url: url,
-            method: .put(content: content),
-            header: Restler.Header(raw: header),
+            requestData: requestData,
             customRequestModification: self.cacheModification)
         // Assert
         let unwrappedRequest = try XCTUnwrap(request)
         let requestURL = try XCTUnwrap(unwrappedRequest.url)
-        XCTAssertNil(requestURL.query)
+        XCTAssertTrue(try XCTUnwrap(requestURL.query?.contains("some=key")))
+        XCTAssertTrue(try XCTUnwrap(requestURL.query?.contains("another=key1")))
         XCTAssertTrue(requestURL.absoluteString.starts(with: "https://www.example.com"))
         XCTAssertEqual(unwrappedRequest.httpMethod, "PUT")
-        XCTAssertEqual(unwrappedRequest.httpBody, content)
+        XCTAssertEqual(unwrappedRequest.httpBody, requestData.content)
         XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
         XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
     }
-    
+
     func testBuildRequest_delete_makesProperRequest() throws {
         // Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let header = ["key1": "value1", "key2": "value2"]
-        // Act
-        let request = sut.buildRequest(
+        let requestData = RequestData(
             url: url,
             method: .delete,
-            header: Restler.Header(raw: header),
+            content: Data(),
+            query: ["some": "key", "another": "key1"].map { URLQueryItem(name: $0, value: $1) },
+            header: Restler.Header(raw: header))
+        // Act
+        let request = sut.buildRequest(
+            requestData: requestData,
             customRequestModification: self.cacheModification)
         // Assert
         let unwrappedRequest = try XCTUnwrap(request)
         let requestURL = try XCTUnwrap(unwrappedRequest.url)
-        XCTAssertNil(requestURL.query)
+        XCTAssertTrue(try XCTUnwrap(requestURL.query?.contains("some=key")))
+        XCTAssertTrue(try XCTUnwrap(requestURL.query?.contains("another=key1")))
         XCTAssertTrue(requestURL.absoluteString.starts(with: "https://www.example.com"))
         XCTAssertEqual(unwrappedRequest.httpMethod, "DELETE")
-        XCTAssertNil(unwrappedRequest.httpBody)
+        XCTAssertEqual(unwrappedRequest.httpBody, requestData.content)
         XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
         XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
     }
-    
+
     func testBuildRequest_head_makesProperRequest() throws {
         // Arrange
         let sut = self.buildSUT()
         let url = try XCTUnwrap(URL(string: "https://www.example.com"))
         let header = ["key1": "value1", "key2": "value2"]
-        // Act
-        let request = sut.buildRequest(
+        let requestData = RequestData(
             url: url,
             method: .head,
-            header: Restler.Header(raw: header),
+            content: Data(),
+            query: ["some": "key", "another": "key1"].map { URLQueryItem(name: $0, value: $1) },
+            header: Restler.Header(raw: header))
+        // Act
+        let request = sut.buildRequest(
+            requestData: requestData,
             customRequestModification: self.cacheModification)
         // Assert
         let unwrappedRequest = try XCTUnwrap(request)
         let requestURL = try XCTUnwrap(unwrappedRequest.url)
-        XCTAssertNil(requestURL.query)
+        XCTAssertTrue(try XCTUnwrap(requestURL.query?.contains("some=key")))
+        XCTAssertTrue(try XCTUnwrap(requestURL.query?.contains("another=key1")))
         XCTAssertTrue(requestURL.absoluteString.starts(with: "https://www.example.com"))
         XCTAssertEqual(unwrappedRequest.httpMethod, "HEAD")
-        XCTAssertNil(unwrappedRequest.httpBody)
+        XCTAssertEqual(unwrappedRequest.httpBody, requestData.content)
         XCTAssertEqual(unwrappedRequest.allHTTPHeaderFields, header)
         XCTAssertEqual(unwrappedRequest.cachePolicy, .reloadIgnoringCacheData)
     }
