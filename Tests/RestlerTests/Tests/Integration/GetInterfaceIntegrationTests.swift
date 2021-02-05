@@ -16,9 +16,11 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(request, expectedRequest)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertNil(requestParams.header[.contentType])
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .get)
+        XCTAssertNil(requestParams.requestData.header[.contentType])
+        XCTAssertNil(requestParams.requestData.content)
+        XCTAssertEqual(requestParams.requestData.query, [])
     }
     
     func testURLRequestBuilding_stringEndpoint() throws {
@@ -32,9 +34,11 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(request, expectedRequest)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertNil(requestParams.header[.contentType])
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .get)
+        XCTAssertNil(requestParams.requestData.header[.contentType])
+        XCTAssertNil(requestParams.requestData.content)
+        XCTAssertEqual(requestParams.requestData.query, [])
     }
     
     func testURLRequestBuilding_customHeader() throws {
@@ -43,15 +47,17 @@ extension GetInterfaceIntegrationTests {
         // Act
         let request = sut
             .get(self.endpoint)
-            .setInHeader("hello darkness", forKey: .contentType)
+            .setInHeader("hello_darkness", forKey: .contentType)
             .urlRequest()
         // Assert
         XCTAssertEqual(request, expectedRequest)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: []))
-        XCTAssertEqual(requestParams.header[.contentType], "hello darkness")
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .get)
+        XCTAssertEqual(requestParams.requestData.header[.contentType], "hello_darkness")
+        XCTAssertNil(requestParams.requestData.content)
+        XCTAssertEqual(requestParams.requestData.query, [])
     }
     
     func testURLRequestBuilding_encodingQuery() throws {
@@ -66,9 +72,11 @@ extension GetInterfaceIntegrationTests {
         XCTAssertEqual(request, expectedRequest)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .get(query: [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems()))
-        XCTAssertEqual(requestParams.header[.contentType], "application/x-www-form-urlencoded")
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .get)
+        XCTAssertNil(requestParams.requestData.header[.contentType])
+        XCTAssertNil(requestParams.requestData.content)
+        XCTAssertEqual(requestParams.requestData.query, [("id", "1"), ("name", "name"), ("double", "1.23")].toQueryItems())
     }
     
     func testGetVoid_buildingRequest_encodingQueryFails() throws {
@@ -95,23 +103,25 @@ extension GetInterfaceIntegrationTests {
     func testURLRequestBuilding_encodingDictionaryQuery() throws {
         // Arrange
         let sut = self.buildSUT()
-        let header = ["id": "1", "name": "name", "double": "1.23"]
+        let query = ["id": "1", "name": "name", "double": "1.23"]
         // Act
         let request = sut
             .get(self.endpoint)
-            .query(header)
+            .query(query)
             .urlRequest()
         // Assert
         XCTAssertEqual(request, expectedRequest)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        guard case let .get(query) = requestParams.method else { return XCTFail() }
-        XCTAssertEqual(query.count, header.count)
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .get)
+        XCTAssertNil(requestParams.requestData.header[.contentType])
+        XCTAssertNil(requestParams.requestData.content)
+        XCTAssertEqual(requestParams.requestData.query.count, query.count)
         [("id", "1"), ("name", "name"), ("double", "1.23")]
             .toQueryItems()
             .forEach {
-                XCTAssert(query.contains($0), "Query doesn't contain: $0")
+                XCTAssert(requestParams.requestData.query.contains($0), "Query doesn't contain: $0")
         }
     }
 }

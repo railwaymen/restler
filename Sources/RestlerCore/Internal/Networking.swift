@@ -8,9 +8,7 @@ typealias DataCompletion = (DataResult) -> Void
 
 protocol NetworkingType: class {
     func buildRequest(
-        url: URL,
-        method: HTTPMethod,
-        header: Restler.Header,
+        requestData: RequestData,
         customRequestModification: ((inout URLRequest) -> Void)?
     ) -> URLRequest?
     
@@ -67,17 +65,10 @@ final class Networking: NSObject {
 // MARK: - NetworkingType
 extension Networking: NetworkingType {
     func buildRequest(
-        url: URL,
-        method: HTTPMethod,
-        header: Restler.Header,
+        requestData: RequestData,
         customRequestModification: ((inout URLRequest) -> Void)?
     ) -> URLRequest? {
-        guard var request = self.buildURLRequest(
-            url: url,
-            httpMethod: method,
-            header: header) else {
-                return nil
-        }
+        guard var request = self.buildURLRequest(requestData: requestData) else { return nil }
         customRequestModification?(&request)
         return request
     }
@@ -192,14 +183,16 @@ extension Networking: URLSessionDownloadDelegate {
 
 // MARK: - Private
 extension Networking {
-    private func buildURLRequest(url: URL, httpMethod: HTTPMethod, header: Restler.Header) -> URLRequest? {
-        guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
-        urlComponents.queryItems = httpMethod.query
+    private func buildURLRequest(requestData: RequestData) -> URLRequest? {
+        guard var urlComponents = URLComponents(url: requestData.url, resolvingAgainstBaseURL: false) else { return nil }
+        if !requestData.query.isEmpty {
+            urlComponents.queryItems = requestData.query
+        }
         guard let url = urlComponents.url else { return nil }
         var request = URLRequest(url: url)
-        request.allHTTPHeaderFields = header.raw
-        request.httpMethod = httpMethod.name
-        request.httpBody = httpMethod.content
+        request.allHTTPHeaderFields = requestData.header.raw
+        request.httpMethod = requestData.method.name
+        request.httpBody = requestData.content
         return request
     }
     

@@ -16,9 +16,11 @@ extension DeleteInterfaceIntegrationTests {
         XCTAssertEqual(request, expectedRequest)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .delete)
-        XCTAssertNil(requestParams.header[.contentType])
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .delete)
+        XCTAssertNil(requestParams.requestData.header[.contentType])
+        XCTAssertNil(requestParams.requestData.content)
+        XCTAssertEqual(requestParams.requestData.query, [])
     }
     
     func testURLRequestBuilding_customHeader() throws {
@@ -27,15 +29,60 @@ extension DeleteInterfaceIntegrationTests {
         // Act
         let request = sut
             .delete(self.endpoint)
-            .setInHeader("hello darkness", forKey: .contentType)
+            .setInHeader("hello_darkness", forKey: .contentType)
             .urlRequest()
         // Assert
         XCTAssertEqual(request, expectedRequest)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .delete)
-        XCTAssertEqual(requestParams.header[.contentType], "hello darkness")
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .delete)
+        XCTAssertEqual(requestParams.requestData.header[.contentType], "hello_darkness")
+        XCTAssertNil(requestParams.requestData.content)
+        XCTAssertEqual(requestParams.requestData.query, [])
+    }
+    
+    // MARK: - Encoding Body
+    func testURLRequestBuilding_encodingBody() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let object = SomeObject(id: 1, name: "name", double: 1.23)
+        let data = try JSONEncoder().encode(object)
+        // Act
+        let request = sut
+            .delete(self.endpoint)
+            .body(object)
+            .urlRequest()
+        // Assert
+        XCTAssertEqual(request, expectedRequest)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 1)
+        let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .delete)
+        XCTAssertEqual(requestParams.requestData.header[.contentType], "application/json")
+        XCTAssertEqual(requestParams.requestData.content, data)
+        XCTAssertEqual(requestParams.requestData.query, [])
+    }
+    
+    func testURLRequestBuilding_encodingBodyFails() throws {
+        // Arrange
+        let sut = self.buildSUT()
+        let object = ThrowingObject()
+        let expectedError = TestError()
+        object.thrownError = expectedError
+        var returnedError: Error?
+        // Act
+        let request = sut
+            .post(self.endpoint)
+            .catching { returnedError = $0 }
+            .body(object)
+            .urlRequest()
+        // Assert
+        XCTAssertNil(request)
+        XCTAssertEqual(self.networking.buildRequestParams.count, 0)
+        try self.assertThrowsEncodingError(
+            expected: expectedError,
+            returnedError: returnedError)
     }
 }
 

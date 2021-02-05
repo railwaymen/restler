@@ -19,9 +19,7 @@ final class NetworkingMock {
     var buildRequestReturnValue: URLRequest?
     private(set) var buildRequestParams: [BuildRequestParams] = []
     struct BuildRequestParams {
-        let url: URL
-        let method: HTTPMethod
-        let header: Restler.Header
+        let requestData: RequestData
         let customRequestModification: ((inout URLRequest) -> Void)?
     }
     
@@ -49,25 +47,23 @@ extension NetworkingMock: NetworkingType {
         eventLogger: EventLoggerLogging,
         completion: @escaping DataCompletion
     ) -> Restler.Task {
-        self.makeRequestParams.append(MakeRequestParams(
-            urlRequest: urlRequest,
-            urlSession: urlSession,
-            eventLogger: eventLogger,
-            completion: completion))
+        self.makeRequestParams.append(
+            MakeRequestParams(
+                urlRequest: urlRequest,
+                urlSession: urlSession,
+                eventLogger: eventLogger,
+                completion: completion))
         return self.makeRequestReturnValue
     }
     
     func buildRequest(
-        url: URL,
-        method: HTTPMethod,
-        header: Restler.Header,
+        requestData: RequestData,
         customRequestModification: ((inout URLRequest) -> Void)?
     ) -> URLRequest? {
-        self.buildRequestParams.append(BuildRequestParams(
-            url: url,
-            method: method,
-            header: header,
-            customRequestModification: customRequestModification))
+        self.buildRequestParams.append(
+            BuildRequestParams(
+                requestData: requestData,
+                customRequestModification: customRequestModification))
         return self.buildRequestReturnValue
     }
     

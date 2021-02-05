@@ -16,8 +16,11 @@ extension HeadInterfaceIntegrationTests {
         XCTAssertEqual(request, expectedRequest)
         XCTAssertEqual(self.networking.buildRequestParams.count, 1)
         let requestParams = try XCTUnwrap(self.networking.buildRequestParams.first)
-        XCTAssertEqual(requestParams.url.absoluteString, self.mockURLString)
-        XCTAssertEqual(requestParams.method, .head)
+        XCTAssertEqual(requestParams.requestData.url.absoluteString, self.mockURLString)
+        XCTAssertEqual(requestParams.requestData.method, .head)
+        XCTAssertNil(requestParams.requestData.header[.contentType])
+        XCTAssertNil(requestParams.requestData.content)
+        XCTAssertEqual(requestParams.requestData.query, [])
     }
 }
 
